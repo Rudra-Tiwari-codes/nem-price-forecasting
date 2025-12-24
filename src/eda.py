@@ -2,33 +2,44 @@
 Exploratory Data Analysis for electricity price data.
 """
 
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional, Any
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from pathlib import Path
 from scipy import stats
 
+logger = logging.getLogger(__name__)
 
-def price_distribution_analysis(df):
+
+def price_distribution_analysis(df: pd.DataFrame) -> Dict[str, float]:
     """Compute distribution statistics for RRP."""
-    rrp = df['RRP']
+    if 'RRP' not in df.columns:
+        raise ValueError("DataFrame must contain 'RRP' column")
+    
+    rrp = df['RRP'].dropna()
+    if len(rrp) == 0:
+        raise ValueError("No valid price data found")
     
     return {
-        'mean': rrp.mean(),
-        'median': rrp.median(),
-        'std': rrp.std(),
-        'skewness': stats.skew(rrp.dropna()),
-        'kurtosis': stats.kurtosis(rrp.dropna()),
-        'iqr': rrp.quantile(0.75) - rrp.quantile(0.25),
-        'percentile_5': rrp.quantile(0.05),
-        'percentile_95': rrp.quantile(0.95),
+        'mean': float(rrp.mean()),
+        'median': float(rrp.median()),
+        'std': float(rrp.std()),
+        'skewness': float(stats.skew(rrp)),
+        'kurtosis': float(stats.kurtosis(rrp)),
+        'iqr': float(rrp.quantile(0.75) - rrp.quantile(0.25)),
+        'percentile_5': float(rrp.quantile(0.05)),
+        'percentile_95': float(rrp.quantile(0.95)),
     }
 
 
-def volatility_analysis(df, window=288):
-    """
-    Calculate rolling volatility. Default window is 288 intervals (1 day at 5min).
-    """
+def volatility_analysis(df: pd.DataFrame, window: int = 288) -> pd.DataFrame:
+    """Calculate rolling volatility. Default window is 288 intervals (1 day at 5min)."""
+    if 'RRP' not in df.columns or 'SETTLEMENTDATE' not in df.columns:
+        raise ValueError("DataFrame must contain 'RRP' and 'SETTLEMENTDATE' columns")
+    
     df = df.copy()
     df['rolling_std'] = df['RRP'].rolling(window=window, min_periods=1).std()
     df['rolling_mean'] = df['RRP'].rolling(window=window, min_periods=1).mean()
@@ -37,8 +48,11 @@ def volatility_analysis(df, window=288):
     return df[['SETTLEMENTDATE', 'RRP', 'rolling_std', 'rolling_mean', 'volatility_ratio']]
 
 
-def temporal_patterns(df):
+def temporal_patterns(df: pd.DataFrame) -> Dict[str, Any]:
     """Analyze price patterns by hour and day of week."""
+    if 'SETTLEMENTDATE' not in df.columns or 'RRP' not in df.columns:
+        raise ValueError("DataFrame must contain 'SETTLEMENTDATE' and 'RRP' columns")
+    
     df = df.copy()
     df['hour'] = df['SETTLEMENTDATE'].dt.hour
     df['dayofweek'] = df['SETTLEMENTDATE'].dt.dayofweek
@@ -47,12 +61,18 @@ def temporal_patterns(df):
     hourly = df.groupby('hour')['RRP'].agg(['mean', 'std', 'median'])
     daily = df.groupby('dayofweek')['RRP'].agg(['mean', 'std', 'median'])
     
-    weekend_avg = df[df['is_weekend']]['RRP'].mean()
-    weekday_avg = df[~df['is_weekend']]['RRP'].mean()
+    weekend_data = df[df['is_weekend']]['RRP']
+    weekday_data = df[~df['is_weekend']]['RRP']
+    weekend_avg = float(weekend_data.mean()) if len(weekend_data) > 0 else 0.0
+    weekday_avg = float(weekday_data.mean()) if len(weekday_data) > 0 else 0.0
     
     peak_hours = [7, 8, 9, 17, 18, 19, 20]
-    peak_avg = df[df['hour'].isin(peak_hours)]['RRP'].mean()
-    offpeak_avg = df[~df['hour'].isin(peak_hours)]['RRP'].mean()
+    peak_data = df[df['hour'].isin(peak_hours)]['RRP']
+    offpeak_data = df[~df['hour'].isin(peak_hours)]['RRP']
+    peak_avg = float(peak_data.mean()) if len(peak_data) > 0 else 0.0
+    offpeak_avg = float(offpeak_data.mean()) if len(offpeak_data) > 0 else 0.0
+    
+    peak_premium = (peak_avg - offpeak_avg) / offpeak_avg * 100 if offpeak_avg != 0 else 0.0
     
     return {
         'hourly_stats': hourly,
@@ -61,12 +81,19 @@ def temporal_patterns(df):
         'weekday_avg': weekday_avg,
         'peak_avg': peak_avg,
         'offpeak_avg': offpeak_avg,
-        'peak_premium': (peak_avg - offpeak_avg) / offpeak_avg * 100 if offpeak_avg else 0
+        'peak_premium': peak_premium
     }
 
 
-def outlier_analysis(df, spike_threshold=300, negative_threshold=0):
+def outlier_analysis(
+    df: pd.DataFrame, 
+    spike_threshold: float = 300.0, 
+    negative_threshold: float = 0.0
+) -> Dict[str, Any]:
     """Identify and analyze price spikes and negative prices."""
+    if 'RRP' not in df.columns:
+        raise ValueError("DataFrame must contain 'RRP' column")
+    
     spikes = df[df['RRP'] > spike_threshold].copy()
     negatives = df[df['RRP'] < negative_threshold].copy()
     
@@ -80,25 +107,24 @@ def outlier_analysis(df, spike_threshold=300, negative_threshold=0):
     
     return {
         'spike_count': len(spikes),
-        'spike_percent': len(spikes) / len(df) * 100,
-        'spike_max': spikes['RRP'].max() if len(spikes) > 0 else None,
+        'spike_percent': len(spikes) / len(df) * 100 if len(df) > 0 else 0.0,
+        'spike_max': float(spikes['RRP'].max()) if len(spikes) > 0 else None,
         'negative_count': len(negatives),
-        'negative_percent': len(negatives) / len(df) * 100,
-        'negative_min': negatives['RRP'].min() if len(negatives) > 0 else None,
+        'negative_percent': len(negatives) / len(df) * 100 if len(df) > 0 else 0.0,
+        'negative_min': float(negatives['RRP'].min()) if len(negatives) > 0 else None,
         'iqr_outlier_count': len(iqr_outliers),
-        'outlier_bounds': (outlier_low, outlier_high),
+        'outlier_bounds': (float(outlier_low), float(outlier_high)),
         'spike_events': spikes,
         'negative_events': negatives
     }
 
 
-def plot_price_histogram(df, save_path=None):
+def plot_price_histogram(df: pd.DataFrame, save_path: Optional[str] = None) -> plt.Figure:
     """Distribution histogram with statistics overlay."""
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
     
     rrp = df['RRP']
     
-    # Full distribution
     axes[0].hist(rrp, bins=100, edgecolor='black', alpha=0.7, color='steelblue')
     axes[0].axvline(rrp.mean(), color='red', linestyle='--', label=f'Mean: ${rrp.mean():.1f}')
     axes[0].axvline(rrp.median(), color='orange', linestyle='--', label=f'Median: ${rrp.median():.1f}')
@@ -107,7 +133,6 @@ def plot_price_histogram(df, save_path=None):
     axes[0].set_title('Price Distribution (Full Range)')
     axes[0].legend()
     
-    # Clipped for detail
     clipped = rrp[(rrp > -50) & (rrp < 300)]
     axes[1].hist(clipped, bins=80, edgecolor='black', alpha=0.7, color='teal')
     axes[1].axvline(clipped.mean(), color='red', linestyle='--', label=f'Mean: ${clipped.mean():.1f}')
@@ -123,7 +148,7 @@ def plot_price_histogram(df, save_path=None):
     return fig
 
 
-def plot_volatility(df, save_path=None):
+def plot_volatility(df: pd.DataFrame, save_path: Optional[str] = None) -> plt.Figure:
     """Rolling volatility over time."""
     vol_df = volatility_analysis(df)
     
@@ -147,7 +172,7 @@ def plot_volatility(df, save_path=None):
     return fig
 
 
-def plot_temporal_patterns(df, save_path=None):
+def plot_temporal_patterns(df: pd.DataFrame, save_path: Optional[str] = None) -> plt.Figure:
     """Hourly and daily price patterns."""
     patterns = temporal_patterns(df)
     
@@ -180,7 +205,7 @@ def plot_temporal_patterns(df, save_path=None):
     return fig
 
 
-def plot_outliers(df, save_path=None):
+def plot_outliers(df: pd.DataFrame, save_path: Optional[str] = None) -> plt.Figure:
     """Timeline of extreme price events."""
     outliers = outlier_analysis(df)
     
@@ -190,7 +215,7 @@ def plot_outliers(df, save_path=None):
         spikes = outliers['spike_events']
         axes[0].scatter(spikes['SETTLEMENTDATE'], spikes['RRP'], c='red', s=20, alpha=0.6)
         axes[0].set_ylabel('Price ($/MWh)')
-        axes[0].set_title(f'Price Spikes (>{300} $/MWh) - {len(spikes)} events')
+        axes[0].set_title(f'Price Spikes (>$300/MWh) - {len(spikes)} events')
     else:
         axes[0].text(0.5, 0.5, 'No spikes detected', ha='center', va='center', transform=axes[0].transAxes)
         axes[0].set_title('Price Spikes')
@@ -212,58 +237,71 @@ def plot_outliers(df, save_path=None):
     return fig
 
 
-def generate_eda_report(data_path, output_dir='charts'):
+def generate_eda_report(data_path: str, output_dir: str = 'charts') -> List[str]:
     """Run full EDA and save all charts."""
     import sys
     sys.path.insert(0, str(Path(__file__).parent))
     from data_loader import load_dispatch_data
     
-    df = load_dispatch_data(data_path)
-    output_dir = Path(output_dir)
-    output_dir.mkdir(exist_ok=True)
+    try:
+        df = load_dispatch_data(data_path)
+    except Exception as e:
+        logger.error(f"Failed to load data: {e}")
+        raise
+    
+    output_path = Path(output_dir)
+    output_path.mkdir(exist_ok=True)
     
     print("Running Exploratory Data Analysis...")
     print("-" * 40)
     
-    dist = price_distribution_analysis(df)
-    print("\nDistribution Statistics:")
-    print(f"  Mean: ${dist['mean']:.2f}")
-    print(f"  Median: ${dist['median']:.2f}")
-    print(f"  Std Dev: ${dist['std']:.2f}")
-    print(f"  Skewness: {dist['skewness']:.2f}")
-    print(f"  Kurtosis: {dist['kurtosis']:.2f}")
+    try:
+        dist = price_distribution_analysis(df)
+        print("\nDistribution Statistics:")
+        print(f"  Mean: ${dist['mean']:.2f}")
+        print(f"  Median: ${dist['median']:.2f}")
+        print(f"  Std Dev: ${dist['std']:.2f}")
+        print(f"  Skewness: {dist['skewness']:.2f}")
+        print(f"  Kurtosis: {dist['kurtosis']:.2f}")
+    except Exception as e:
+        logger.warning(f"Distribution analysis failed: {e}")
     
-    patterns = temporal_patterns(df)
-    print("\nTemporal Patterns:")
-    print(f"  Weekday avg: ${patterns['weekday_avg']:.2f}")
-    print(f"  Weekend avg: ${patterns['weekend_avg']:.2f}")
-    print(f"  Peak avg: ${patterns['peak_avg']:.2f}")
-    print(f"  Off-peak avg: ${patterns['offpeak_avg']:.2f}")
-    print(f"  Peak premium: {patterns['peak_premium']:.1f}%")
+    try:
+        patterns = temporal_patterns(df)
+        print("\nTemporal Patterns:")
+        print(f"  Weekday avg: ${patterns['weekday_avg']:.2f}")
+        print(f"  Weekend avg: ${patterns['weekend_avg']:.2f}")
+        print(f"  Peak avg: ${patterns['peak_avg']:.2f}")
+        print(f"  Off-peak avg: ${patterns['offpeak_avg']:.2f}")
+        print(f"  Peak premium: {patterns['peak_premium']:.1f}%")
+    except Exception as e:
+        logger.warning(f"Temporal analysis failed: {e}")
     
-    outliers = outlier_analysis(df)
-    print("\nOutlier Analysis:")
-    print(f"  Spike events (>$300): {outliers['spike_count']} ({outliers['spike_percent']:.2f}%)")
-    print(f"  Negative prices: {outliers['negative_count']} ({outliers['negative_percent']:.2f}%)")
+    try:
+        outliers = outlier_analysis(df)
+        print("\nOutlier Analysis:")
+        print(f"  Spike events (>$300): {outliers['spike_count']} ({outliers['spike_percent']:.2f}%)")
+        print(f"  Negative prices: {outliers['negative_count']} ({outliers['negative_percent']:.2f}%)")
+    except Exception as e:
+        logger.warning(f"Outlier analysis failed: {e}")
     
     print("\nGenerating charts...")
-    saved = []
+    saved: List[str] = []
     
-    path = output_dir / 'eda_price_distribution.png'
-    plot_price_histogram(df, str(path))
-    saved.append(str(path))
+    chart_funcs = [
+        ('eda_price_distribution.png', plot_price_histogram),
+        ('eda_volatility.png', plot_volatility),
+        ('eda_temporal_patterns.png', plot_temporal_patterns),
+        ('eda_outliers.png', plot_outliers),
+    ]
     
-    path = output_dir / 'eda_volatility.png'
-    plot_volatility(df, str(path))
-    saved.append(str(path))
-    
-    path = output_dir / 'eda_temporal_patterns.png'
-    plot_temporal_patterns(df, str(path))
-    saved.append(str(path))
-    
-    path = output_dir / 'eda_outliers.png'
-    plot_outliers(df, str(path))
-    saved.append(str(path))
+    for filename, func in chart_funcs:
+        try:
+            path = output_path / filename
+            func(df, str(path))
+            saved.append(str(path))
+        except Exception as e:
+            logger.warning(f"Failed to generate {filename}: {e}")
     
     print(f"Saved {len(saved)} charts to {output_dir}/")
     return saved
