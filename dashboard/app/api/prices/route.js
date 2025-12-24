@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import JSZip from 'jszip';
 
 const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/';
 
@@ -35,19 +36,22 @@ async function extractPricesFromZip(url) {
 
         const buffer = await response.arrayBuffer();
 
-        // Parse ZIP file manually (simple approach for single CSV)
-        const bytes = new Uint8Array(buffer);
+        // Use JSZip to properly decompress the ZIP file
+        const zip = await JSZip.loadAsync(buffer);
 
-        // Find the CSV content in the ZIP
-        // ZIP files have local file headers starting with PK\x03\x04
-        let csvContent = '';
+        // Find the CSV file inside the ZIP
+        const csvFileName = Object.keys(zip.files).find(name =>
+            name.toUpperCase().endsWith('.CSV')
+        );
 
-        // Simple extraction - find CSV data after the header
-        const decoder = new TextDecoder('utf-8');
-        const fullText = decoder.decode(bytes);
+        if (!csvFileName) {
+            console.log(`No CSV found in ${url}`);
+            return [];
+        }
 
-        // Find DISPATCH,PRICE data lines
-        const lines = fullText.split('\n');
+        // Extract and read the CSV content
+        const csvContent = await zip.files[csvFileName].async('string');
+        const lines = csvContent.split('\n');
         const prices = [];
 
         for (const line of lines) {
@@ -79,7 +83,6 @@ export async function GET() {
         const zipLinks = await getLatestZipLinks();
 
         if (zipLinks.length === 0) {
-            // Return demo data if no files found
             return returnDemoData('No dispatch files found on NEMWEB');
         }
 
@@ -104,7 +107,7 @@ export async function GET() {
         const last100 = uniquePrices.slice(-100);
 
         if (last100.length === 0) {
-            return returnDemoData('No SA1 price data extracted');
+            return returnDemoData('No SA1 price data extracted from ' + zipLinks.length + ' files');
         }
 
         // Calculate EMA forecast
