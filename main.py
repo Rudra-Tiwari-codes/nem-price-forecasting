@@ -1,14 +1,12 @@
 """
-NEM Arbitrage Engine - Main Entry Point
+Time-Series Price Analytics Engine - Main Entry Point
 
-Runs complete arbitrage simulation with all strategies,
-generates visualizations, and outputs performance report.
+Runs price analysis, forecasting evaluation, and trading strategy simulation.
 """
 
 import sys
 from pathlib import Path
 
-# Add src to path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
@@ -40,19 +38,9 @@ def run_simulation(
     capacity_mwh: float = 100.0,
     power_mw: float = 50.0,
     efficiency: float = 0.90,
-    generate_charts: bool = True
+    generate_charts: bool = True,
+    run_eda: bool = False
 ):
-    """
-    Run complete arbitrage simulation.
-    
-    Args:
-        data_path: Path to AEMO data CSV
-        region: Region to simulate (None for all)
-        capacity_mwh: Battery capacity
-        power_mw: Battery power rating
-        efficiency: Round-trip efficiency
-        generate_charts: Whether to generate visualization charts
-    """
     print_header("NEM ARBITRAGE ENGINE")
     print(f"\nBattery Configuration:")
     print(f"  Capacity: {capacity_mwh} MWh")
@@ -152,6 +140,22 @@ def run_simulation(
         except Exception as e:
             print(f"  Warning: Could not generate charts: {e}")
     
+    if run_eda:
+        print_section("Exploratory Data Analysis")
+        try:
+            from eda import generate_eda_report
+            chart_dir = Path(data_path).parent.parent / "charts"
+            generate_eda_report(data_path, str(chart_dir))
+        except Exception as e:
+            print(f"  Warning: EDA failed: {e}")
+        
+        print_section("Strategy Metrics")
+        try:
+            from metrics import generate_metrics_report
+            generate_metrics_report(results, df, capacity_mwh, power_mw, efficiency)
+        except Exception as e:
+            print(f"  Warning: Metrics failed: {e}")
+    
     print_header("SIMULATION COMPLETE")
     
     return results, stats
@@ -194,6 +198,11 @@ def main():
         action="store_true",
         help="Skip chart generation"
     )
+    parser.add_argument(
+        "--eda",
+        action="store_true",
+        help="Run exploratory data analysis and metrics"
+    )
     
     args = parser.parse_args()
     
@@ -203,7 +212,8 @@ def main():
         capacity_mwh=args.capacity,
         power_mw=args.power,
         efficiency=args.efficiency,
-        generate_charts=not args.no_charts
+        generate_charts=not args.no_charts,
+        run_eda=args.eda
     )
 
 
