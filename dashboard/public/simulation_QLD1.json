@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2025-12-27T19:44:14.600397",
+  "lastUpdated": "2025-12-27T19:50:37.468765",
   "region": "QLD1",
   "stats": {
     "current": 0.0,
-    "mean": 21.77,
+    "mean": 21.85,
     "min": -14.99,
     "max": 71.9,
-    "count": 573
+    "count": 572
   },
   "prices": [
     {
@@ -615,7 +615,7 @@
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 12199.09,
+      "profit": 12192.78,
       "charges": 61,
       "discharges": 61
     },
@@ -627,20 +627,20 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 2262.69,
-      "charges": 13,
-      "discharges": 13
+      "profit": 2478.91,
+      "charges": 14,
+      "discharges": 14
     },
     {
       "name": "Dynamic Programming",
-      "profit": 24019.28,
+      "profit": 24042.89,
       "charges": 207,
       "discharges": 207
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 24019.28,
-  "annualizedProfit": 4383517.95,
+  "bestProfit": 24042.89,
+  "annualizedProfit": 4387828.03,
   "dataRange": {
     "start": "2025-12-26 05:45:00",
     "end": "2025-12-28 05:45:00",

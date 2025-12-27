@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2025-12-27T19:44:15.413351",
+  "lastUpdated": "2025-12-27T19:50:38.225674",
   "region": "TAS1",
   "stats": {
     "current": 30.45,
-    "mean": 12.02,
+    "mean": 12.0,
     "min": -107.18,
     "max": 102.69,
-    "count": 573
+    "count": 572
   },
   "prices": [
     {
@@ -615,13 +615,13 @@
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 16825.58,
+      "profit": 16457.15,
       "charges": 65,
       "discharges": 60
     },
     {
       "name": "Greedy",
-      "profit": 7764.71,
+      "profit": 7673.02,
       "charges": 48,
       "discharges": 48
     },
@@ -633,14 +633,14 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 27847.85,
+      "profit": 27916.41,
       "charges": 182,
       "discharges": 182
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 27847.85,
-  "annualizedProfit": 5082232.12,
+  "bestProfit": 27916.41,
+  "annualizedProfit": 5094744.02,
   "dataRange": {
     "start": "2025-12-26 05:45:00",
     "end": "2025-12-28 05:45:00",

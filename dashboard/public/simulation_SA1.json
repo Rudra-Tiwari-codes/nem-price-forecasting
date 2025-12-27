@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2025-12-27T19:44:17.821419",
+  "lastUpdated": "2025-12-27T19:50:40.522416",
   "region": "SA1",
   "stats": {
     "current": 0.0,
-    "mean": -42.02,
+    "mean": -42.12,
     "min": -308.0,
     "max": 138.0,
-    "count": 573
+    "count": 572
   },
   "prices": [
     {
@@ -615,7 +615,7 @@
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 52936.57,
+      "profit": 52811.32,
       "charges": 48,
       "discharges": 48
     },
@@ -627,20 +627,20 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 7664.6,
-      "charges": 7,
-      "discharges": 7
+      "profit": 8920.36,
+      "charges": 8,
+      "discharges": 8
     },
     {
       "name": "Dynamic Programming",
-      "profit": 84613.53,
+      "profit": 84652.07,
       "charges": 252,
       "discharges": 252
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 84613.53,
-  "annualizedProfit": 15441969.42,
+  "bestProfit": 84652.07,
+  "annualizedProfit": 15449002.58,
   "dataRange": {
     "start": "2025-12-26 05:45:00",
     "end": "2025-12-28 05:45:00",
