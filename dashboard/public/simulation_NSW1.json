@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T23:42:14.488819",
+  "lastUpdated": "2025-12-27T23:49:20.187314",
   "region": "NSW1",
   "stats": {
-    "current": -10.0,
-    "mean": 18.06,
+    "current": -6.95,
+    "mean": 18.15,
     "min": -39.37,
     "max": 74.34,
-    "count": 570
+    "count": 578
   },
   "prices": [
-    {
-      "time": "01:30",
-      "fullDate": "2025-12-28 01:30:00",
-      "price": 36.2
-    },
     {
       "time": "01:35",
       "fullDate": "2025-12-28 01:35:00",
@@ -508,14 +503,14 @@
       "time": "09:45",
       "fullDate": "2025-12-28 09:45:00",
       "price": -10.0
+    },
+    {
+      "time": "09:50",
+      "fullDate": "2025-12-28 09:50:00",
+      "price": -6.95
     }
   ],
   "signals": [
-    {
-      "time": "08:10",
-      "price": -15.05,
-      "signal": "buy"
-    },
     {
       "time": "08:15",
       "price": -14.96,
@@ -610,14 +605,19 @@
       "time": "09:45",
       "price": -10.0,
       "signal": "buy"
+    },
+    {
+      "time": "09:50",
+      "price": -6.95,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 9711.21,
-      "charges": 52,
-      "discharges": 45
+      "profit": 9791.05,
+      "charges": 56,
+      "discharges": 44
     },
     {
       "name": "Greedy",
@@ -627,23 +627,23 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 2301.7,
-      "charges": 15,
-      "discharges": 13
+      "profit": 2420.83,
+      "charges": 16,
+      "discharges": 14
     },
     {
       "name": "Dynamic Programming",
-      "profit": 21366.98,
-      "charges": 213,
-      "discharges": 193
+      "profit": 21531.31,
+      "charges": 216,
+      "discharges": 196
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 21366.98,
-  "annualizedProfit": 3899474.54,
+  "bestProfit": 21531.31,
+  "annualizedProfit": 3929464.36,
   "dataRange": {
     "start": "2025-12-26 09:45:00",
-    "end": "2025-12-28 09:45:00",
+    "end": "2025-12-28 09:50:00",
     "days": 2
   }
 }

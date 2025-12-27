@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T23:42:16.862689",
+  "lastUpdated": "2025-12-27T23:49:22.477844",
   "region": "TAS1",
   "stats": {
-    "current": 19.12,
-    "mean": 14.3,
+    "current": 7.35,
+    "mean": 14.05,
     "min": -107.18,
     "max": 102.69,
-    "count": 570
+    "count": 578
   },
   "prices": [
-    {
-      "time": "01:30",
-      "fullDate": "2025-12-28 01:30:00",
-      "price": 34.06
-    },
     {
       "time": "01:35",
       "fullDate": "2025-12-28 01:35:00",
@@ -508,14 +503,14 @@
       "time": "09:45",
       "fullDate": "2025-12-28 09:45:00",
       "price": 19.12
+    },
+    {
+      "time": "09:50",
+      "fullDate": "2025-12-28 09:50:00",
+      "price": 7.35
     }
   ],
   "signals": [
-    {
-      "time": "08:10",
-      "price": 38.14,
-      "signal": "sell"
-    },
     {
       "time": "08:15",
       "price": 38.1,
@@ -610,40 +605,45 @@
       "time": "09:45",
       "price": 19.12,
       "signal": "sell"
+    },
+    {
+      "time": "09:50",
+      "price": 7.35,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 18025.42,
-      "charges": 75,
+      "profit": 17630.44,
+      "charges": 74,
       "discharges": 74
     },
     {
       "name": "Greedy",
-      "profit": 7922.91,
+      "profit": 7853.21,
       "charges": 48,
       "discharges": 48
     },
     {
       "name": "Sliding Window",
-      "profit": 6410.04,
-      "charges": 32,
-      "discharges": 33
+      "profit": 6555.88,
+      "charges": 33,
+      "discharges": 34
     },
     {
       "name": "Dynamic Programming",
-      "profit": 28192.87,
-      "charges": 180,
-      "discharges": 180
+      "profit": 28340.94,
+      "charges": 183,
+      "discharges": 183
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 28192.87,
-  "annualizedProfit": 5145198.25,
+  "bestProfit": 28340.94,
+  "annualizedProfit": 5172221.61,
   "dataRange": {
     "start": "2025-12-26 09:45:00",
-    "end": "2025-12-28 09:45:00",
+    "end": "2025-12-28 09:50:00",
     "days": 2
   }
 }
