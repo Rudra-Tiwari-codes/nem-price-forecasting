@@ -1,33 +1,42 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart } from 'recharts';
+
+const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
+const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main';
 
 export default function Home() {
   const [priceData, setPriceData] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [region, setRegion] = useState('SA1');
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [source, setSource] = useState('');
 
-  useEffect(() => {
-    setMounted(true);
-    fetchData();
-    const interval = setInterval(fetchData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const res = await fetch('/api/prices');
+      const res = await fetch(`/api/prices?region=${region}`);
       const data = await res.json();
       setPriceData(data.prices || []);
       setStats(data.stats || null);
+      setLastUpdated(data.lastUpdated ? new Date(data.lastUpdated) : new Date());
+      setSource(data.source || 'NEMWEB');
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch data:', err);
       setLoading(false);
     }
-  };
+  }, [region]);
+
+  useEffect(() => {
+    setMounted(true);
+    fetchData();
+    // Update every 30 seconds for more real-time feel
+    const interval = setInterval(fetchData, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
   if (!mounted || loading) {
     return (
@@ -39,22 +48,47 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-8 max-w-6xl mx-auto">
-      <header className="mb-12">
-        <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-        <p className="text-white/40 text-sm mt-1">Real-time electricity market data</p>
+      <header className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
+          <p className="text-white/40 text-sm mt-1">Real-time electricity market data</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <select
+            value={region}
+            onChange={(e) => { setRegion(e.target.value); setLoading(true); }}
+            className="bg-black border border-white/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/50"
+          >
+            {REGIONS.map(r => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+          <button
+            onClick={() => { setLoading(true); fetchData(); }}
+            className="text-white/50 hover:text-white text-sm px-3 py-2 border border-white/20 rounded hover:border-white/40 transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
       </header>
 
       {stats && (
-        <div className="grid grid-cols-4 gap-6 mb-12">
-          <Stat label="Current" value={stats.current?.toFixed(2)} />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <Stat label="Current" value={stats.current?.toFixed(2)} highlight />
           <Stat label="Average" value={stats.mean?.toFixed(2)} />
           <Stat label="High" value={stats.max?.toFixed(2)} />
           <Stat label="Low" value={stats.min?.toFixed(2)} />
         </div>
       )}
 
-      <section className="mb-12">
-        <h2 className="text-sm text-white/40 uppercase tracking-widest mb-6">Price & Forecast</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-sm text-white/40 uppercase tracking-widest">Price & Forecast</h2>
+        <div className="text-xs text-white/30">
+          {source} | {lastUpdated?.toLocaleTimeString()}
+        </div>
+      </div>
+
+      <section className="mb-10">
         <div className="h-80 border border-white/10 rounded-lg p-4">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={priceData}>
@@ -104,57 +138,59 @@ export default function Home() {
                 strokeWidth={1}
                 strokeDasharray="4 4"
                 dot={false}
-                name="Forecast"
+                name="EMA Forecast"
               />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <div className="grid grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
         <section>
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-6">Signals</h2>
-          <div className="space-y-2">
-            {priceData.slice(-8).reverse().map((d, i) => (
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals</h2>
+          <div className="space-y-1">
+            {priceData.slice(-10).reverse().map((d, i) => (
               <div key={i} className="flex justify-between items-center py-2 border-b border-white/5">
                 <span className="text-white/50 text-sm">{d.time}</span>
-                <span className={`text-xs uppercase tracking-wider ${d.signal === 'buy' ? 'text-white' :
-                  d.signal === 'sell' ? 'text-white/30' :
-                    'text-white/20'
-                  }`}>
-                  {d.signal || 'hold'}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-white/40 text-sm">${d.price?.toFixed(2)}</span>
+                  <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${d.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
+                      d.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
+                        'bg-white/5 text-white/30'
+                    }`}>
+                    {d.signal || 'hold'}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
         <section>
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-6">Analysis</h2>
-          <div className="space-y-3 text-white/50 text-sm">
-            <p>Run the simulation locally to generate analysis charts:</p>
-            <code className="block py-2 px-3 bg-white/5 rounded text-xs">
-              python main.py --eda
-            </code>
-            <p className="text-white/30 text-xs mt-2">
-              Charts will be saved to the charts/ directory.
-            </p>
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Analysis Charts</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <ChartLink title="Price Distribution" href={`${GITHUB_RAW_URL}/charts/price_distribution.png`} />
+            <ChartLink title="Strategy Comparison" href={`${GITHUB_RAW_URL}/charts/strategy_comparison.png`} />
+            <ChartLink title="Volatility Analysis" href={`${GITHUB_RAW_URL}/charts/eda_volatility.png`} />
+            <ChartLink title="Temporal Patterns" href={`${GITHUB_RAW_URL}/charts/eda_temporal_patterns.png`} />
           </div>
         </section>
       </div>
 
-      <footer className="mt-20 pt-8 border-t border-white/5">
-        <p className="text-white/20 text-xs">Data from AEMO. Updates every 5 minutes.</p>
+      <footer className="pt-8 border-t border-white/5">
+        <p className="text-white/20 text-xs">
+          Data from AEMO NEMWEB. Auto-refreshes every 30 seconds. Region: {region}
+        </p>
       </footer>
     </div>
   );
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, highlight }) {
   return (
-    <div>
+    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5' : ''}`}>
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{label}</p>
-      <p className="text-2xl font-light">${value}</p>
+      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>${value}</p>
     </div>
   );
 }
@@ -164,9 +200,10 @@ function ChartLink({ title, href }) {
     <a
       href={href}
       target="_blank"
-      className="block py-3 px-4 border border-white/10 rounded hover:border-white/30 transition-colors"
+      rel="noopener noreferrer"
+      className="block py-3 px-4 border border-white/10 rounded hover:border-white/30 transition-colors text-center"
     >
-      <span className="text-sm">{title}</span>
+      <span className="text-sm text-white/70">{title}</span>
     </a>
   );
 }
