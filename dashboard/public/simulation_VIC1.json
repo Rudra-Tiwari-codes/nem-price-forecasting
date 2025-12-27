@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T18:56:19.491205",
+  "lastUpdated": "2025-12-27T19:02:46.012784",
   "region": "VIC1",
   "stats": {
-    "current": 8.95,
-    "mean": -33.27,
+    "current": 8.69,
+    "mean": -33.21,
     "min": -204.31,
     "max": 47.01,
     "count": 577
   },
   "prices": [
-    {
-      "time": "20:40",
-      "fullDate": "2025-12-27 20:40:00",
-      "price": 32.08
-    },
-    {
-      "time": "20:45",
-      "fullDate": "2025-12-27 20:45:00",
-      "price": 29.67
-    },
     {
       "time": "20:50",
       "fullDate": "2025-12-27 20:50:00",
@@ -508,19 +498,19 @@
       "time": "04:55",
       "fullDate": "2025-12-28 04:55:00",
       "price": 8.95
+    },
+    {
+      "time": "05:00",
+      "fullDate": "2025-12-28 05:00:00",
+      "price": 8.95
+    },
+    {
+      "time": "05:05",
+      "fullDate": "2025-12-28 05:05:00",
+      "price": 8.69
     }
   ],
   "signals": [
-    {
-      "time": "03:20",
-      "price": 8.95,
-      "signal": "buy"
-    },
-    {
-      "time": "03:25",
-      "price": 11.91,
-      "signal": "sell"
-    },
     {
       "time": "03:30",
       "price": 12.71,
@@ -610,14 +600,24 @@
       "time": "04:55",
       "price": 8.95,
       "signal": "hold"
+    },
+    {
+      "time": "05:00",
+      "price": 8.95,
+      "signal": "hold"
+    },
+    {
+      "time": "05:05",
+      "price": 8.69,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 32498.1,
+      "profit": 32851.88,
       "charges": 71,
-      "discharges": 57
+      "discharges": 67
     },
     {
       "name": "Greedy",
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 50540.87,
-      "charges": 234,
-      "discharges": 234
+      "profit": 50535.14,
+      "charges": 233,
+      "discharges": 233
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 50540.87,
-  "annualizedProfit": 9223708.24,
+  "bestProfit": 50535.14,
+  "annualizedProfit": 9222663.62,
   "dataRange": {
-    "start": "2025-12-26 04:55:00",
-    "end": "2025-12-28 04:55:00",
+    "start": "2025-12-26 05:05:00",
+    "end": "2025-12-28 05:05:00",
     "days": 2
   }
 }

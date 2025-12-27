@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T18:56:20.274605",
+  "lastUpdated": "2025-12-27T19:02:46.811736",
   "region": "QLD1",
   "stats": {
-    "current": 35.22,
-    "mean": 22.65,
+    "current": 35.0,
+    "mean": 22.51,
     "min": -14.99,
     "max": 74.71,
     "count": 577
   },
   "prices": [
-    {
-      "time": "20:40",
-      "fullDate": "2025-12-27 20:40:00",
-      "price": 37.76
-    },
-    {
-      "time": "20:45",
-      "fullDate": "2025-12-27 20:45:00",
-      "price": 34.75
-    },
     {
       "time": "20:50",
       "fullDate": "2025-12-27 20:50:00",
@@ -508,19 +498,19 @@
       "time": "04:55",
       "fullDate": "2025-12-28 04:55:00",
       "price": 35.22
+    },
+    {
+      "time": "05:00",
+      "fullDate": "2025-12-28 05:00:00",
+      "price": 35.45
+    },
+    {
+      "time": "05:05",
+      "fullDate": "2025-12-28 05:05:00",
+      "price": 35.0
     }
   ],
   "signals": [
-    {
-      "time": "03:20",
-      "price": 35.0,
-      "signal": "hold"
-    },
-    {
-      "time": "03:25",
-      "price": 35.0,
-      "signal": "hold"
-    },
     {
       "time": "03:30",
       "price": 35.0,
@@ -610,6 +600,16 @@
       "time": "04:55",
       "price": 35.22,
       "signal": "hold"
+    },
+    {
+      "time": "05:00",
+      "price": 35.45,
+      "signal": "hold"
+    },
+    {
+      "time": "05:05",
+      "price": 35.0,
+      "signal": "hold"
     }
   ],
   "strategies": [
@@ -621,7 +621,7 @@
     },
     {
       "name": "Greedy",
-      "profit": 6735.43,
+      "profit": 6733.62,
       "charges": 33,
       "discharges": 33
     },
@@ -642,8 +642,8 @@
   "bestProfit": 24142.58,
   "annualizedProfit": 4406020.19,
   "dataRange": {
-    "start": "2025-12-26 04:55:00",
-    "end": "2025-12-28 04:55:00",
+    "start": "2025-12-26 05:05:00",
+    "end": "2025-12-28 05:05:00",
     "days": 2
   }
 }

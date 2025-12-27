@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T18:56:18.691127",
+  "lastUpdated": "2025-12-27T19:02:45.188716",
   "region": "NSW1",
   "stats": {
-    "current": 36.06,
-    "mean": 23.26,
+    "current": 35.61,
+    "mean": 23.13,
     "min": -39.37,
     "max": 74.34,
     "count": 577
   },
   "prices": [
-    {
-      "time": "20:40",
-      "fullDate": "2025-12-27 20:40:00",
-      "price": 36.2
-    },
-    {
-      "time": "20:45",
-      "fullDate": "2025-12-27 20:45:00",
-      "price": 33.7
-    },
     {
       "time": "20:50",
       "fullDate": "2025-12-27 20:50:00",
@@ -508,19 +498,19 @@
       "time": "04:55",
       "fullDate": "2025-12-28 04:55:00",
       "price": 36.06
+    },
+    {
+      "time": "05:00",
+      "fullDate": "2025-12-28 05:00:00",
+      "price": 36.06
+    },
+    {
+      "time": "05:05",
+      "fullDate": "2025-12-28 05:05:00",
+      "price": 35.61
     }
   ],
   "signals": [
-    {
-      "time": "03:20",
-      "price": 36.2,
-      "signal": "hold"
-    },
-    {
-      "time": "03:25",
-      "price": 36.24,
-      "signal": "hold"
-    },
     {
       "time": "03:30",
       "price": 36.24,
@@ -610,12 +600,22 @@
       "time": "04:55",
       "price": 36.06,
       "signal": "hold"
+    },
+    {
+      "time": "05:00",
+      "price": 36.06,
+      "signal": "hold"
+    },
+    {
+      "time": "05:05",
+      "price": 35.61,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 10008.05,
+      "profit": 10007.99,
       "charges": 53,
       "discharges": 53
     },
@@ -642,8 +642,8 @@
   "bestProfit": 22179.85,
   "annualizedProfit": 4047822.67,
   "dataRange": {
-    "start": "2025-12-26 04:55:00",
-    "end": "2025-12-28 04:55:00",
+    "start": "2025-12-26 05:05:00",
+    "end": "2025-12-28 05:05:00",
     "days": 2
   }
 }
