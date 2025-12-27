@@ -29,8 +29,14 @@ jobs:
       - name: Download latest AEMO data
         run: python download_aemo_data.py
       
-      - name: Run simulation
-        run: python main.py --region SA1
+      - name: Run simulation for all regions
+        run: |
+          for region in SA1 NSW1 VIC1 QLD1 TAS1; do
+            echo "Running simulation for $region..."
+            python main.py --region $region --no-charts
+          done
+          # Generate charts for SA1 (default)
+          python main.py --region SA1
       
       - name: Commit and push changes
         run: |

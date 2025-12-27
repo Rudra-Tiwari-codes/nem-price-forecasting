@@ -229,7 +229,8 @@ def run_simulation(
             }
         }
         
-        output_path = dashboard_dir / "simulation_results.json"
+        region_name = region if region else 'ALL'
+        output_path = dashboard_dir / f"simulation_{region_name}.json"
         with open(output_path, 'w') as f:
             json.dump(dashboard_data, f, indent=2)
         print(f"  Exported dashboard data to {output_path}")

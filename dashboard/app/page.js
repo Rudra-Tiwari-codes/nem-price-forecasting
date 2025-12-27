@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar } from 'recharts';
 
+const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
 const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main';
 
 export default function Home() {
@@ -10,23 +11,27 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState('SA1');
 
   const fetchData = useCallback(async () => {
     try {
-      // First try local API (reads from public/simulation_results.json)
-      let res = await fetch('/api/simulation');
-
-      if (!res.ok) {
-        // Fallback to GitHub raw file
-        res = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_results.json`);
-      }
+      // Fetch region-specific simulation results from GitHub
+      const res = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_${selectedRegion}.json`);
 
       if (res.ok) {
         const result = await res.json();
         setData(result);
         setError(null);
       } else {
-        setError('Simulation results not available. The Python simulation needs to run first.');
+        // Fallback to old filename format
+        const fallbackRes = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_results.json`);
+        if (fallbackRes.ok) {
+          const result = await fallbackRes.json();
+          setData(result);
+          setError(null);
+        } else {
+          setError(`Simulation results for ${selectedRegion} not available yet. The workflow needs to run first.`);
+        }
       }
       setLoading(false);
     } catch (err) {
@@ -34,22 +39,33 @@ export default function Home() {
       setError('Failed to load simulation results. Please try again.');
       setLoading(false);
     }
-  }, []);
+  }, [selectedRegion]);
 
   useEffect(() => {
     setMounted(true);
-    fetchData();
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchData, 30 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchData]);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setLoading(true);
+      fetchData();
+    }
+  }, [mounted, selectedRegion, fetchData]);
+
+  useEffect(() => {
+    if (mounted) {
+      // Refresh every 60 seconds
+      const interval = setInterval(fetchData, 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [mounted, fetchData]);
 
   if (!mounted || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white/50 text-sm">Loading simulation results...</p>
+          <p className="text-white/50 text-sm">Loading {selectedRegion} simulation results...</p>
         </div>
       </div>
     );
@@ -57,13 +73,18 @@ export default function Home() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-8">
-        <div className="text-center max-w-md">
-          <h1 className="text-2xl font-light mb-4">NEM Analytics</h1>
+      <div className="min-h-screen p-8">
+        <header className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
+            <p className="text-white/40 text-sm mt-1">Python Simulation Results</p>
+          </div>
+          <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
+        </header>
+        <div className="text-center max-w-md mx-auto mt-20">
           <p className="text-white/50 mb-4">{error || 'No data available'}</p>
           <p className="text-white/30 text-sm mb-6">
             The Python simulation runs every 5 minutes via GitHub Actions.
-            Results will appear here once the first simulation completes.
           </p>
           <button
             onClick={() => { setLoading(true); fetchData(); }}
@@ -82,20 +103,17 @@ export default function Home() {
         <div>
           <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
           <p className="text-white/40 text-sm mt-1">
-            Python Simulation Results | Region: {data.region}
+            Python Simulation | {data.region || selectedRegion}
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-xs text-white/30">Last Updated</p>
-          <p className="text-sm text-white/60">
-            {data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'Unknown'}
-          </p>
-          <button
-            onClick={() => { setLoading(true); fetchData(); }}
-            className="mt-2 text-xs text-white/50 hover:text-white px-2 py-1 border border-white/20 rounded hover:border-white/40 transition-colors"
-          >
-            Refresh
-          </button>
+        <div className="flex items-center gap-4">
+          <RegionSelector selected={selectedRegion} onChange={(r) => { setSelectedRegion(r); setLoading(true); }} />
+          <div className="text-right">
+            <p className="text-xs text-white/30">Last Updated</p>
+            <p className="text-sm text-white/60">
+              {data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'Unknown'}
+            </p>
+          </div>
         </div>
       </header>
 
@@ -112,7 +130,7 @@ export default function Home() {
       {/* Best Strategy Banner */}
       {data.bestStrategy && (
         <div className="mb-8 p-4 bg-white/5 rounded-lg border border-white/10">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <div>
               <p className="text-white/40 text-xs uppercase tracking-widest">Best Strategy</p>
               <p className="text-xl font-light">{data.bestStrategy}</p>
@@ -131,16 +149,16 @@ export default function Home() {
 
       {/* Price Chart */}
       <section className="mb-8">
-        <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Price History (Last 100 Intervals)</h2>
+        <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
+          Price History - {selectedRegion} (Last 100 Intervals)
+        </h2>
         <div className="h-64 border border-white/10 rounded-lg p-4">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={data.prices || []}>
               <CartesianGrid stroke="#222" vertical={false} />
               <XAxis dataKey="time" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
               <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
-              <Tooltip
-                contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
-              />
+              <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }} />
               <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} />
               <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
             </ComposedChart>
@@ -204,7 +222,7 @@ export default function Home() {
 
           {data.dataRange && (
             <div className="mt-4 p-3 bg-white/5 rounded text-xs text-white/40">
-              <p>Data Range: {data.dataRange.days} days</p>
+              <p>Data Range: {data.dataRange.days} day(s)</p>
               <p className="truncate">From: {data.dataRange.start}</p>
               <p className="truncate">To: {data.dataRange.end}</p>
             </div>
@@ -214,11 +232,25 @@ export default function Home() {
 
       <footer className="pt-8 border-t border-white/5">
         <p className="text-white/20 text-xs">
-          Data from AEMO NEMWEB via Python simulation. Auto-refreshes every 30 seconds.
-          Source: {data.source || 'Python Simulation'}
+          Data from AEMO NEMWEB via Python simulation. Auto-refreshes every 60 seconds.
+          Source: Python Simulation ({selectedRegion})
         </p>
       </footer>
     </div>
+  );
+}
+
+function RegionSelector({ selected, onChange }) {
+  return (
+    <select
+      value={selected}
+      onChange={(e) => onChange(e.target.value)}
+      className="bg-black border border-white/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/50"
+    >
+      {REGIONS.map(r => (
+        <option key={r} value={r}>{r}</option>
+      ))}
+    </select>
   );
 }
 
