@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T19:30:21.977257",
+  "lastUpdated": "2025-12-27T19:38:05.357881",
   "region": "SA1",
   "stats": {
-    "current": 9.0,
-    "mean": -42.36,
+    "current": 0.64,
+    "mean": -42.28,
     "min": -308.0,
     "max": 138.0,
-    "count": 577
+    "count": 578
   },
   "prices": [
-    {
-      "time": "21:15",
-      "fullDate": "2025-12-27 21:15:00",
-      "price": 79.05
-    },
-    {
-      "time": "21:20",
-      "fullDate": "2025-12-27 21:20:00",
-      "price": 44.61
-    },
     {
       "time": "21:25",
       "fullDate": "2025-12-27 21:25:00",
@@ -508,19 +498,19 @@
       "time": "05:30",
       "fullDate": "2025-12-28 05:30:00",
       "price": 9.0
+    },
+    {
+      "time": "05:35",
+      "fullDate": "2025-12-28 05:35:00",
+      "price": 0.55
+    },
+    {
+      "time": "05:40",
+      "fullDate": "2025-12-28 05:40:00",
+      "price": 0.64
     }
   ],
   "signals": [
-    {
-      "time": "03:55",
-      "price": 13.58,
-      "signal": "buy"
-    },
-    {
-      "time": "04:00",
-      "price": 13.65,
-      "signal": "buy"
-    },
     {
       "time": "04:05",
       "price": 9.66,
@@ -610,14 +600,24 @@
       "time": "05:30",
       "price": 9.0,
       "signal": "sell"
+    },
+    {
+      "time": "05:35",
+      "price": 0.55,
+      "signal": "buy"
+    },
+    {
+      "time": "05:40",
+      "price": 0.64,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 53527.94,
-      "charges": 54,
-      "discharges": 53
+      "profit": 53003.34,
+      "charges": 50,
+      "discharges": 49
     },
     {
       "name": "Greedy",
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 84930.93,
-      "charges": 255,
-      "discharges": 255
+      "profit": 84939.54,
+      "charges": 256,
+      "discharges": 256
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 84930.93,
-  "annualizedProfit": 15499895.01,
+  "bestProfit": 84939.54,
+  "annualizedProfit": 15501466.66,
   "dataRange": {
-    "start": "2025-12-26 05:25:00",
-    "end": "2025-12-28 05:30:00",
+    "start": "2025-12-26 05:35:00",
+    "end": "2025-12-28 05:40:00",
     "days": 2
   }
 }
