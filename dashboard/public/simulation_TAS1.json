@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T21:38:18.401612",
+  "lastUpdated": "2025-12-27T21:45:40.814197",
   "region": "TAS1",
   "stats": {
     "current": 38.14,
-    "mean": 12.62,
+    "mean": 12.71,
     "min": -107.18,
     "max": 102.69,
-    "count": 578
+    "count": 577
   },
   "prices": [
-    {
-      "time": "23:25",
-      "fullDate": "2025-12-27 23:25:00",
-      "price": 35.12
-    },
     {
       "time": "23:30",
       "fullDate": "2025-12-27 23:30:00",
@@ -508,14 +503,14 @@
       "time": "07:40",
       "fullDate": "2025-12-28 07:40:00",
       "price": 38.14
+    },
+    {
+      "time": "07:45",
+      "fullDate": "2025-12-28 07:45:00",
+      "price": 38.14
     }
   ],
   "signals": [
-    {
-      "time": "06:05",
-      "price": 33.54,
-      "signal": "hold"
-    },
     {
       "time": "06:10",
       "price": 33.19,
@@ -610,6 +605,11 @@
       "time": "07:40",
       "price": 38.14,
       "signal": "sell"
+    },
+    {
+      "time": "07:45",
+      "price": 38.14,
+      "signal": "sell"
     }
   ],
   "strategies": [
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 28208.97,
+      "profit": 28218.84,
       "charges": 184,
       "discharges": 184
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 28208.97,
-  "annualizedProfit": 5148137.51,
+  "bestProfit": 28218.84,
+  "annualizedProfit": 5149938.11,
   "dataRange": {
-    "start": "2025-12-26 07:35:00",
-    "end": "2025-12-28 07:40:00",
+    "start": "2025-12-26 07:45:00",
+    "end": "2025-12-28 07:45:00",
     "days": 2
   }
 }

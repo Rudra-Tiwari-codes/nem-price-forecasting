@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T21:38:17.627259",
+  "lastUpdated": "2025-12-27T21:45:40.022684",
   "region": "QLD1",
   "stats": {
-    "current": -14.4,
-    "mean": 19.88,
+    "current": -14.99,
+    "mean": 19.7,
     "min": -14.99,
     "max": 71.9,
-    "count": 578
+    "count": 577
   },
   "prices": [
-    {
-      "time": "23:25",
-      "fullDate": "2025-12-27 23:25:00",
-      "price": 54.96
-    },
     {
       "time": "23:30",
       "fullDate": "2025-12-27 23:30:00",
@@ -508,14 +503,14 @@
       "time": "07:40",
       "fullDate": "2025-12-28 07:40:00",
       "price": -14.4
+    },
+    {
+      "time": "07:45",
+      "fullDate": "2025-12-28 07:45:00",
+      "price": -14.99
     }
   ],
   "signals": [
-    {
-      "time": "06:05",
-      "price": -6.21,
-      "signal": "hold"
-    },
     {
       "time": "06:10",
       "price": -6.42,
@@ -610,19 +605,24 @@
       "time": "07:40",
       "price": -14.4,
       "signal": "buy"
+    },
+    {
+      "time": "07:45",
+      "price": -14.99,
+      "signal": "buy"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 12042.51,
-      "charges": 57,
-      "discharges": 53
+      "profit": 11920.9,
+      "charges": 56,
+      "discharges": 54
     },
     {
       "name": "Greedy",
-      "profit": 7121.53,
-      "charges": 50,
+      "profit": 7187.37,
+      "charges": 51,
       "discharges": 28
     },
     {
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 24240.1,
-      "charges": 218,
-      "discharges": 198
+      "profit": 24289.65,
+      "charges": 219,
+      "discharges": 199
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 24240.1,
-  "annualizedProfit": 4423817.83,
+  "bestProfit": 24289.65,
+  "annualizedProfit": 4432861.17,
   "dataRange": {
-    "start": "2025-12-26 07:35:00",
-    "end": "2025-12-28 07:40:00",
+    "start": "2025-12-26 07:45:00",
+    "end": "2025-12-28 07:45:00",
     "days": 2
   }
 }
