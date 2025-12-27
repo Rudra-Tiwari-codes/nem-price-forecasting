@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T18:45:08.664668",
+  "lastUpdated": "2025-12-27T18:56:20.274605",
   "region": "QLD1",
   "stats": {
-    "current": 35.0,
-    "mean": 22.72,
+    "current": 35.22,
+    "mean": 22.65,
     "min": -14.99,
     "max": 74.71,
-    "count": 570
+    "count": 577
   },
   "prices": [
-    {
-      "time": "20:30",
-      "fullDate": "2025-12-27 20:30:00",
-      "price": 33.24
-    },
-    {
-      "time": "20:35",
-      "fullDate": "2025-12-27 20:35:00",
-      "price": 36.63
-    },
     {
       "time": "20:40",
       "fullDate": "2025-12-27 20:40:00",
@@ -508,19 +498,19 @@
       "time": "04:45",
       "fullDate": "2025-12-28 04:45:00",
       "price": 35.0
+    },
+    {
+      "time": "04:50",
+      "fullDate": "2025-12-28 04:50:00",
+      "price": 35.0
+    },
+    {
+      "time": "04:55",
+      "fullDate": "2025-12-28 04:55:00",
+      "price": 35.22
     }
   ],
   "signals": [
-    {
-      "time": "03:10",
-      "price": 34.75,
-      "signal": "hold"
-    },
-    {
-      "time": "03:15",
-      "price": 35.0,
-      "signal": "hold"
-    },
     {
       "time": "03:20",
       "price": 35.0,
@@ -610,40 +600,50 @@
       "time": "04:45",
       "price": 35.0,
       "signal": "hold"
+    },
+    {
+      "time": "04:50",
+      "price": 35.0,
+      "signal": "hold"
+    },
+    {
+      "time": "04:55",
+      "price": 35.22,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 11997.58,
-      "charges": 62,
-      "discharges": 62
+      "profit": 12084.72,
+      "charges": 64,
+      "discharges": 64
     },
     {
       "name": "Greedy",
-      "profit": 6628.86,
-      "charges": 32,
-      "discharges": 32
+      "profit": 6735.43,
+      "charges": 33,
+      "discharges": 33
     },
     {
       "name": "Sliding Window",
-      "profit": 2298.77,
+      "profit": 2338.18,
       "charges": 14,
       "discharges": 13
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23910.47,
+      "profit": 24142.58,
       "charges": 209,
       "discharges": 209
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 23910.47,
-  "annualizedProfit": 4363661.58,
+  "bestProfit": 24142.58,
+  "annualizedProfit": 4406020.19,
   "dataRange": {
-    "start": "2025-12-26 04:45:00",
-    "end": "2025-12-28 04:45:00",
+    "start": "2025-12-26 04:55:00",
+    "end": "2025-12-28 04:55:00",
     "days": 2
   }
 }
