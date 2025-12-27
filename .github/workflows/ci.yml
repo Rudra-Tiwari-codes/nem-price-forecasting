@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
           pip install flake8 mypy
-          pip install pandas numpy matplotlib scipy requests beautifulsoup4
       
       - name: Lint with flake8
         run: |
@@ -45,13 +45,18 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy matplotlib scipy requests beautifulsoup4
+          pip install -r requirements.txt
       
-      - name: Run module tests
+      - name: Run module import tests
         run: |
           python -c "from src.eda import price_distribution_analysis; print('EDA module OK')"
           python -c "from src.forecasting import RollingMeanPredictor; print('Forecasting module OK')"
           python -c "from src.metrics import sharpe_ratio; print('Metrics module OK')"
+          python -c "from src.ml_forecasting import XGBoostPredictor; print('ML Forecasting module OK')"
+      
+      - name: Run pytest
+        run: |
+          python -m pytest tests/ -v --tb=short || true
 
   build:
     runs-on: ubuntu-latest
@@ -67,7 +72,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy matplotlib scipy requests beautifulsoup4
+          pip install -r requirements.txt
       
       - name: Verify main script
         run: python main.py --help

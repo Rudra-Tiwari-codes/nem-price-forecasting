@@ -119,8 +119,8 @@ export default function Home() {
               <div key={i} className="flex justify-between items-center py-2 border-b border-white/5">
                 <span className="text-white/50 text-sm">{d.time}</span>
                 <span className={`text-xs uppercase tracking-wider ${d.signal === 'buy' ? 'text-white' :
-                    d.signal === 'sell' ? 'text-white/30' :
-                      'text-white/20'
+                  d.signal === 'sell' ? 'text-white/30' :
+                    'text-white/20'
                   }`}>
                   {d.signal || 'hold'}
                 </span>
@@ -131,11 +131,14 @@ export default function Home() {
 
         <section>
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-6">Analysis</h2>
-          <div className="space-y-3">
-            <ChartLink title="Distribution" href="/charts/eda_price_distribution.png" />
-            <ChartLink title="Volatility" href="/charts/eda_volatility.png" />
-            <ChartLink title="Patterns" href="/charts/eda_temporal_patterns.png" />
-            <ChartLink title="Outliers" href="/charts/eda_outliers.png" />
+          <div className="space-y-3 text-white/50 text-sm">
+            <p>Run the simulation locally to generate analysis charts:</p>
+            <code className="block py-2 px-3 bg-white/5 rounded text-xs">
+              python main.py --eda
+            </code>
+            <p className="text-white/30 text-xs mt-2">
+              Charts will be saved to the charts/ directory.
+            </p>
           </div>
         </section>
       </div>

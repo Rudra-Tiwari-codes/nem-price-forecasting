@@ -48,14 +48,32 @@ def run_simulation(
     print(f"  Efficiency: {efficiency:.0%}")
     print(f"  C-Rate: {capacity_mwh/power_mw:.1f} hours")
     
+    # Check if data file exists
+    data_file = Path(data_path)
+    if not data_file.exists():
+        print(f"\nError: Data file not found: {data_path}")
+        print("Please run 'python download_aemo_data.py' first to fetch AEMO price data.")
+        return None, None
+    
     # Load data
     print_section("Loading Data")
     df = load_dispatch_data(data_path, regions=[region] if region else None)
+    
+    if df.empty:
+        print("Error: No data loaded. The CSV file may be empty or corrupted.")
+        return None, None
     
     validation = validate_data(df)
     print(f"  Rows loaded: {validation['row_count']:,}")
     print(f"  Date range: {validation['date_range'][0]} to {validation['date_range'][1]}")
     print(f"  Valid: {'Yes' if validation['valid'] else 'No'}")
+    
+    if not validation['valid']:
+        print("  Issues found:")
+        for issue in validation['issues']:
+            print(f"    - {issue}")
+        print("\nError: Data validation failed. Please check the data file.")
+        return None, None
     
     if 'REGIONID' in df.columns:
         regions = df['REGIONID'].unique()
