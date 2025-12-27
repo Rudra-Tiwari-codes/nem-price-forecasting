@@ -54,12 +54,28 @@ async function extractPricesFromZip(url, region = 'SA1') {
         const lines = csvContent.split('\n');
         const prices = [];
 
+        // Find column indices from header row
+        let settlementDateIdx = -1;
+        let regionIdIdx = -1;
+        let rrpIdx = -1;
+
         for (const line of lines) {
-            if (line.startsWith('D,DISPATCH,PRICE,')) {
+            // Header row starts with I,DISPATCH,PRICE
+            if (line.startsWith('I,DISPATCH,PRICE,')) {
+                const headerParts = line.split(',');
+                for (let i = 0; i < headerParts.length; i++) {
+                    const col = headerParts[i].replace(/"/g, '').trim().toUpperCase();
+                    if (col === 'SETTLEMENTDATE') settlementDateIdx = i;
+                    if (col === 'REGIONID') regionIdIdx = i;
+                    if (col === 'RRP') rrpIdx = i;
+                }
+            }
+            // Data row starts with D,DISPATCH,PRICE
+            if (line.startsWith('D,DISPATCH,PRICE,') && settlementDateIdx >= 0 && regionIdIdx >= 0 && rrpIdx >= 0) {
                 const parts = line.split(',');
-                const settlementDate = parts[4]?.replace(/"/g, '');
-                const regionId = parts[6];
-                const rrp = parseFloat(parts[7]) || 0;
+                const settlementDate = parts[settlementDateIdx]?.replace(/"/g, '');
+                const regionId = parts[regionIdIdx]?.replace(/"/g, '');
+                const rrp = parseFloat(parts[rrpIdx]) || 0;
 
                 if (regionId === region && settlementDate) {
                     prices.push({
