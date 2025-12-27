@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T17:50:59.052374",
+  "lastUpdated": "2025-12-27T17:56:48.973471",
   "region": "TAS1",
   "stats": {
-    "current": 35.18,
-    "mean": 11.51,
+    "current": 35.12,
+    "mean": 11.56,
     "min": -107.18,
     "max": 102.69,
-    "count": 576
+    "count": 575
   },
   "prices": [
-    {
-      "time": "19:35",
-      "fullDate": "2025-12-27 19:35:00",
-      "price": 35.12
-    },
-    {
-      "time": "19:40",
-      "fullDate": "2025-12-27 19:40:00",
-      "price": 35.12
-    },
     {
       "time": "19:45",
       "fullDate": "2025-12-27 19:45:00",
@@ -508,19 +498,19 @@
       "time": "03:50",
       "fullDate": "2025-12-28 03:50:00",
       "price": 35.18
+    },
+    {
+      "time": "03:55",
+      "fullDate": "2025-12-28 03:55:00",
+      "price": 35.12
+    },
+    {
+      "time": "04:00",
+      "fullDate": "2025-12-28 04:00:00",
+      "price": 35.12
     }
   ],
   "signals": [
-    {
-      "time": "02:15",
-      "price": 35.12,
-      "signal": "hold"
-    },
-    {
-      "time": "02:20",
-      "price": 35.12,
-      "signal": "hold"
-    },
     {
       "time": "02:25",
       "price": 35.12,
@@ -610,12 +600,22 @@
       "time": "03:50",
       "price": 35.18,
       "signal": "hold"
+    },
+    {
+      "time": "03:55",
+      "price": 35.12,
+      "signal": "hold"
+    },
+    {
+      "time": "04:00",
+      "price": 35.12,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 17080.98,
+      "profit": 16829.93,
       "charges": 56,
       "discharges": 56
     },
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 27901.42,
-      "charges": 181,
-      "discharges": 181
+      "profit": 27880.29,
+      "charges": 180,
+      "discharges": 180
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 27901.42,
-  "annualizedProfit": 5092008.49,
+  "bestProfit": 27880.29,
+  "annualizedProfit": 5088153.29,
   "dataRange": {
-    "start": "2025-12-26 03:45:00",
-    "end": "2025-12-28 03:50:00",
+    "start": "2025-12-26 03:55:00",
+    "end": "2025-12-28 04:00:00",
     "days": 2
   }
 }
