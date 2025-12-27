@@ -1,29 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T20:28:02.481592",
+  "lastUpdated": "2025-12-27T20:41:51.166068",
   "region": "QLD1",
   "stats": {
-    "current": -9.27,
-    "mean": 21.05,
+    "current": -13.0,
+    "mean": 20.85,
     "min": -14.99,
     "max": 71.9,
-    "count": 574
+    "count": 569
   },
   "prices": [
-    {
-      "time": "22:15",
-      "fullDate": "2025-12-27 22:15:00",
-      "price": 54.47
-    },
-    {
-      "time": "22:20",
-      "fullDate": "2025-12-27 22:20:00",
-      "price": 35.07
-    },
-    {
-      "time": "22:25",
-      "fullDate": "2025-12-27 22:25:00",
-      "price": 54.53
-    },
     {
       "time": "22:30",
       "fullDate": "2025-12-27 22:30:00",
@@ -508,24 +493,24 @@
       "time": "06:30",
       "fullDate": "2025-12-28 06:30:00",
       "price": -9.27
+    },
+    {
+      "time": "06:35",
+      "fullDate": "2025-12-28 06:35:00",
+      "price": -9.52
+    },
+    {
+      "time": "06:40",
+      "fullDate": "2025-12-28 06:40:00",
+      "price": -10.31
+    },
+    {
+      "time": "06:45",
+      "fullDate": "2025-12-28 06:45:00",
+      "price": -13.0
     }
   ],
   "signals": [
-    {
-      "time": "04:55",
-      "price": 35.22,
-      "signal": "hold"
-    },
-    {
-      "time": "05:00",
-      "price": 35.45,
-      "signal": "hold"
-    },
-    {
-      "time": "05:05",
-      "price": 35.0,
-      "signal": "hold"
-    },
     {
       "time": "05:10",
       "price": 35.01,
@@ -610,40 +595,55 @@
       "time": "06:30",
       "price": -9.27,
       "signal": "buy"
+    },
+    {
+      "time": "06:35",
+      "price": -9.52,
+      "signal": "buy"
+    },
+    {
+      "time": "06:40",
+      "price": -10.31,
+      "signal": "buy"
+    },
+    {
+      "time": "06:45",
+      "price": -13.0,
+      "signal": "buy"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 12349.56,
-      "charges": 60,
-      "discharges": 60
+      "profit": 12426.65,
+      "charges": 58,
+      "discharges": 58
     },
     {
       "name": "Greedy",
-      "profit": 6983.44,
-      "charges": 42,
-      "discharges": 33
+      "profit": 6906.03,
+      "charges": 44,
+      "discharges": 32
     },
     {
       "name": "Sliding Window",
-      "profit": 2264.56,
-      "charges": 13,
-      "discharges": 13
+      "profit": 2048.35,
+      "charges": 12,
+      "discharges": 12
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23956.96,
-      "charges": 214,
-      "discharges": 205
+      "profit": 23981.39,
+      "charges": 213,
+      "discharges": 201
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 23956.96,
-  "annualizedProfit": 4372146.1,
+  "bestProfit": 23981.39,
+  "annualizedProfit": 4376603.84,
   "dataRange": {
-    "start": "2025-12-26 06:25:00",
-    "end": "2025-12-28 06:30:00",
+    "start": "2025-12-26 06:45:00",
+    "end": "2025-12-28 06:45:00",
     "days": 2
   }
 }
