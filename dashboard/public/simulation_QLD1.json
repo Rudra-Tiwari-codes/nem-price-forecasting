@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T17:45:08.611480",
+  "lastUpdated": "2025-12-27T17:50:58.287751",
   "region": "QLD1",
   "stats": {
-    "current": 34.94,
-    "mean": 23.4,
+    "current": 35.0,
+    "mean": 23.32,
     "min": -14.99,
     "max": 74.71,
-    "count": 573
+    "count": 576
   },
   "prices": [
-    {
-      "time": "19:30",
-      "fullDate": "2025-12-27 19:30:00",
-      "price": 39.03
-    },
     {
       "time": "19:35",
       "fullDate": "2025-12-27 19:35:00",
@@ -508,14 +503,14 @@
       "time": "03:45",
       "fullDate": "2025-12-28 03:45:00",
       "price": 34.94
+    },
+    {
+      "time": "03:50",
+      "fullDate": "2025-12-28 03:50:00",
+      "price": 35.0
     }
   ],
   "signals": [
-    {
-      "time": "02:10",
-      "price": 35.0,
-      "signal": "hold"
-    },
     {
       "time": "02:15",
       "price": 34.75,
@@ -610,12 +605,17 @@
       "time": "03:45",
       "price": 34.94,
       "signal": "hold"
+    },
+    {
+      "time": "03:50",
+      "price": 35.0,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 11878.3,
+      "profit": 11879.29,
       "charges": 62,
       "discharges": 62
     },
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 24090.01,
-      "charges": 209,
-      "discharges": 209
+      "profit": 24243.17,
+      "charges": 212,
+      "discharges": 212
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 24090.01,
-  "annualizedProfit": 4396427.39,
+  "bestProfit": 24243.17,
+  "annualizedProfit": 4424378.97,
   "dataRange": {
     "start": "2025-12-26 03:45:00",
-    "end": "2025-12-28 03:45:00",
+    "end": "2025-12-28 03:50:00",
     "days": 2
   }
 }
