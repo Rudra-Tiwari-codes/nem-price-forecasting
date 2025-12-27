@@ -158,8 +158,8 @@ export default function Home() {
               <CartesianGrid stroke="#222" vertical={false} />
               <XAxis dataKey="time" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
               <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
-              <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }} />
-              <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} />
+              <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }} formatter={(value) => [`$${value}`, 'Price']} />
+              <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} legendType="none" tooltipType="none" />
               <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
             </ComposedChart>
           </ResponsiveContainer>
@@ -199,8 +199,8 @@ export default function Home() {
                 <div className="flex items-center gap-3">
                   <span className="text-white/40 text-sm">${s.price?.toFixed(2)}</span>
                   <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${s.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
-                      s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
-                        'bg-white/10 text-white/30'
+                    s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
+                      'bg-white/10 text-white/30'
                     }`}>
                     {s.signal}
                   </span>
