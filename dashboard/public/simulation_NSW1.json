@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T17:34:20.688777",
+  "lastUpdated": "2025-12-27T17:45:07.086141",
   "region": "NSW1",
   "stats": {
     "current": 36.2,
-    "mean": 24.04,
+    "mean": 23.93,
     "min": -39.37,
     "max": 74.34,
-    "count": 576
+    "count": 573
   },
   "prices": [
-    {
-      "time": "19:20",
-      "fullDate": "2025-12-27 19:20:00",
-      "price": 36.2
-    },
-    {
-      "time": "19:25",
-      "fullDate": "2025-12-27 19:25:00",
-      "price": 36.2
-    },
     {
       "time": "19:30",
       "fullDate": "2025-12-27 19:30:00",
@@ -508,19 +498,19 @@
       "time": "03:35",
       "fullDate": "2025-12-28 03:35:00",
       "price": 36.2
+    },
+    {
+      "time": "03:40",
+      "fullDate": "2025-12-28 03:40:00",
+      "price": 36.27
+    },
+    {
+      "time": "03:45",
+      "fullDate": "2025-12-28 03:45:00",
+      "price": 36.2
     }
   ],
   "signals": [
-    {
-      "time": "02:00",
-      "price": 36.2,
-      "signal": "hold"
-    },
-    {
-      "time": "02:05",
-      "price": 36.2,
-      "signal": "hold"
-    },
     {
       "time": "02:10",
       "price": 36.41,
@@ -610,14 +600,24 @@
       "time": "03:35",
       "price": 36.2,
       "signal": "hold"
+    },
+    {
+      "time": "03:40",
+      "price": 36.27,
+      "signal": "hold"
+    },
+    {
+      "time": "03:45",
+      "price": 36.2,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 9272.37,
+      "profit": 9640.95,
       "charges": 53,
-      "discharges": 49
+      "discharges": 51
     },
     {
       "name": "Greedy",
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 22283.18,
-      "charges": 205,
-      "discharges": 205
+      "profit": 22152.99,
+      "charges": 203,
+      "discharges": 203
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 22283.18,
-  "annualizedProfit": 4066680.31,
+  "bestProfit": 22152.99,
+  "annualizedProfit": 4042920.25,
   "dataRange": {
-    "start": "2025-12-26 03:35:00",
-    "end": "2025-12-28 03:35:00",
+    "start": "2025-12-26 03:45:00",
+    "end": "2025-12-28 03:45:00",
     "days": 2
   }
 }
