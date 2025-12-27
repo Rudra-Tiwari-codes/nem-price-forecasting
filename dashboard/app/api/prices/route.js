@@ -29,7 +29,7 @@ async function getLatestZipLinks() {
     return links;
 }
 
-async function extractPricesFromZip(url) {
+async function extractPricesFromZip(url, region = 'SA1') {
     try {
         const response = await fetch(url);
         if (!response.ok) return [];
@@ -61,7 +61,7 @@ async function extractPricesFromZip(url) {
                 const regionId = parts[6];
                 const rrp = parseFloat(parts[7]) || 0;
 
-                if (regionId === 'SA1' && settlementDate) {
+                if (regionId === region && settlementDate) {
                     prices.push({
                         time: settlementDate,
                         region: regionId,
@@ -78,8 +78,21 @@ async function extractPricesFromZip(url) {
     }
 }
 
-export async function GET() {
+export async function GET(request) {
     try {
+        // Get region from query parameter, default to SA1
+        const { searchParams } = new URL(request.url);
+        const selectedRegion = searchParams.get('region') || 'SA1';
+        const validRegions = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
+
+        if (!validRegions.includes(selectedRegion)) {
+            return NextResponse.json({
+                error: `Invalid region. Valid regions: ${validRegions.join(', ')}`,
+                prices: [],
+                stats: null
+            }, { status: 400 });
+        }
+
         const zipLinks = await getLatestZipLinks();
 
         if (zipLinks.length === 0) {
@@ -88,7 +101,7 @@ export async function GET() {
 
         let allPrices = [];
         for (const url of zipLinks) {
-            const prices = await extractPricesFromZip(url);
+            const prices = await extractPricesFromZip(url, selectedRegion);
             allPrices.push(...prices);
         }
 
@@ -107,7 +120,7 @@ export async function GET() {
         const last100 = uniquePrices.slice(-100);
 
         if (last100.length === 0) {
-            return returnDemoData('No SA1 price data extracted from ' + zipLinks.length + ' files');
+            return returnDemoData('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
         }
 
         // Calculate EMA forecast
@@ -151,6 +164,7 @@ export async function GET() {
         return NextResponse.json({
             prices,
             stats,
+            region: selectedRegion,
             source: 'NEMWEB Live',
             filesProcessed: zipLinks.length,
             lastUpdated: new Date().toISOString()

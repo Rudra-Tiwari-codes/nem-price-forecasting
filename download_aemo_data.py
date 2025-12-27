@@ -12,12 +12,13 @@ import pandas as pd
 from pathlib import Path
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Optional, List
 
 BASE_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/"
 OUTPUT_DIR = Path(__file__).parent / "data"
 COMBINED_CSV = OUTPUT_DIR / "combined_dispatch_prices.csv"
 
-def get_zip_links(base_url: str) -> list[str]:
+def get_zip_links(base_url: str) -> List[str]:
     """Scrape the directory listing for all .zip file links."""
     print(f"Fetching file list from {base_url}")
     response = requests.get(base_url)
@@ -40,7 +41,7 @@ def get_zip_links(base_url: str) -> list[str]:
     return links
 
 
-def download_and_extract_zip(url: str) -> pd.DataFrame | None:
+def download_and_extract_zip(url: str) -> Optional[pd.DataFrame]:
     """Download a ZIP file and extract the price data from the CSV inside."""
     try:
         response = requests.get(url, timeout=30)

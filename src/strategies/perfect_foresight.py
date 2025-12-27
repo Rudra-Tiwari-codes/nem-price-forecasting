@@ -140,6 +140,10 @@ def run_perfect_foresight(
     """
     Run perfect foresight simulation on price data.
     
+    This strategy has complete knowledge of future prices, making it the
+    theoretical maximum profit achievable. Uses percentile-based thresholds
+    within a look-ahead window to identify optimal charge/discharge times.
+    
     Args:
         df: DataFrame with SETTLEMENTDATE and RRP columns
         capacity_mwh: Battery capacity
@@ -156,6 +160,7 @@ def run_perfect_foresight(
     efficiency_factor = np.sqrt(efficiency)
     
     n = len(prices)
+    look_ahead = min(288, n // 4)  # 24 hours or quarter of data
     
     # Initialize result arrays
     actions = np.full(n, 'hold', dtype=object)
@@ -167,28 +172,44 @@ def run_perfect_foresight(
     current_soc = 0.0
     total_profit = 0.0
     
-    # Simple forward-looking strategy
-    for i in range(n - 1):
+    for i in range(n):
         current_price = prices[i]
-        future_max = np.max(prices[i+1:min(i+50, n)])  # Look ahead 50 intervals (~4 hours)
-        future_min = np.min(prices[i+1:min(i+50, n)])
         
-        # Charge if current price is low relative to future
-        min_sell_price = current_price / efficiency + 10  # Need at least $10/MWh profit margin
+        # Look ahead window
+        end_idx = min(i + look_ahead, n)
+        if end_idx <= i + 1:
+            # Near end of data, just hold
+            soc[i] = current_soc
+            cumulative_profit[i] = total_profit
+            continue
         
-        if current_price <= future_min and current_soc < capacity_mwh:
-            # Good time to charge
-            charge_amount = min(max_energy, capacity_mwh - current_soc)
-            grid_energy = charge_amount / efficiency_factor
-            cost = grid_energy * current_price
-            
-            actions[i] = 'charge'
-            energy[i] = charge_amount
-            current_soc += charge_amount
-            profit[i] = -cost
-            
-        elif current_price >= future_max * 0.9 and current_soc > 0:
-            # Good time to sell (price is near future max)
+        future_prices = prices[i+1:end_idx]
+        
+        # Calculate percentiles of future prices
+        p20 = np.percentile(future_prices, 20)
+        p80 = np.percentile(future_prices, 80)
+        future_max = np.max(future_prices)
+        future_min = np.min(future_prices)
+        
+        # Minimum profitable spread after efficiency losses
+        min_spread = current_price * (1/efficiency - 1) + 5
+        
+        # Charge when price is in bottom 20% of future prices AND there is room
+        if current_price <= p20 and current_soc < capacity_mwh:
+            # Check if we can profit from charging now
+            potential_sell_price = p80
+            if potential_sell_price * efficiency > current_price:
+                charge_amount = min(max_energy, capacity_mwh - current_soc)
+                grid_energy = charge_amount / efficiency_factor
+                cost = grid_energy * current_price
+                
+                actions[i] = 'charge'
+                energy[i] = charge_amount
+                current_soc += charge_amount
+                profit[i] = -cost
+        
+        # Discharge when price is in top 20% AND we have energy
+        elif current_price >= p80 and current_soc > 0:
             discharge_amount = min(max_energy, current_soc)
             grid_energy = discharge_amount * efficiency_factor
             revenue = grid_energy * current_price
@@ -198,13 +219,32 @@ def run_perfect_foresight(
             current_soc -= discharge_amount
             profit[i] = revenue
         
+        # Also discharge if current price is near the maximum we will see
+        elif current_price >= future_max * 0.95 and current_soc > 0:
+            discharge_amount = min(max_energy, current_soc)
+            grid_energy = discharge_amount * efficiency_factor
+            revenue = grid_energy * current_price
+            
+            actions[i] = 'discharge'
+            energy[i] = discharge_amount
+            current_soc -= discharge_amount
+            profit[i] = revenue
+        
+        # Charge if current price is near the minimum we will see
+        elif current_price <= future_min * 1.05 and current_soc < capacity_mwh:
+            if future_max * efficiency > current_price:
+                charge_amount = min(max_energy, capacity_mwh - current_soc)
+                grid_energy = charge_amount / efficiency_factor
+                cost = grid_energy * current_price
+                
+                actions[i] = 'charge'
+                energy[i] = charge_amount
+                current_soc += charge_amount
+                profit[i] = -cost
+        
         soc[i] = current_soc
         total_profit += profit[i]
         cumulative_profit[i] = total_profit
-    
-    # Handle last interval
-    soc[-1] = current_soc
-    cumulative_profit[-1] = total_profit
     
     result = df.copy()
     result['action'] = actions
