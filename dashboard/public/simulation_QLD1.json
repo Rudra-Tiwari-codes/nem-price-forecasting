@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T16:45:53.966310",
+  "lastUpdated": "2025-12-27T16:55:53.217851",
   "region": "QLD1",
   "stats": {
-    "current": 34.75,
-    "mean": 23.85,
+    "current": 35.0,
+    "mean": 23.79,
     "min": -14.99,
     "max": 74.71,
-    "count": 575
+    "count": 577
   },
   "prices": [
-    {
-      "time": "18:30",
-      "fullDate": "2025-12-27 18:30:00",
-      "price": 38.03
-    },
-    {
-      "time": "18:35",
-      "fullDate": "2025-12-27 18:35:00",
-      "price": 35.47
-    },
     {
       "time": "18:40",
       "fullDate": "2025-12-27 18:40:00",
@@ -508,19 +498,19 @@
       "time": "02:45",
       "fullDate": "2025-12-28 02:45:00",
       "price": 34.75
+    },
+    {
+      "time": "02:50",
+      "fullDate": "2025-12-28 02:50:00",
+      "price": 34.75
+    },
+    {
+      "time": "02:55",
+      "fullDate": "2025-12-28 02:55:00",
+      "price": 35.0
     }
   ],
   "signals": [
-    {
-      "time": "01:10",
-      "price": 54.96,
-      "signal": "sell"
-    },
-    {
-      "time": "01:15",
-      "price": 54.96,
-      "signal": "sell"
-    },
     {
       "time": "01:20",
       "price": 54.96,
@@ -610,18 +600,28 @@
       "time": "02:45",
       "price": 34.75,
       "signal": "hold"
+    },
+    {
+      "time": "02:50",
+      "price": 34.75,
+      "signal": "hold"
+    },
+    {
+      "time": "02:55",
+      "price": 35.0,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 11813.87,
+      "profit": 11539.16,
       "charges": 61,
-      "discharges": 61
+      "discharges": 59
     },
     {
       "name": "Greedy",
-      "profit": 7623.34,
+      "profit": 7558.34,
       "charges": 33,
       "discharges": 33
     },
@@ -642,8 +642,8 @@
   "bestProfit": 24467.15,
   "annualizedProfit": 4465255.68,
   "dataRange": {
-    "start": "2025-12-26 02:45:00",
-    "end": "2025-12-28 02:45:00",
+    "start": "2025-12-26 02:55:00",
+    "end": "2025-12-28 02:55:00",
     "days": 2
   }
 }

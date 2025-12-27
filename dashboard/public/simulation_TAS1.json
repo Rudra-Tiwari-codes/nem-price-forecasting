@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T16:45:54.736398",
+  "lastUpdated": "2025-12-27T16:55:53.998795",
   "region": "TAS1",
   "stats": {
-    "current": 35.12,
+    "current": 35.18,
     "mean": 11.21,
     "min": -107.18,
     "max": 102.69,
-    "count": 575
+    "count": 577
   },
   "prices": [
-    {
-      "time": "18:30",
-      "fullDate": "2025-12-27 18:30:00",
-      "price": 35.12
-    },
-    {
-      "time": "18:35",
-      "fullDate": "2025-12-27 18:35:00",
-      "price": 35.06
-    },
     {
       "time": "18:40",
       "fullDate": "2025-12-27 18:40:00",
@@ -508,19 +498,19 @@
       "time": "02:45",
       "fullDate": "2025-12-28 02:45:00",
       "price": 35.12
+    },
+    {
+      "time": "02:50",
+      "fullDate": "2025-12-28 02:50:00",
+      "price": 35.18
+    },
+    {
+      "time": "02:55",
+      "fullDate": "2025-12-28 02:55:00",
+      "price": 35.18
     }
   ],
   "signals": [
-    {
-      "time": "01:10",
-      "price": 35.12,
-      "signal": "hold"
-    },
-    {
-      "time": "01:15",
-      "price": 35.12,
-      "signal": "hold"
-    },
     {
       "time": "01:20",
       "price": 35.12,
@@ -610,6 +600,16 @@
       "time": "02:45",
       "price": 35.12,
       "signal": "hold"
+    },
+    {
+      "time": "02:50",
+      "price": 35.18,
+      "signal": "hold"
+    },
+    {
+      "time": "02:55",
+      "price": 35.18,
+      "signal": "sell"
     }
   ],
   "strategies": [
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 27902.22,
-      "charges": 182,
-      "discharges": 182
+      "profit": 27897.51,
+      "charges": 181,
+      "discharges": 181
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 27902.22,
-  "annualizedProfit": 5092155.54,
+  "bestProfit": 27897.51,
+  "annualizedProfit": 5091295.63,
   "dataRange": {
-    "start": "2025-12-26 02:45:00",
-    "end": "2025-12-28 02:45:00",
+    "start": "2025-12-26 02:55:00",
+    "end": "2025-12-28 02:55:00",
     "days": 2
   }
 }
