@@ -1,39 +1,45 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar } from 'recharts';
 
-const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
 const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main';
 
 export default function Home() {
-  const [priceData, setPriceData] = useState([]);
-  const [stats, setStats] = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const [region, setRegion] = useState('SA1');
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [source, setSource] = useState('');
+  const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
     try {
-      const res = await fetch(`/api/prices?region=${region}`);
-      const data = await res.json();
-      setPriceData(data.prices || []);
-      setStats(data.stats || null);
-      setLastUpdated(data.lastUpdated ? new Date(data.lastUpdated) : new Date());
-      setSource(data.source || 'NEMWEB');
+      // First try local API (reads from public/simulation_results.json)
+      let res = await fetch('/api/simulation');
+
+      if (!res.ok) {
+        // Fallback to GitHub raw file
+        res = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_results.json`);
+      }
+
+      if (res.ok) {
+        const result = await res.json();
+        setData(result);
+        setError(null);
+      } else {
+        setError('Simulation results not available. The Python simulation needs to run first.');
+      }
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch data:', err);
+      setError('Failed to load simulation results. Please try again.');
       setLoading(false);
     }
-  }, [region]);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
     fetchData();
-    // Update every 30 seconds for more real-time feel
+    // Refresh every 30 seconds
     const interval = setInterval(fetchData, 30 * 1000);
     return () => clearInterval(interval);
   }, [fetchData]);
@@ -41,7 +47,31 @@ export default function Home() {
   if (!mounted || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
+        <div className="text-center">
+          <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-white/50 text-sm">Loading simulation results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8">
+        <div className="text-center max-w-md">
+          <h1 className="text-2xl font-light mb-4">NEM Analytics</h1>
+          <p className="text-white/50 mb-4">{error || 'No data available'}</p>
+          <p className="text-white/30 text-sm mb-6">
+            The Python simulation runs every 5 minutes via GitHub Actions.
+            Results will appear here once the first simulation completes.
+          </p>
+          <button
+            onClick={() => { setLoading(true); fetchData(); }}
+            className="px-4 py-2 border border-white/20 rounded hover:border-white/40 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -51,114 +81,110 @@ export default function Home() {
       <header className="mb-8 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-          <p className="text-white/40 text-sm mt-1">Real-time electricity market data</p>
+          <p className="text-white/40 text-sm mt-1">
+            Python Simulation Results | Region: {data.region}
+          </p>
         </div>
-        <div className="flex items-center gap-4">
-          <select
-            value={region}
-            onChange={(e) => { setRegion(e.target.value); setLoading(true); }}
-            className="bg-black border border-white/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/50"
-          >
-            {REGIONS.map(r => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
+        <div className="text-right">
+          <p className="text-xs text-white/30">Last Updated</p>
+          <p className="text-sm text-white/60">
+            {data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'Unknown'}
+          </p>
           <button
             onClick={() => { setLoading(true); fetchData(); }}
-            className="text-white/50 hover:text-white text-sm px-3 py-2 border border-white/20 rounded hover:border-white/40 transition-colors"
+            className="mt-2 text-xs text-white/50 hover:text-white px-2 py-1 border border-white/20 rounded hover:border-white/40 transition-colors"
           >
             Refresh
           </button>
         </div>
       </header>
 
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-          <Stat label="Current" value={stats.current?.toFixed(2)} highlight />
-          <Stat label="Average" value={stats.mean?.toFixed(2)} />
-          <Stat label="High" value={stats.max?.toFixed(2)} />
-          <Stat label="Low" value={stats.min?.toFixed(2)} />
+      {/* Stats Grid */}
+      {data.stats && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Stat label="Current Price" value={data.stats.current} highlight />
+          <Stat label="Average" value={data.stats.mean} />
+          <Stat label="High" value={data.stats.max} />
+          <Stat label="Low" value={data.stats.min} />
         </div>
       )}
 
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-sm text-white/40 uppercase tracking-widest">Price & Forecast</h2>
-        <div className="text-xs text-white/30">
-          {source} | {lastUpdated?.toLocaleTimeString()}
+      {/* Best Strategy Banner */}
+      {data.bestStrategy && (
+        <div className="mb-8 p-4 bg-white/5 rounded-lg border border-white/10">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-white/40 text-xs uppercase tracking-widest">Best Strategy</p>
+              <p className="text-xl font-light">{data.bestStrategy}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-white/40 text-xs uppercase tracking-widest">Total Profit</p>
+              <p className="text-xl font-light text-green-400">${data.bestProfit?.toLocaleString()}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-white/40 text-xs uppercase tracking-widest">Annualized</p>
+              <p className="text-xl font-light">${data.annualizedProfit?.toLocaleString()}/yr</p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      <section className="mb-10">
-        <div className="h-80 border border-white/10 rounded-lg p-4">
+      {/* Price Chart */}
+      <section className="mb-8">
+        <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Price History (Last 100 Intervals)</h2>
+        <div className="h-64 border border-white/10 rounded-lg p-4">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={priceData}>
-              <CartesianGrid stroke="#222" strokeDasharray="0" vertical={false} />
-              <XAxis
-                dataKey="time"
-                stroke="#444"
-                fontSize={11}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                stroke="#444"
-                fontSize={11}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(v) => `$${v}`}
-              />
+            <ComposedChart data={data.prices || []}>
+              <CartesianGrid stroke="#222" vertical={false} />
+              <XAxis dataKey="time" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+              <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
               <Tooltip
-                contentStyle={{
-                  background: '#111',
-                  border: '1px solid #333',
-                  borderRadius: 4,
-                  fontSize: 12
-                }}
-                labelStyle={{ color: '#666' }}
+                contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
               />
-              <Area
-                type="monotone"
-                dataKey="price"
-                stroke="none"
-                fill="#fff"
-                fillOpacity={0.05}
-              />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke="#fff"
-                strokeWidth={1.5}
-                dot={false}
-                name="Price"
-              />
-              <Line
-                type="monotone"
-                dataKey="forecast"
-                stroke="#666"
-                strokeWidth={1}
-                strokeDasharray="4 4"
-                dot={false}
-                name="EMA Forecast"
-              />
+              <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} />
+              <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
+      {/* Strategy Comparison */}
+      {data.strategies && data.strategies.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Strategy Comparison</h2>
+          <div className="h-48 border border-white/10 rounded-lg p-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.strategies} layout="vertical">
+                <CartesianGrid stroke="#222" horizontal={false} />
+                <XAxis type="number" stroke="#444" fontSize={10} tickFormatter={(v) => `$${v.toLocaleString()}`} />
+                <YAxis type="category" dataKey="name" stroke="#444" fontSize={10} width={120} />
+                <Tooltip
+                  contentStyle={{ background: '#111', border: '1px solid #333', fontSize: 11 }}
+                  formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
+                />
+                <Bar dataKey="profit" fill="#4ade80" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      )}
+
+      {/* Two Column Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        {/* Trading Signals */}
         <section>
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals</h2>
-          <div className="space-y-1">
-            {priceData.slice(-10).reverse().map((d, i) => (
-              <div key={i} className="flex justify-between items-center py-2 border-b border-white/5">
-                <span className="text-white/50 text-sm">{d.time}</span>
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals (Best Strategy)</h2>
+          <div className="space-y-1 max-h-64 overflow-y-auto">
+            {(data.signals || []).slice().reverse().map((s, i) => (
+              <div key={i} className="flex justify-between items-center py-2 px-3 bg-white/5 rounded">
+                <span className="text-white/50 text-sm">{s.time}</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-white/40 text-sm">${d.price?.toFixed(2)}</span>
-                  <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${d.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
-                      d.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
-                        'bg-white/5 text-white/30'
+                  <span className="text-white/40 text-sm">${s.price?.toFixed(2)}</span>
+                  <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${s.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
+                      s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
+                        'bg-white/10 text-white/30'
                     }`}>
-                    {d.signal || 'hold'}
+                    {s.signal}
                   </span>
                 </div>
               </div>
@@ -166,6 +192,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Analysis Charts */}
         <section>
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Analysis Charts</h2>
           <div className="grid grid-cols-2 gap-3">
@@ -174,12 +201,21 @@ export default function Home() {
             <ChartLink title="Volatility Analysis" href={`${GITHUB_RAW_URL}/charts/eda_volatility.png`} />
             <ChartLink title="Temporal Patterns" href={`${GITHUB_RAW_URL}/charts/eda_temporal_patterns.png`} />
           </div>
+
+          {data.dataRange && (
+            <div className="mt-4 p-3 bg-white/5 rounded text-xs text-white/40">
+              <p>Data Range: {data.dataRange.days} days</p>
+              <p className="truncate">From: {data.dataRange.start}</p>
+              <p className="truncate">To: {data.dataRange.end}</p>
+            </div>
+          )}
         </section>
       </div>
 
       <footer className="pt-8 border-t border-white/5">
         <p className="text-white/20 text-xs">
-          Data from AEMO NEMWEB. Auto-refreshes every 30 seconds. Region: {region}
+          Data from AEMO NEMWEB via Python simulation. Auto-refreshes every 30 seconds.
+          Source: {data.source || 'Python Simulation'}
         </p>
       </footer>
     </div>
@@ -188,9 +224,11 @@ export default function Home() {
 
 function Stat({ label, value, highlight }) {
   return (
-    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5' : ''}`}>
+    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5 border border-white/10' : ''}`}>
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{label}</p>
-      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>${value}</p>
+      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>
+        ${typeof value === 'number' ? value.toFixed(2) : value}
+      </p>
     </div>
   );
 }

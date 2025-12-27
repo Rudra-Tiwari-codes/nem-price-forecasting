@@ -158,6 +158,87 @@ def run_simulation(
         except Exception as e:
             print(f"  Warning: Could not generate charts: {e}")
     
+    # Export JSON results for dashboard
+    print_section("Exporting Dashboard Data")
+    try:
+        import json
+        from datetime import datetime
+        
+        dashboard_dir = Path(data_path).parent.parent / "dashboard" / "public"
+        dashboard_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Get recent price data for chart
+        recent_df = df.tail(100).copy()
+        recent_prices = []
+        for _, row in recent_df.iterrows():
+            ts = row['SETTLEMENTDATE']
+            time_str = ts.strftime('%H:%M') if hasattr(ts, 'strftime') else str(ts)[-8:-3]
+            recent_prices.append({
+                'time': time_str,
+                'fullDate': str(row['SETTLEMENTDATE']),
+                'price': round(float(row['RRP']), 2)
+            })
+        
+        # Strategy results summary
+        strategy_summary = []
+        for name, result_df in results.items():
+            profit = float(result_df['cumulative_profit'].iloc[-1])
+            charges = int((result_df['action'] == 'charge').sum())
+            discharges = int((result_df['action'] == 'discharge').sum())
+            strategy_summary.append({
+                'name': name.replace('_', ' ').title(),
+                'profit': round(profit, 2),
+                'charges': charges,
+                'discharges': discharges
+            })
+        
+        # Get trading signals from best strategy
+        signals = []
+        best_result = results[best_name].tail(20)
+        for _, row in best_result.iterrows():
+            ts = row['SETTLEMENTDATE']
+            time_str = ts.strftime('%H:%M') if hasattr(ts, 'strftime') else str(ts)[-8:-3]
+            action = row['action']
+            signal = 'buy' if action == 'charge' else ('sell' if action == 'discharge' else 'hold')
+            signals.append({
+                'time': time_str,
+                'price': round(float(row['RRP']), 2),
+                'signal': signal
+            })
+        
+        dashboard_data = {
+            'lastUpdated': datetime.now().isoformat(),
+            'region': region if region else 'ALL',
+            'stats': {
+                'current': round(float(df['RRP'].iloc[-1]), 2),
+                'mean': round(float(stats['mean']), 2),
+                'min': round(float(stats['min']), 2),
+                'max': round(float(stats['max']), 2),
+                'count': int(stats['count'])
+            },
+            'prices': recent_prices,
+            'signals': signals,
+            'strategies': strategy_summary,
+            'bestStrategy': best_name.replace('_', ' ').title(),
+            'bestProfit': round(best_profit, 2),
+            'annualizedProfit': round(annualized, 2),
+            'dataRange': {
+                'start': str(df['SETTLEMENTDATE'].min()),
+                'end': str(df['SETTLEMENTDATE'].max()),
+                'days': days
+            }
+        }
+        
+        output_path = dashboard_dir / "simulation_results.json"
+        with open(output_path, 'w') as f:
+            json.dump(dashboard_data, f, indent=2)
+        print(f"  Exported dashboard data to {output_path}")
+        
+    except Exception as e:
+        print(f"  Warning: Could not export dashboard data: {e}")
+        import traceback
+        traceback.print_exc()
+    
     if run_eda:
         print_section("Exploratory Data Analysis")
         try:
