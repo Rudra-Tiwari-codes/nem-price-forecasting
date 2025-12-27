@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-27T11:37:37.345818",
+  "lastUpdated": "2025-12-27T11:44:36.564865",
   "region": "TAS1",
   "stats": {
     "current": 35.14,
-    "mean": 10.02,
+    "mean": 10.07,
     "min": -107.18,
     "max": 102.69,
     "count": 576
   },
   "prices": [
-    {
-      "time": "13:25",
-      "fullDate": "2025-12-27 13:25:00",
-      "price": -4.03
-    },
     {
       "time": "13:30",
       "fullDate": "2025-12-27 13:30:00",
@@ -508,14 +503,14 @@
       "time": "21:40",
       "fullDate": "2025-12-27 21:40:00",
       "price": 35.14
+    },
+    {
+      "time": "21:45",
+      "fullDate": "2025-12-27 21:45:00",
+      "price": 35.14
     }
   ],
   "signals": [
-    {
-      "time": "20:05",
-      "price": 69.57,
-      "signal": "sell"
-    },
     {
       "time": "20:10",
       "price": 71.45,
@@ -610,6 +605,11 @@
       "time": "21:40",
       "price": 35.14,
       "signal": "hold"
+    },
+    {
+      "time": "21:45",
+      "price": 35.14,
+      "signal": "hold"
     }
   ],
   "strategies": [
@@ -621,9 +621,9 @@
     },
     {
       "name": "Greedy",
-      "profit": 8474.15,
-      "charges": 50,
-      "discharges": 50
+      "profit": 8099.75,
+      "charges": 49,
+      "discharges": 49
     },
     {
       "name": "Sliding Window",
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 28875.1,
-      "charges": 200,
-      "discharges": 200
+      "profit": 28924.3,
+      "charges": 201,
+      "discharges": 201
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 28875.1,
-  "annualizedProfit": 5269705.55,
+  "bestProfit": 28924.3,
+  "annualizedProfit": 5278683.93,
   "dataRange": {
-    "start": "2025-12-25 21:40:00",
-    "end": "2025-12-27 21:40:00",
+    "start": "2025-12-25 21:45:00",
+    "end": "2025-12-27 21:45:00",
     "days": 2
   }
 }
