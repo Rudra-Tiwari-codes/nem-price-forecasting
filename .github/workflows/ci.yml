@@ -56,7 +56,7 @@ jobs:
       
       - name: Run pytest
         run: |
-          python -m pytest tests/ -v --tb=short || true
+          python -m pytest tests/ -v --tb=short
 
   build:
     runs-on: ubuntu-latest
