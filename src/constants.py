@@ -22,4 +22,4 @@ NEGATIVE_THRESHOLD = 0.0  # $/MWh
 REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1']
 
 # Peak hours (7-10am and 5-9pm)
-PEAK_HOURS = [7, 8, 9, 17, 18, 19, 20]
+PEAK_HOURS = [7, 8, 9, 10, 17, 18, 19, 20]

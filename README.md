@@ -69,7 +69,7 @@ A simulation engine that:
 | Dynamic Programming | $63,914 | 255 | 255 |
 | Forecast Ema | $9,717 | 212 | 204 |
 
-**Key Insight:** Perfect Foresight provides the theoretical upper bound at $63,914. The greedy strategy achieves ~44% of optimal. Last updated: 2025-12-28 11:59 UTC. The greedy strategy achieves ~47% of optimal. Results vary based on data time range.
+**Key Insight:** Perfect Foresight provides the theoretical upper bound at $63,914. The greedy strategy achieves ~44% of optimal. Last updated: 2025-12-28 11:59 UTC.
 
 ---
 

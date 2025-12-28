@@ -63,7 +63,7 @@ def update_readme():
     try:
         dt = datetime.fromisoformat(last_updated.replace('Z', '+00:00'))
         date_str = dt.strftime('%Y-%m-%d %H:%M UTC')
-    except:
+    except (ValueError, TypeError):
         date_str = last_updated[:16]
     
     # Read current README
@@ -89,7 +89,7 @@ def update_readme():
             pct = (greedy_profit / pf_profit) * 100
             insight = f"**Key Insight:** Perfect Foresight provides the theoretical upper bound at ${pf_profit:,.0f}. The greedy strategy achieves ~{pct:.0f}% of optimal. Last updated: {date_str}."
             new_content = re.sub(
-                r'\*\*Key Insight:\*\*.*?\.(\s*Results vary.*?\.)?',
+                r'\*\*Key Insight:\*\*[^\n]*',
                 insight,
                 new_content
             )
