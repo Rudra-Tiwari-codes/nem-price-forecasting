@@ -21,5 +21,6 @@ NEGATIVE_THRESHOLD = 0.0  # $/MWh
 # NEM Regions
 REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1']
 
-# Peak hours (7-10am and 5-9pm)
+# Peak hours (7-10am and 5-9pm) - Used for peak/off-peak price analysis
+# TODO: Integrate into temporal_patterns() in eda.py for peak vs off-peak comparison
 PEAK_HOURS = [7, 8, 9, 10, 17, 18, 19, 20]

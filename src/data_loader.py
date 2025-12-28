@@ -9,6 +9,8 @@ import pandas as pd
 from pathlib import Path
 from typing import Optional, List
 
+from constants import SPIKE_THRESHOLD
+
 
 def load_dispatch_data(
     filepath: str,
@@ -101,8 +103,8 @@ def get_price_statistics(df: pd.DataFrame) -> dict:
         'max': rrp.max(),
         'negative_count': (rrp < 0).sum(),
         'negative_percent': (rrp < 0).mean() * 100,
-        'spike_count': (rrp > 300).sum(),  # Prices > $300/MWh
-        'spike_percent': (rrp > 300).mean() * 100,
+        'spike_count': (rrp > SPIKE_THRESHOLD).sum(),  # Prices > spike threshold
+        'spike_percent': (rrp > SPIKE_THRESHOLD).mean() * 100,
     }
 
 
