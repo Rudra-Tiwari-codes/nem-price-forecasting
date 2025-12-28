@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T07:35:26.225594",
+  "lastUpdated": "2025-12-28T07:44:22.308054",
   "region": "QLD1",
   "stats": {
-    "current": -2.13,
-    "mean": 13.59,
+    "current": 34.11,
+    "mean": 13.6,
     "min": -20.75,
     "max": 71.9,
     "count": 576
   },
   "prices": [
-    {
-      "time": "09:20",
-      "fullDate": "2025-12-28 09:20:00",
-      "price": -12.12
-    },
-    {
-      "time": "09:25",
-      "fullDate": "2025-12-28 09:25:00",
-      "price": -12.12
-    },
     {
       "time": "09:30",
       "fullDate": "2025-12-28 09:30:00",
@@ -508,19 +498,19 @@
       "time": "17:35",
       "fullDate": "2025-12-28 17:35:00",
       "price": -2.13
+    },
+    {
+      "time": "17:40",
+      "fullDate": "2025-12-28 17:40:00",
+      "price": 0.0
+    },
+    {
+      "time": "17:45",
+      "fullDate": "2025-12-28 17:45:00",
+      "price": 34.11
     }
   ],
   "signals": [
-    {
-      "time": "16:00",
-      "price": 0.0,
-      "signal": "sell"
-    },
-    {
-      "time": "16:05",
-      "price": -6.26,
-      "signal": "buy"
-    },
     {
       "time": "16:10",
       "price": -6.26,
@@ -610,13 +600,23 @@
       "time": "17:35",
       "price": -2.13,
       "signal": "buy"
+    },
+    {
+      "time": "17:40",
+      "price": 0.0,
+      "signal": "sell"
+    },
+    {
+      "time": "17:45",
+      "price": 34.11,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 8235.59,
-      "charges": 50,
+      "profit": 8237.08,
+      "charges": 52,
       "discharges": 28
     },
     {
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 18964.15,
-      "charges": 225,
-      "discharges": 211
+      "profit": 18874.86,
+      "charges": 224,
+      "discharges": 212
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 18964.15,
-  "annualizedProfit": 3460957.77,
+  "bestProfit": 18874.86,
+  "annualizedProfit": 3444661.89,
   "dataRange": {
-    "start": "2025-12-26 17:35:00",
-    "end": "2025-12-28 17:35:00",
+    "start": "2025-12-26 17:45:00",
+    "end": "2025-12-28 17:45:00",
     "days": 2
   }
 }
