@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T10:49:12.075360",
+  "lastUpdated": "2025-12-28T10:55:26.102489",
   "region": "NSW1",
   "stats": {
-    "current": 36.19,
-    "mean": 13.55,
+    "current": 57.3,
+    "mean": 13.63,
     "min": -27.0,
     "max": 74.34,
-    "count": 576
+    "count": 577
   },
   "prices": [
-    {
-      "time": "12:35",
-      "fullDate": "2025-12-28 12:35:00",
-      "price": -27.0
-    },
     {
       "time": "12:40",
       "fullDate": "2025-12-28 12:40:00",
@@ -508,14 +503,14 @@
       "time": "20:50",
       "fullDate": "2025-12-28 20:50:00",
       "price": 36.19
+    },
+    {
+      "time": "20:55",
+      "fullDate": "2025-12-28 20:55:00",
+      "price": 57.3
     }
   ],
   "signals": [
-    {
-      "time": "19:15",
-      "price": 57.3,
-      "signal": "sell"
-    },
     {
       "time": "19:20",
       "price": 57.06,
@@ -609,14 +604,19 @@
     {
       "time": "20:50",
       "price": 36.19,
-      "signal": "hold"
+      "signal": "buy"
+    },
+    {
+      "time": "20:55",
+      "price": 57.3,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 11263.91,
-      "charges": 54,
+      "profit": 11104.98,
+      "charges": 55,
       "discharges": 43
     },
     {
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23684.55,
-      "charges": 219,
-      "discharges": 219
+      "profit": 23765.64,
+      "charges": 220,
+      "discharges": 220
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 23684.55,
-  "annualizedProfit": 4322431.02,
+  "bestProfit": 23765.64,
+  "annualizedProfit": 4337229.23,
   "dataRange": {
-    "start": "2025-12-26 20:45:00",
-    "end": "2025-12-28 20:50:00",
+    "start": "2025-12-26 20:55:00",
+    "end": "2025-12-28 20:55:00",
     "days": 2
   }
 }
