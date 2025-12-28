@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Optional, Dict, List
 
 
-# Set style
-plt.style.use('seaborn-v0_8-whitegrid')
+# Set style - use ggplot for cross-version compatibility
+plt.style.use('ggplot')
 
 
 def plot_price_distribution(
