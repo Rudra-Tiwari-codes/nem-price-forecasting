@@ -165,7 +165,7 @@ export default function Home() {
       {/* Price Chart */}
       <section className="mb-8">
         <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
-          Price History - {selectedRegion} (Last 100 Intervals)
+          Price History - {selectedRegion} (Last 24 Hours)
         </h2>
         <div className="h-64 border border-white/10 rounded-lg p-4">
           <ResponsiveContainer width="100%" height="100%">
