@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar } from 'recharts';
 
 const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
-const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main';
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -15,28 +14,44 @@ export default function Home() {
 
   const fetchData = useCallback(async () => {
     try {
-      // Fetch region-specific simulation results from GitHub
-      const res = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_${selectedRegion}.json`);
+      // First try to fetch from our own API (live NEMWEB data)
+      const pricesRes = await fetch(`/api/prices?region=${selectedRegion}`);
 
-      if (res.ok) {
-        const result = await res.json();
-        setData(result);
+      if (pricesRes.ok) {
+        const pricesData = await pricesRes.json();
+
+        // Also try to get simulation results
+        const simRes = await fetch('/api/simulation');
+        let simData = null;
+        if (simRes.ok) {
+          simData = await simRes.json();
+        }
+
+        // Merge live prices with simulation data
+        setData({
+          ...simData,
+          prices: pricesData.prices || [],
+          stats: pricesData.stats || simData?.stats,
+          region: selectedRegion,
+          source: pricesData.source || 'API',
+          lastUpdated: pricesData.lastUpdated || new Date().toISOString()
+        });
         setError(null);
       } else {
-        // Fallback to old filename format
-        const fallbackRes = await fetch(`${GITHUB_RAW_URL}/dashboard/public/simulation_results.json`);
-        if (fallbackRes.ok) {
-          const result = await fallbackRes.json();
+        // Fallback to simulation API only
+        const simRes = await fetch('/api/simulation');
+        if (simRes.ok) {
+          const result = await simRes.json();
           setData(result);
           setError(null);
         } else {
-          setError(`Simulation results for ${selectedRegion} not available yet. The workflow needs to run first.`);
+          setError(`Data for ${selectedRegion} not available. Check API status.`);
         }
       }
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch data:', err);
-      setError('Failed to load simulation results. Please try again.');
+      setError('Failed to load data. Please try again.');
       setLoading(false);
     }
   }, [selectedRegion]);
@@ -65,7 +80,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white/50 text-sm">Loading {selectedRegion} simulation results...</p>
+          <p className="text-white/50 text-sm">Loading {selectedRegion} data...</p>
         </div>
       </div>
     );
@@ -77,14 +92,14 @@ export default function Home() {
         <header className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-            <p className="text-white/40 text-sm mt-1">Python Simulation Results</p>
+            <p className="text-white/40 text-sm mt-1">Live NEMWEB Data + Python Simulation</p>
           </div>
           <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
         </header>
         <div className="text-center max-w-md mx-auto mt-20">
           <p className="text-white/50 mb-4">{error || 'No data available'}</p>
           <p className="text-white/30 text-sm mb-6">
-            The Python simulation runs every 5 minutes via GitHub Actions.
+            Make sure the API routes are working and Python simulation has run.
           </p>
           <button
             onClick={() => { setLoading(true); fetchData(); }}
@@ -103,7 +118,7 @@ export default function Home() {
         <div>
           <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
           <p className="text-white/40 text-sm mt-1">
-            Python Simulation | {data.region || selectedRegion}
+            {data.source || 'Live Data'} | {data.region || selectedRegion}
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -191,9 +206,9 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* Trading Signals */}
         <section>
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals (Best Strategy)</h2>
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals</h2>
           <div className="space-y-1 max-h-64 overflow-y-auto">
-            {(data.signals || []).slice().reverse().map((s, i) => (
+            {(data.signals || data.prices?.slice(-20) || []).slice().reverse().map((s, i) => (
               <div key={i} className="flex justify-between items-center py-2 px-3 bg-white/5 rounded">
                 <span className="text-white/50 text-sm">{s.time}</span>
                 <div className="flex items-center gap-3">
@@ -202,7 +217,7 @@ export default function Home() {
                     s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
                       'bg-white/10 text-white/30'
                     }`}>
-                    {s.signal}
+                    {s.signal || 'hold'}
                   </span>
                 </div>
               </div>
@@ -210,30 +225,30 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Analysis Charts */}
+        {/* Data Info */}
         <section>
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Analysis Charts</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <ChartLink title="Price Distribution" href={`${GITHUB_RAW_URL}/charts/price_distribution.png`} />
-            <ChartLink title="Strategy Comparison" href={`${GITHUB_RAW_URL}/charts/strategy_comparison.png`} />
-            <ChartLink title="Volatility Analysis" href={`${GITHUB_RAW_URL}/charts/eda_volatility.png`} />
-            <ChartLink title="Temporal Patterns" href={`${GITHUB_RAW_URL}/charts/eda_temporal_patterns.png`} />
-          </div>
-
-          {data.dataRange && (
-            <div className="mt-4 p-3 bg-white/5 rounded text-xs text-white/40">
-              <p>Data Range: {data.dataRange.days} day(s)</p>
-              <p className="truncate">From: {data.dataRange.start}</p>
-              <p className="truncate">To: {data.dataRange.end}</p>
+          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Data Info</h2>
+          <div className="space-y-3">
+            <div className="p-3 bg-white/5 rounded text-xs text-white/40">
+              <p><strong>Source:</strong> {data.source || 'API'}</p>
+              <p><strong>Region:</strong> {data.region || selectedRegion}</p>
+              <p><strong>Data Points:</strong> {data.prices?.length || 0}</p>
             </div>
-          )}
+
+            {data.dataRange && (
+              <div className="p-3 bg-white/5 rounded text-xs text-white/40">
+                <p>Data Range: {data.dataRange.days} day(s)</p>
+                <p className="truncate">From: {data.dataRange.start}</p>
+                <p className="truncate">To: {data.dataRange.end}</p>
+              </div>
+            )}
+          </div>
         </section>
       </div>
 
       <footer className="pt-8 border-t border-white/5">
         <p className="text-white/20 text-xs">
-          Data from AEMO NEMWEB via Python simulation. Auto-refreshes every 60 seconds.
-          Source: Python Simulation ({selectedRegion})
+          Live data from AEMO NEMWEB via API. Simulation results from Python backend. Auto-refreshes every 60 seconds.
         </p>
       </footer>
     </div>
@@ -262,18 +277,5 @@ function Stat({ label, value, highlight }) {
         ${typeof value === 'number' ? value.toFixed(2) : value}
       </p>
     </div>
-  );
-}
-
-function ChartLink({ title, href }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block py-3 px-4 border border-white/10 rounded hover:border-white/30 transition-colors text-center"
-    >
-      <span className="text-sm text-white/70">{title}</span>
-    </a>
   );
 }
