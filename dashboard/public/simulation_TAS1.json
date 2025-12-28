@@ -1,24 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T19:43:20.017950",
+  "lastUpdated": "2025-12-28T19:53:52.682488",
   "region": "TAS1",
   "stats": {
-    "current": 39.33,
-    "mean": 27.28,
+    "current": 37.29,
+    "mean": 27.21,
     "min": -107.18,
     "max": 102.69,
-    "count": 577
+    "count": 571
   },
   "prices": [
-    {
-      "time": "21:30",
-      "fullDate": "2025-12-28 21:30:00",
-      "price": 38.1
-    },
-    {
-      "time": "21:35",
-      "fullDate": "2025-12-28 21:35:00",
-      "price": 38.14
-    },
     {
       "time": "21:40",
       "fullDate": "2025-12-28 21:40:00",
@@ -508,19 +498,19 @@
       "time": "05:45",
       "fullDate": "2025-12-29 05:45:00",
       "price": 39.33
+    },
+    {
+      "time": "05:50",
+      "fullDate": "2025-12-29 05:50:00",
+      "price": 39.33
+    },
+    {
+      "time": "05:55",
+      "fullDate": "2025-12-29 05:55:00",
+      "price": 37.29
     }
   ],
   "signals": [
-    {
-      "time": "04:10",
-      "price": 39.16,
-      "signal": "hold"
-    },
-    {
-      "time": "04:15",
-      "price": 39.33,
-      "signal": "hold"
-    },
     {
       "time": "04:20",
       "price": 39.33,
@@ -610,6 +600,16 @@
       "time": "05:45",
       "price": 39.33,
       "signal": "hold"
+    },
+    {
+      "time": "05:50",
+      "price": 39.33,
+      "signal": "hold"
+    },
+    {
+      "time": "05:55",
+      "price": 37.29,
+      "signal": "hold"
     }
   ],
   "strategies": [
@@ -621,9 +621,9 @@
     },
     {
       "name": "Greedy",
-      "profit": 8139.23,
-      "charges": 54,
-      "discharges": 54
+      "profit": 8029.83,
+      "charges": 53,
+      "discharges": 53
     },
     {
       "name": "Sliding Window",
@@ -639,8 +639,8 @@
     },
     {
       "name": "Forecast Ema",
-      "profit": 3094.68,
-      "charges": 164,
+      "profit": 3163.77,
+      "charges": 165,
       "discharges": 144
     }
   ],
@@ -648,8 +648,8 @@
   "bestProfit": 21522.24,
   "annualizedProfit": 3927808.0,
   "dataRange": {
-    "start": "2025-12-27 05:45:00",
-    "end": "2025-12-29 05:45:00",
+    "start": "2025-12-27 05:55:00",
+    "end": "2025-12-29 05:55:00",
     "days": 2
   }
 }
