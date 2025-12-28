@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T07:44:20.759653",
+  "lastUpdated": "2025-12-28T07:50:36.306169",
   "region": "NSW1",
   "stats": {
-    "current": 30.13,
-    "mean": 12.39,
+    "current": 48.39,
+    "mean": 12.48,
     "min": -27.0,
     "max": 74.34,
-    "count": 576
+    "count": 577
   },
   "prices": [
-    {
-      "time": "09:30",
-      "fullDate": "2025-12-28 09:30:00",
-      "price": -9.35
-    },
     {
       "time": "09:35",
       "fullDate": "2025-12-28 09:35:00",
@@ -508,14 +503,14 @@
       "time": "17:45",
       "fullDate": "2025-12-28 17:45:00",
       "price": 30.13
+    },
+    {
+      "time": "17:50",
+      "fullDate": "2025-12-28 17:50:00",
+      "price": 48.39
     }
   ],
   "signals": [
-    {
-      "time": "16:10",
-      "price": -5.32,
-      "signal": "buy"
-    },
     {
       "time": "16:15",
       "price": -3.0,
@@ -610,20 +605,25 @@
       "time": "17:45",
       "price": 30.13,
       "signal": "sell"
+    },
+    {
+      "time": "17:50",
+      "price": 48.39,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 8730.09,
-      "charges": 54,
-      "discharges": 30
+      "profit": 8459.18,
+      "charges": 52,
+      "discharges": 28
     },
     {
       "name": "Greedy",
-      "profit": 6601.94,
+      "profit": 6793.22,
       "charges": 48,
-      "discharges": 24
+      "discharges": 25
     },
     {
       "name": "Sliding Window",
@@ -633,17 +633,17 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 20099.5,
-      "charges": 222,
+      "profit": 20242.46,
+      "charges": 221,
       "discharges": 210
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 20099.5,
-  "annualizedProfit": 3668158.98,
+  "bestProfit": 20242.46,
+  "annualizedProfit": 3694248.73,
   "dataRange": {
     "start": "2025-12-26 17:45:00",
-    "end": "2025-12-28 17:45:00",
+    "end": "2025-12-28 17:50:00",
     "days": 2
   }
 }
