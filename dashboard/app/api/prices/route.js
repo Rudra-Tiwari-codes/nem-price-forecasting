@@ -109,6 +109,29 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
+        // First, try to use pre-generated simulation data (has 100 data points)
+        try {
+            const simUrl = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_${selectedRegion}.json`;
+            const simResponse = await fetch(simUrl, { next: { revalidate: 300 } });
+
+            if (simResponse.ok) {
+                const simData = await simResponse.json();
+                if (simData.prices && simData.prices.length > 0) {
+                    return NextResponse.json({
+                        prices: simData.prices,
+                        stats: simData.stats,
+                        region: selectedRegion,
+                        source: 'GitHub Simulation Data',
+                        filesProcessed: 0,
+                        lastUpdated: simData.lastUpdated || new Date().toISOString()
+                    });
+                }
+            }
+        } catch (simErr) {
+            console.log('Simulation data not available, falling back to NEMWEB:', simErr.message);
+        }
+
+        // Fallback: Try live NEMWEB scraping
         const zipLinks = await getLatestZipLinks();
 
         if (zipLinks.length === 0) {
