@@ -1,7 +1,6 @@
 {
-    "buildCommand": "npm run build",
-    "outputDirectory": ".next",
-    "installCommand": "npm install",
-    "framework": "nextjs",
-    "rootDirectory": "dashboard"
+    "buildCommand": "cd dashboard && npm run build",
+    "outputDirectory": "dashboard/.next",
+    "installCommand": "cd dashboard && npm install",
+    "framework": "nextjs"
 }
