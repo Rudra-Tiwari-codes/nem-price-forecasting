@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T07:50:38.401692",
+  "lastUpdated": "2025-12-28T07:56:13.725984",
   "region": "TAS1",
   "stats": {
     "current": 38.11,
-    "mean": 20.89,
+    "mean": 21.11,
     "min": -107.18,
     "max": 102.69,
-    "count": 577
+    "count": 572
   },
   "prices": [
-    {
-      "time": "09:35",
-      "fullDate": "2025-12-28 09:35:00",
-      "price": 18.32
-    },
     {
       "time": "09:40",
       "fullDate": "2025-12-28 09:40:00",
@@ -508,14 +503,14 @@
       "time": "17:50",
       "fullDate": "2025-12-28 17:50:00",
       "price": 38.11
+    },
+    {
+      "time": "17:55",
+      "fullDate": "2025-12-28 17:55:00",
+      "price": 38.11
     }
   ],
   "signals": [
-    {
-      "time": "16:15",
-      "price": 38.1,
-      "signal": "sell"
-    },
     {
       "time": "16:20",
       "price": 58.89,
@@ -610,12 +605,17 @@
       "time": "17:50",
       "price": 38.11,
       "signal": "sell"
+    },
+    {
+      "time": "17:55",
+      "price": 38.11,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 14102.84,
+      "profit": 14094.77,
       "charges": 81,
       "discharges": 64
     },
@@ -627,23 +627,23 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 5890.47,
-      "charges": 32,
-      "discharges": 33
+      "profit": 5598.79,
+      "charges": 30,
+      "discharges": 31
     },
     {
       "name": "Dynamic Programming",
-      "profit": 26440.18,
-      "charges": 173,
-      "discharges": 173
+      "profit": 26438.24,
+      "charges": 172,
+      "discharges": 172
     }
   ],
   "bestStrategy": "Dynamic Programming",
-  "bestProfit": 26440.18,
-  "annualizedProfit": 4825333.18,
+  "bestProfit": 26438.24,
+  "annualizedProfit": 4824978.29,
   "dataRange": {
-    "start": "2025-12-26 17:45:00",
-    "end": "2025-12-28 17:50:00",
+    "start": "2025-12-26 17:55:00",
+    "end": "2025-12-28 17:55:00",
     "days": 2
   }
 }
