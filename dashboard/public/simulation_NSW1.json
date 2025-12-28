@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T11:46:50.798738",
+  "lastUpdated": "2025-12-28T11:52:52.586292",
   "region": "NSW1",
   "stats": {
-    "current": 36.2,
-    "mean": 13.8,
+    "current": 35.44,
+    "mean": 13.75,
     "min": -27.0,
     "max": 74.34,
-    "count": 578
+    "count": 575
   },
   "prices": [
-    {
-      "time": "13:35",
-      "fullDate": "2025-12-28 13:35:00",
-      "price": -14.0
-    },
     {
       "time": "13:40",
       "fullDate": "2025-12-28 13:40:00",
@@ -508,14 +503,14 @@
       "time": "21:50",
       "fullDate": "2025-12-28 21:50:00",
       "price": 36.2
+    },
+    {
+      "time": "21:55",
+      "fullDate": "2025-12-28 21:55:00",
+      "price": 35.44
     }
   ],
   "signals": [
-    {
-      "time": "20:15",
-      "price": 56.99,
-      "signal": "sell"
-    },
     {
       "time": "20:20",
       "price": 50.64,
@@ -610,14 +605,19 @@
       "time": "21:50",
       "price": 36.2,
       "signal": "hold"
+    },
+    {
+      "time": "21:55",
+      "price": 35.44,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 23970.66,
-      "charges": 219,
-      "discharges": 219
+      "profit": 23847.2,
+      "charges": 218,
+      "discharges": 218
     },
     {
       "name": "Greedy",
@@ -633,23 +633,23 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23970.66,
-      "charges": 219,
-      "discharges": 219
+      "profit": 23847.2,
+      "charges": 218,
+      "discharges": 218
     },
     {
       "name": "Forecast Ema",
-      "profit": 8498.46,
+      "profit": 8202.18,
       "charges": 218,
-      "discharges": 217
+      "discharges": 216
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 23970.66,
-  "annualizedProfit": 4374644.94,
+  "bestProfit": 23847.2,
+  "annualizedProfit": 4352114.73,
   "dataRange": {
-    "start": "2025-12-26 21:45:00",
-    "end": "2025-12-28 21:50:00",
+    "start": "2025-12-26 21:55:00",
+    "end": "2025-12-28 21:55:00",
     "days": 2
   }
 }
