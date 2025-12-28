@@ -1,39 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T16:17:24.988225",
+  "lastUpdated": "2025-12-28T16:45:25.397415",
   "region": "TAS1",
   "stats": {
     "current": 41.04,
-    "mean": 25.74,
+    "mean": 26.1,
     "min": -107.18,
     "max": 102.69,
-    "count": 578
+    "count": 576
   },
   "prices": [
-    {
-      "time": "18:05",
-      "fullDate": "2025-12-28 18:05:00",
-      "price": 38.1
-    },
-    {
-      "time": "18:10",
-      "fullDate": "2025-12-28 18:10:00",
-      "price": 38.14
-    },
-    {
-      "time": "18:15",
-      "fullDate": "2025-12-28 18:15:00",
-      "price": 38.1
-    },
-    {
-      "time": "18:20",
-      "fullDate": "2025-12-28 18:20:00",
-      "price": 38.1
-    },
-    {
-      "time": "18:25",
-      "fullDate": "2025-12-28 18:25:00",
-      "price": 38.1
-    },
     {
       "time": "18:30",
       "fullDate": "2025-12-28 18:30:00",
@@ -508,34 +483,34 @@
       "time": "02:20",
       "fullDate": "2025-12-29 02:20:00",
       "price": 41.04
+    },
+    {
+      "time": "02:25",
+      "fullDate": "2025-12-29 02:25:00",
+      "price": 50.1
+    },
+    {
+      "time": "02:30",
+      "fullDate": "2025-12-29 02:30:00",
+      "price": 41.04
+    },
+    {
+      "time": "02:35",
+      "fullDate": "2025-12-29 02:35:00",
+      "price": 41.04
+    },
+    {
+      "time": "02:40",
+      "fullDate": "2025-12-29 02:40:00",
+      "price": 40.14
+    },
+    {
+      "time": "02:45",
+      "fullDate": "2025-12-29 02:45:00",
+      "price": 41.04
     }
   ],
   "signals": [
-    {
-      "time": "00:45",
-      "price": 20.6,
-      "signal": "buy"
-    },
-    {
-      "time": "00:50",
-      "price": 20.6,
-      "signal": "buy"
-    },
-    {
-      "time": "00:55",
-      "price": 38.1,
-      "signal": "sell"
-    },
-    {
-      "time": "01:00",
-      "price": 20.6,
-      "signal": "buy"
-    },
-    {
-      "time": "01:05",
-      "price": 20.18,
-      "signal": "buy"
-    },
     {
       "time": "01:10",
       "price": 20.21,
@@ -549,12 +524,12 @@
     {
       "time": "01:20",
       "price": 21.14,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "01:25",
       "price": 21.14,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "01:30",
@@ -610,46 +585,71 @@
       "time": "02:20",
       "price": 41.04,
       "signal": "sell"
+    },
+    {
+      "time": "02:25",
+      "price": 50.1,
+      "signal": "sell"
+    },
+    {
+      "time": "02:30",
+      "price": 41.04,
+      "signal": "sell"
+    },
+    {
+      "time": "02:35",
+      "price": 41.04,
+      "signal": "sell"
+    },
+    {
+      "time": "02:40",
+      "price": 40.14,
+      "signal": "sell"
+    },
+    {
+      "time": "02:45",
+      "price": 41.04,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 23595.22,
-      "charges": 142,
-      "discharges": 142
+      "profit": 23388.43,
+      "charges": 146,
+      "discharges": 146
     },
     {
       "name": "Greedy",
-      "profit": 8132.03,
+      "profit": 7921.99,
       "charges": 53,
       "discharges": 53
     },
     {
       "name": "Sliding Window",
-      "profit": 2342.37,
+      "profit": 2936.49,
       "charges": 12,
-      "discharges": 9
+      "discharges": 12
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23595.22,
-      "charges": 142,
-      "discharges": 142
+      "profit": 23388.43,
+      "charges": 146,
+      "discharges": 146
     },
     {
       "name": "Forecast Ema",
-      "profit": 4805.43,
-      "charges": 166,
-      "discharges": 150
+      "profit": 4820.87,
+      "charges": 167,
+      "discharges": 151
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 23595.22,
-  "annualizedProfit": 4306127.92,
+  "bestProfit": 23388.43,
+  "annualizedProfit": 4268389.31,
   "dataRange": {
-    "start": "2025-12-27 02:15:00",
-    "end": "2025-12-29 02:20:00",
+    "start": "2025-12-27 02:45:00",
+    "end": "2025-12-29 02:45:00",
     "days": 2
   }
 }
