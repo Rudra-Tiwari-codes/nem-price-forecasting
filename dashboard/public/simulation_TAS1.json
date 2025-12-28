@@ -1,19 +1,14 @@
 {
-  "lastUpdated": "2025-12-28T09:52:02.567252",
+  "lastUpdated": "2025-12-28T09:58:11.915542",
   "region": "TAS1",
   "stats": {
     "current": 38.1,
-    "mean": 22.43,
+    "mean": 22.46,
     "min": -107.18,
     "max": 102.69,
-    "count": 577
+    "count": 578
   },
   "prices": [
-    {
-      "time": "11:40",
-      "fullDate": "2025-12-28 11:40:00",
-      "price": 17.72
-    },
     {
       "time": "11:45",
       "fullDate": "2025-12-28 11:45:00",
@@ -508,14 +503,14 @@
       "time": "19:55",
       "fullDate": "2025-12-28 19:55:00",
       "price": 38.1
+    },
+    {
+      "time": "20:00",
+      "fullDate": "2025-12-28 20:00:00",
+      "price": 38.1
     }
   ],
   "signals": [
-    {
-      "time": "18:20",
-      "price": 38.1,
-      "signal": "hold"
-    },
     {
       "time": "18:25",
       "price": 38.1,
@@ -610,6 +605,11 @@
       "time": "19:55",
       "price": 38.1,
       "signal": "hold"
+    },
+    {
+      "time": "20:00",
+      "price": 38.1,
+      "signal": "hold"
     }
   ],
   "strategies": [
@@ -621,9 +621,9 @@
     },
     {
       "name": "Greedy",
-      "profit": 8043.53,
-      "charges": 46,
-      "discharges": 46
+      "profit": 7904.33,
+      "charges": 45,
+      "discharges": 45
     },
     {
       "name": "Sliding Window",
@@ -643,7 +643,7 @@
   "annualizedProfit": 4700269.72,
   "dataRange": {
     "start": "2025-12-26 19:55:00",
-    "end": "2025-12-28 19:55:00",
+    "end": "2025-12-28 20:00:00",
     "days": 2
   }
 }
