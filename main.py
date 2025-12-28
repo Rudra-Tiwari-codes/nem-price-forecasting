@@ -16,6 +16,7 @@ from strategies.perfect_foresight import run_perfect_foresight
 from strategies.greedy import run_greedy_strategy, optimize_thresholds
 from strategies.sliding_window import run_sliding_window_strategy, optimize_window_size
 from strategies.dynamic_programming import run_dp_strategy
+from forecasting import run_forecast_strategy, EMAPredictor
 from visualizer import generate_all_charts, plot_strategy_comparison
 import time
 
@@ -118,6 +119,13 @@ def run_simulation(
     start = time.perf_counter()
     results['dynamic_programming'] = run_dp_strategy(df, capacity_mwh, power_mw, efficiency)
     timings['dynamic_programming'] = time.perf_counter() - start
+    
+    # Forecast-Based Strategy (EMA)
+    print("  Running Forecast Strategy (EMA)...")
+    start = time.perf_counter()
+    predictor = EMAPredictor(span=12)
+    results['forecast_ema'] = run_forecast_strategy(df, predictor, capacity_mwh, power_mw, efficiency)
+    timings['forecast_ema'] = time.perf_counter() - start
     
     # Results summary
     print_section("Results Summary")
