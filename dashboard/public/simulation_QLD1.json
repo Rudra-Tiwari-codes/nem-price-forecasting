@@ -1,39 +1,14 @@
 {
-  "lastUpdated": "2025-12-29T23:14:24.507609",
+  "lastUpdated": "2025-12-29T23:32:22.960375",
   "region": "QLD1",
   "stats": {
-    "current": -14.99,
-    "mean": 22.7,
-    "min": -19.87,
+    "current": -23.25,
+    "mean": 22.5,
+    "min": -23.25,
     "max": 87.82,
-    "count": 574
+    "count": 575
   },
   "prices": [
-    {
-      "time": "00:55",
-      "fullDate": "2025-12-30 00:55:00",
-      "price": 54.53
-    },
-    {
-      "time": "01:00",
-      "fullDate": "2025-12-30 01:00:00",
-      "price": 54.96
-    },
-    {
-      "time": "01:05",
-      "fullDate": "2025-12-30 01:05:00",
-      "price": 54.76
-    },
-    {
-      "time": "01:10",
-      "fullDate": "2025-12-30 01:10:00",
-      "price": 54.96
-    },
-    {
-      "time": "01:15",
-      "fullDate": "2025-12-30 01:15:00",
-      "price": 54.96
-    },
     {
       "time": "01:20",
       "fullDate": "2025-12-30 01:20:00",
@@ -460,6 +435,11 @@
       "price": -12.12
     },
     {
+      "time": "08:25",
+      "fullDate": "2025-12-30 08:25:00",
+      "price": -12.12
+    },
+    {
       "time": "08:30",
       "fullDate": "2025-12-30 08:30:00",
       "price": -12.12
@@ -508,34 +488,29 @@
       "time": "09:15",
       "fullDate": "2025-12-30 09:15:00",
       "price": -14.99
+    },
+    {
+      "time": "09:20",
+      "fullDate": "2025-12-30 09:20:00",
+      "price": -14.99
+    },
+    {
+      "time": "09:25",
+      "fullDate": "2025-12-30 09:25:00",
+      "price": -14.99
+    },
+    {
+      "time": "09:30",
+      "fullDate": "2025-12-30 09:30:00",
+      "price": -14.99
+    },
+    {
+      "time": "09:35",
+      "fullDate": "2025-12-30 09:35:00",
+      "price": -23.25
     }
   ],
   "signals": [
-    {
-      "time": "07:35",
-      "price": -11.0,
-      "signal": "buy"
-    },
-    {
-      "time": "07:40",
-      "price": -12.12,
-      "signal": "buy"
-    },
-    {
-      "time": "07:45",
-      "price": -12.12,
-      "signal": "buy"
-    },
-    {
-      "time": "07:50",
-      "price": -12.12,
-      "signal": "buy"
-    },
-    {
-      "time": "07:55",
-      "price": -13.75,
-      "signal": "buy"
-    },
     {
       "time": "08:00",
       "price": -14.99,
@@ -562,9 +537,14 @@
       "signal": "buy"
     },
     {
+      "time": "08:25",
+      "price": -12.12,
+      "signal": "sell"
+    },
+    {
       "time": "08:30",
       "price": -12.12,
-      "signal": "buy"
+      "signal": "sell"
     },
     {
       "time": "08:35",
@@ -610,19 +590,39 @@
       "time": "09:15",
       "price": -14.99,
       "signal": "buy"
+    },
+    {
+      "time": "09:20",
+      "price": -14.99,
+      "signal": "buy"
+    },
+    {
+      "time": "09:25",
+      "price": -14.99,
+      "signal": "buy"
+    },
+    {
+      "time": "09:30",
+      "price": -14.99,
+      "signal": "buy"
+    },
+    {
+      "time": "09:35",
+      "price": -23.25,
+      "signal": "buy"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 23416.9,
-      "charges": 221,
-      "discharges": 201
+      "profit": 23473.25,
+      "charges": 220,
+      "discharges": 200
     },
     {
       "name": "Greedy",
-      "profit": 16141.27,
-      "charges": 68,
+      "profit": 16423.34,
+      "charges": 72,
       "discharges": 48
     },
     {
@@ -633,23 +633,23 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 23416.9,
-      "charges": 221,
-      "discharges": 201
+      "profit": 23473.25,
+      "charges": 220,
+      "discharges": 200
     },
     {
       "name": "Forecast Ema",
-      "profit": 1752.8,
-      "charges": 209,
-      "discharges": 186
+      "profit": 1598.45,
+      "charges": 203,
+      "discharges": 180
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 23416.9,
-  "annualizedProfit": 4273584.9,
+  "bestProfit": 23473.25,
+  "annualizedProfit": 4283867.73,
   "dataRange": {
-    "start": "2025-12-28 09:15:00",
-    "end": "2025-12-30 09:15:00",
+    "start": "2025-12-28 09:35:00",
+    "end": "2025-12-30 09:35:00",
     "days": 2
   }
 }
