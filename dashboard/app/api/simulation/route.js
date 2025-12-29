@@ -1,35 +1,20 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
 export async function GET(request) {
     try {
         // Get region from query parameter, default to SA1
         const { searchParams } = new URL(request.url);
         const region = searchParams.get('region') || 'SA1';
+        const validRegions = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
 
-        // Try region-specific file first (matches main.py output)
-        const regionPath = path.join(process.cwd(), 'public', `simulation_${region}.json`);
-
-        if (fs.existsSync(regionPath)) {
-            const data = JSON.parse(fs.readFileSync(regionPath, 'utf8'));
+        if (!validRegions.includes(region)) {
             return NextResponse.json({
-                ...data,
-                source: 'Python Simulation'
-            });
+                error: `Invalid region. Valid regions: ${validRegions.join(', ')}`,
+                source: 'error'
+            }, { status: 400 });
         }
 
-        // Fallback to SA1 if specific region not found
-        const sa1Path = path.join(process.cwd(), 'public', 'simulation_SA1.json');
-        if (fs.existsSync(sa1Path)) {
-            const data = JSON.parse(fs.readFileSync(sa1Path, 'utf8'));
-            return NextResponse.json({
-                ...data,
-                source: 'Python Simulation (SA1 fallback)'
-            });
-        }
-
-        // Fallback: try to fetch from GitHub if local file doesn't exist
+        // Fetch simulation data from GitHub (works on Vercel serverless)
         const githubUrl = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_${region}.json`;
         const response = await fetch(githubUrl, { next: { revalidate: 60 } });
 
@@ -41,14 +26,28 @@ export async function GET(request) {
             });
         }
 
+        // Fallback to SA1 if specific region not found
+        if (region !== 'SA1') {
+            const sa1Url = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_SA1.json`;
+            const sa1Response = await fetch(sa1Url, { next: { revalidate: 60 } });
+
+            if (sa1Response.ok) {
+                const data = await sa1Response.json();
+                return NextResponse.json({
+                    ...data,
+                    source: 'GitHub (SA1 fallback)'
+                });
+            }
+        }
+
         // If no simulation results available, return error
         return NextResponse.json({
-            error: 'Simulation results not available. Run python main.py first.',
+            error: 'Simulation results not available. GitHub Actions may still be running.',
             source: 'none'
         }, { status: 404 });
 
     } catch (error) {
-        console.error('Error reading simulation results:', error);
+        console.error('Error fetching simulation results:', error);
         return NextResponse.json({
             error: error.message,
             source: 'error'

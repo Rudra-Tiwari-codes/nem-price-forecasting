@@ -175,8 +175,8 @@ def run_simulation(
         dashboard_dir = Path(data_path).parent.parent / "dashboard" / "public"
         dashboard_dir.mkdir(parents=True, exist_ok=True)
         
-        # Get recent price data for chart (288 intervals = 24 hours at 5-min intervals)
-        recent_df = df.tail(288).copy()
+        # Get recent price data for chart (576 intervals = 48 hours at 5-min intervals)
+        recent_df = df.tail(576).copy()
         recent_prices = []
         for _, row in recent_df.iterrows():
             ts = row['SETTLEMENTDATE']
