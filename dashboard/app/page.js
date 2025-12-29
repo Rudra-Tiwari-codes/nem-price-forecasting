@@ -162,7 +162,7 @@ export default function Home() {
       {/* Price Chart - show skeleton when loading */}
       <section className="mb-8">
         <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
-          Price History - {selectedRegion} (Last 48 Hours) {data?.prices?.length ? `- ${data.prices.length} points` : ''}
+          Price History - {selectedRegion} (Last ~8 Hours) {data?.prices?.length ? `- ${data.prices.length} points` : ''}
         </h2>
         <div className="h-64 border border-white/10 rounded-lg p-4">
           {loading && !data ? (
@@ -228,8 +228,8 @@ export default function Home() {
                 <div className="flex items-center gap-3">
                   <span className="text-white/40 text-sm">${s.price?.toFixed(2)}</span>
                   <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${s.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
-                      s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
-                        'bg-white/10 text-white/30'
+                    s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
+                      'bg-white/10 text-white/30'
                     }`}>
                     {s.signal || 'hold'}
                   </span>
