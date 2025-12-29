@@ -156,18 +156,18 @@ export async function GET(request) {
             }
         }
 
-        const last576 = uniquePrices.slice(-576);
+        const last100 = uniquePrices.slice(-100);
 
-        if (last576.length === 0) {
+        if (last100.length === 0) {
             return returnDemoData('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
         }
 
         // Calculate EMA forecast
         const emaSpan = 12;
-        let ema = last576[0]?.price || 0;
+        let ema = last100[0]?.price || 0;
         const multiplier = 2 / (emaSpan + 1);
 
-        const prices = last576.map((d, i) => {
+        const prices = last100.map((d, i) => {
             if (i > 0) {
                 ema = (d.price - ema) * multiplier + ema;
             }
@@ -191,7 +191,7 @@ export async function GET(request) {
             };
         });
 
-        const priceValues = last576.map(d => d.price);
+        const priceValues = last100.map(d => d.price);
         const stats = {
             current: priceValues[priceValues.length - 1],
             mean: Math.round(priceValues.reduce((a, b) => a + b, 0) / priceValues.length * 100) / 100,
