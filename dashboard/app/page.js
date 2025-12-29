@@ -14,44 +14,55 @@ export default function Home() {
 
   const fetchData = useCallback(async () => {
     try {
-      // First try to fetch from our own API (live NEMWEB data)
-      const pricesRes = await fetch(`/api/prices?region=${selectedRegion}`);
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
+      // Fetch both APIs in parallel for faster loading
+      const [pricesRes, simRes] = await Promise.all([
+        fetch(`/api/prices?region=${selectedRegion}`, { signal: controller.signal }),
+        fetch(`/api/simulation?region=${selectedRegion}`, { signal: controller.signal })
+      ]);
+
+      clearTimeout(timeout);
+
+      let pricesData = null;
+      let simData = null;
 
       if (pricesRes.ok) {
-        const pricesData = await pricesRes.json();
+        pricesData = await pricesRes.json();
+      }
+      if (simRes.ok) {
+        simData = await simRes.json();
+      }
 
-        // Also try to get simulation results
-        const simRes = await fetch('/api/simulation');
-        let simData = null;
-        if (simRes.ok) {
-          simData = await simRes.json();
-        }
+      // Prefer prices data, fallback to simulation data
+      const prices = pricesData?.prices || simData?.prices || [];
+      const stats = pricesData?.stats || simData?.stats;
 
-        // Merge live prices with simulation data
+      if (prices.length > 0) {
         setData({
           ...simData,
-          prices: pricesData.prices || [],
-          stats: pricesData.stats || simData?.stats,
+          prices,
+          stats,
           region: selectedRegion,
-          source: pricesData.source || 'API',
-          lastUpdated: pricesData.lastUpdated || new Date().toISOString()
+          source: pricesData?.source || simData?.source || 'API',
+          lastUpdated: pricesData?.lastUpdated || simData?.lastUpdated || new Date().toISOString()
         });
         setError(null);
+        console.log(`Loaded ${prices.length} price points for ${selectedRegion}`);
       } else {
-        // Fallback to simulation API only
-        const simRes = await fetch('/api/simulation');
-        if (simRes.ok) {
-          const result = await simRes.json();
-          setData(result);
-          setError(null);
-        } else {
-          setError(`Data for ${selectedRegion} not available. Check API status.`);
-        }
+        setError(`No data available for ${selectedRegion}. Check API status.`);
       }
       setLoading(false);
     } catch (err) {
-      console.error('Failed to fetch data:', err);
-      setError('Failed to load data. Please try again.');
+      if (err.name === 'AbortError') {
+        console.error('Request timed out');
+        setError('Request timed out. Please try again.');
+      } else {
+        console.error('Failed to fetch data:', err);
+        setError('Failed to load data. Please try again.');
+      }
       setLoading(false);
     }
   }, [selectedRegion]);
@@ -165,15 +176,26 @@ export default function Home() {
       {/* Price Chart */}
       <section className="mb-8">
         <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
-          Price History - {selectedRegion} (Last 48 Hours)
+          Price History - {selectedRegion} (Last 48 Hours) - {data.prices?.length || 0} data points
         </h2>
         <div className="h-64 border border-white/10 rounded-lg p-4">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={data.prices || []}>
               <CartesianGrid stroke="#222" vertical={false} />
-              <XAxis dataKey="time" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+              <XAxis
+                dataKey="time"
+                stroke="#444"
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                interval={Math.floor((data.prices?.length || 1) / 12)}
+              />
               <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
-              <Tooltip contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }} formatter={(value) => [`$${value}`, 'Price']} />
+              <Tooltip
+                contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
+                formatter={(value) => [`$${value}`, 'Price']}
+                labelFormatter={(label, payload) => payload?.[0]?.payload?.fullDate || label}
+              />
               <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} legendType="none" tooltipType="none" />
               <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
             </ComposedChart>
