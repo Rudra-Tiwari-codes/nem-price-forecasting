@@ -8,7 +8,7 @@ actual profit values from the most recent simulation.
 import json
 import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def update_readme():
@@ -58,13 +58,8 @@ def update_readme():
     best_strategy = sa1_data.get('bestStrategy', 'Perfect Foresight')
     best_profit = sa1_data.get('bestProfit', 0)
     
-    # Format date
-    last_updated = sa1_data.get('lastUpdated', datetime.now().isoformat())
-    try:
-        dt = datetime.fromisoformat(last_updated.replace('Z', '+00:00'))
-        date_str = dt.strftime('%Y-%m-%d %H:%M UTC')
-    except (ValueError, TypeError):
-        date_str = last_updated[:16]
+    # Always use current UTC time for README timestamp
+    date_str = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
     
     # Read current README
     with open(readme_path, 'r', encoding='utf-8') as f:
