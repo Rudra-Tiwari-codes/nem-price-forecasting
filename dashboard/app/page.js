@@ -1,24 +1,52 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar, Line } from 'recharts';
 
 const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
+
+// Skeleton loader component
+function Skeleton({ className = '' }) {
+  return <div className={`animate-pulse bg-white/10 rounded ${className}`} />;
+}
+
+function RegionSelector({ selected, onChange }) {
+  return (
+    <select
+      value={selected}
+      onChange={(e) => onChange(e.target.value)}
+      className="bg-black border border-white/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/50"
+    >
+      {REGIONS.map(r => (
+        <option key={r} value={r}>{r}</option>
+      ))}
+    </select>
+  );
+}
+
+function Stat({ label, value, highlight }) {
+  return (
+    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5 border border-white/10' : ''}`}>
+      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{label}</p>
+      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>
+        ${typeof value === 'number' ? value.toFixed(2) : value}
+      </p>
+    </div>
+  );
+}
 
 export default function Home() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
   const [error, setError] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('SA1');
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     try {
-      // Create abort controller for timeout
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      const timeout = setTimeout(() => controller.abort(), 8000);
 
-      // Fetch both APIs in parallel for faster loading
       const [pricesRes, simRes] = await Promise.all([
         fetch(`/api/prices?region=${selectedRegion}`, { signal: controller.signal }),
         fetch(`/api/simulation?region=${selectedRegion}`, { signal: controller.signal })
@@ -29,14 +57,9 @@ export default function Home() {
       let pricesData = null;
       let simData = null;
 
-      if (pricesRes.ok) {
-        pricesData = await pricesRes.json();
-      }
-      if (simRes.ok) {
-        simData = await simRes.json();
-      }
+      if (pricesRes.ok) pricesData = await pricesRes.json();
+      if (simRes.ok) simData = await simRes.json();
 
-      // Prefer prices data, fallback to simulation data
       const prices = pricesData?.prices || simData?.prices || [];
       const stats = pricesData?.stats || simData?.stats;
 
@@ -50,111 +73,74 @@ export default function Home() {
           lastUpdated: pricesData?.lastUpdated || simData?.lastUpdated || new Date().toISOString()
         });
         setError(null);
-        console.log(`Loaded ${prices.length} price points for ${selectedRegion}`);
       } else {
-        setError(`No data available for ${selectedRegion}. Check API status.`);
+        setError(`No data for ${selectedRegion}`);
       }
-      setLoading(false);
     } catch (err) {
-      if (err.name === 'AbortError') {
-        console.error('Request timed out');
-        setError('Request timed out. Please try again.');
-      } else {
-        console.error('Failed to fetch data:', err);
-        setError('Failed to load data. Please try again.');
-      }
-      setLoading(false);
+      setError(err.name === 'AbortError' ? 'Timeout' : 'Failed to load');
     }
+    setLoading(false);
   }, [selectedRegion]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    fetchData();
+  }, [selectedRegion, fetchData]);
 
   useEffect(() => {
-    if (mounted) {
-      setLoading(true);
-      fetchData();
-    }
-  }, [mounted, selectedRegion, fetchData]);
+    const interval = setInterval(fetchData, 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
-  useEffect(() => {
-    if (mounted) {
-      // Refresh every 60 seconds
-      const interval = setInterval(fetchData, 60 * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [mounted, fetchData]);
-
-  if (!mounted || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white/50 text-sm">Loading {selectedRegion} data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="min-h-screen p-8">
-        <header className="mb-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-            <p className="text-white/40 text-sm mt-1">Live NEMWEB Data + Python Simulation</p>
-          </div>
-          <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
-        </header>
-        <div className="text-center max-w-md mx-auto mt-20">
-          <p className="text-white/50 mb-4">{error || 'No data available'}</p>
-          <p className="text-white/30 text-sm mb-6">
-            Make sure the API routes are working and Python simulation has run.
-          </p>
-          <button
-            onClick={() => { setLoading(true); fetchData(); }}
-            className="px-4 py-2 border border-white/20 rounded hover:border-white/40 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  // Always render the UI immediately - no blocking loading screen
   return (
     <div className="min-h-screen p-8 max-w-6xl mx-auto">
       <header className="mb-8 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
           <p className="text-white/40 text-sm mt-1">
-            {data.source || 'Live Data'} | {data.region || selectedRegion}
+            {loading ? 'Loading...' : (data?.source || 'API')} | {selectedRegion}
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <RegionSelector selected={selectedRegion} onChange={(r) => { setSelectedRegion(r); setLoading(true); }} />
+          <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
           <div className="text-right">
             <p className="text-xs text-white/30">Last Updated</p>
             <p className="text-sm text-white/60">
-              {data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'Unknown'}
+              {data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : '--'}
             </p>
           </div>
         </div>
       </header>
 
-      {/* Stats Grid */}
-      {data.stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Stat label="Current Price" value={data.stats.current} highlight />
-          <Stat label="Average" value={data.stats.mean} />
-          <Stat label="High" value={data.stats.max} />
-          <Stat label="Low" value={data.stats.min} />
+      {/* Error Banner (non-blocking) */}
+      {error && !loading && (
+        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={fetchData} className="text-xs underline">Retry</button>
         </div>
       )}
 
+      {/* Stats Grid - show skeleton when loading */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {loading && !data ? (
+          <>
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </>
+        ) : data?.stats ? (
+          <>
+            <Stat label="Current Price" value={data.stats.current} highlight />
+            <Stat label="Average" value={data.stats.mean} />
+            <Stat label="High" value={data.stats.max} />
+            <Stat label="Low" value={data.stats.min} />
+          </>
+        ) : null}
+      </div>
+
       {/* Best Strategy Banner */}
-      {data.bestStrategy && (
+      {data?.bestStrategy && (
         <div className="mb-8 p-4 bg-white/5 rounded-lg border border-white/10">
           <div className="flex flex-wrap justify-between items-center gap-4">
             <div>
@@ -173,38 +159,44 @@ export default function Home() {
         </div>
       )}
 
-      {/* Price Chart */}
+      {/* Price Chart - show skeleton when loading */}
       <section className="mb-8">
         <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
-          Price History - {selectedRegion} (Last 48 Hours) - {data.prices?.length || 0} data points
+          Price History - {selectedRegion} (Last 48 Hours) {data?.prices?.length ? `- ${data.prices.length} points` : ''}
         </h2>
         <div className="h-64 border border-white/10 rounded-lg p-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data.prices || []}>
-              <CartesianGrid stroke="#222" vertical={false} />
-              <XAxis
-                dataKey="time"
-                stroke="#444"
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
-                interval={Math.floor((data.prices?.length || 1) / 12)}
-              />
-              <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
-              <Tooltip
-                contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
-                formatter={(value) => [`$${value}`, 'Price']}
-                labelFormatter={(label, payload) => payload?.[0]?.payload?.fullDate || label}
-              />
-              <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} legendType="none" tooltipType="none" />
-              <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
-            </ComposedChart>
-          </ResponsiveContainer>
+          {loading && !data ? (
+            <Skeleton className="w-full h-full" />
+          ) : data?.prices?.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={data.prices}>
+                <CartesianGrid stroke="#222" vertical={false} />
+                <XAxis
+                  dataKey="time"
+                  stroke="#444"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                  interval={Math.floor((data.prices?.length || 1) / 12)}
+                />
+                <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
+                <Tooltip
+                  contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
+                  formatter={(value) => [`$${value}`, 'Price']}
+                  labelFormatter={(label, payload) => payload?.[0]?.payload?.fullDate || label}
+                />
+                <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} />
+                <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-white/30">No chart data</div>
+          )}
         </div>
       </section>
 
       {/* Strategy Comparison */}
-      {data.strategies && data.strategies.length > 0 && (
+      {data?.strategies?.length > 0 && (
         <section className="mb-8">
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Strategy Comparison</h2>
           <div className="h-48 border border-white/10 rounded-lg p-4">
@@ -230,14 +222,14 @@ export default function Home() {
         <section>
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals</h2>
           <div className="space-y-1 max-h-64 overflow-y-auto">
-            {(data.signals || data.prices?.slice(-20) || []).slice().reverse().map((s, i) => (
+            {(data?.signals || data?.prices?.slice(-20) || []).slice().reverse().map((s, i) => (
               <div key={i} className="flex justify-between items-center py-2 px-3 bg-white/5 rounded">
                 <span className="text-white/50 text-sm">{s.time}</span>
                 <div className="flex items-center gap-3">
                   <span className="text-white/40 text-sm">${s.price?.toFixed(2)}</span>
                   <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${s.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
-                    s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
-                      'bg-white/10 text-white/30'
+                      s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
+                        'bg-white/10 text-white/30'
                     }`}>
                     {s.signal || 'hold'}
                   </span>
@@ -252,12 +244,11 @@ export default function Home() {
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Data Info</h2>
           <div className="space-y-3">
             <div className="p-3 bg-white/5 rounded text-xs text-white/40">
-              <p><strong>Source:</strong> {data.source || 'API'}</p>
-              <p><strong>Region:</strong> {data.region || selectedRegion}</p>
-              <p><strong>Data Points:</strong> {data.prices?.length || 0}</p>
+              <p><strong>Source:</strong> {data?.source || 'API'}</p>
+              <p><strong>Region:</strong> {data?.region || selectedRegion}</p>
+              <p><strong>Data Points:</strong> {data?.prices?.length || 0}</p>
             </div>
-
-            {data.dataRange && (
+            {data?.dataRange && (
               <div className="p-3 bg-white/5 rounded text-xs text-white/40">
                 <p>Data Range: {data.dataRange.days} day(s)</p>
                 <p className="truncate">From: {data.dataRange.start}</p>
@@ -273,31 +264,6 @@ export default function Home() {
           Live data from AEMO NEMWEB via API. Simulation results from Python backend. Auto-refreshes every 60 seconds.
         </p>
       </footer>
-    </div>
-  );
-}
-
-function RegionSelector({ selected, onChange }) {
-  return (
-    <select
-      value={selected}
-      onChange={(e) => onChange(e.target.value)}
-      className="bg-black border border-white/20 rounded px-3 py-2 text-sm focus:outline-none focus:border-white/50"
-    >
-      {REGIONS.map(r => (
-        <option key={r} value={r}>{r}</option>
-      ))}
-    </select>
-  );
-}
-
-function Stat({ label, value, highlight }) {
-  return (
-    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5 border border-white/10' : ''}`}>
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{label}</p>
-      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>
-        ${typeof value === 'number' ? value.toFixed(2) : value}
-      </p>
     </div>
   );
 }
