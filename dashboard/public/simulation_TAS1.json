@@ -1,49 +1,14 @@
 {
-  "lastUpdated": "2025-12-30T18:21:46.728357",
+  "lastUpdated": "2025-12-30T18:53:34.596822",
   "region": "TAS1",
   "stats": {
-    "current": 39.12,
-    "mean": 37.35,
+    "current": 15.88,
+    "mean": 37.15,
     "min": 0.04,
     "max": 350.02,
-    "count": 573
+    "count": 575
   },
   "prices": [
-    {
-      "time": "20:05",
-      "fullDate": "2025-12-30 20:05:00",
-      "price": 42.14
-    },
-    {
-      "time": "20:10",
-      "fullDate": "2025-12-30 20:10:00",
-      "price": 43.14
-    },
-    {
-      "time": "20:15",
-      "fullDate": "2025-12-30 20:15:00",
-      "price": 53.1
-    },
-    {
-      "time": "20:20",
-      "fullDate": "2025-12-30 20:20:00",
-      "price": 66.14
-    },
-    {
-      "time": "20:25",
-      "fullDate": "2025-12-30 20:25:00",
-      "price": 53.1
-    },
-    {
-      "time": "20:30",
-      "fullDate": "2025-12-30 20:30:00",
-      "price": 53.1
-    },
-    {
-      "time": "20:35",
-      "fullDate": "2025-12-30 20:35:00",
-      "price": 83.84
-    },
     {
       "time": "20:40",
       "fullDate": "2025-12-30 20:40:00",
@@ -508,44 +473,44 @@
       "time": "04:20",
       "fullDate": "2025-12-31 04:20:00",
       "price": 39.12
+    },
+    {
+      "time": "04:25",
+      "fullDate": "2025-12-31 04:25:00",
+      "price": 0.08
+    },
+    {
+      "time": "04:30",
+      "fullDate": "2025-12-31 04:30:00",
+      "price": 32.35
+    },
+    {
+      "time": "04:35",
+      "fullDate": "2025-12-31 04:35:00",
+      "price": 32.3
+    },
+    {
+      "time": "04:40",
+      "fullDate": "2025-12-31 04:40:00",
+      "price": 32.61
+    },
+    {
+      "time": "04:45",
+      "fullDate": "2025-12-31 04:45:00",
+      "price": 32.72
+    },
+    {
+      "time": "04:50",
+      "fullDate": "2025-12-31 04:50:00",
+      "price": 15.88
+    },
+    {
+      "time": "04:55",
+      "fullDate": "2025-12-31 04:55:00",
+      "price": 15.88
     }
   ],
   "signals": [
-    {
-      "time": "02:45",
-      "price": 39.14,
-      "signal": "sell"
-    },
-    {
-      "time": "02:50",
-      "price": 39.14,
-      "signal": "sell"
-    },
-    {
-      "time": "02:55",
-      "price": 39.14,
-      "signal": "sell"
-    },
-    {
-      "time": "03:00",
-      "price": 39.14,
-      "signal": "sell"
-    },
-    {
-      "time": "03:05",
-      "price": 23.38,
-      "signal": "buy"
-    },
-    {
-      "time": "03:10",
-      "price": 23.54,
-      "signal": "buy"
-    },
-    {
-      "time": "03:15",
-      "price": 23.54,
-      "signal": "hold"
-    },
     {
       "time": "03:20",
       "price": 24.58,
@@ -594,12 +559,12 @@
     {
       "time": "04:05",
       "price": 23.87,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "04:10",
       "price": 23.86,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "04:15",
@@ -610,46 +575,81 @@
       "time": "04:20",
       "price": 39.12,
       "signal": "sell"
+    },
+    {
+      "time": "04:25",
+      "price": 0.08,
+      "signal": "buy"
+    },
+    {
+      "time": "04:30",
+      "price": 32.35,
+      "signal": "sell"
+    },
+    {
+      "time": "04:35",
+      "price": 32.3,
+      "signal": "sell"
+    },
+    {
+      "time": "04:40",
+      "price": 32.61,
+      "signal": "sell"
+    },
+    {
+      "time": "04:45",
+      "price": 32.72,
+      "signal": "sell"
+    },
+    {
+      "time": "04:50",
+      "price": 15.88,
+      "signal": "hold"
+    },
+    {
+      "time": "04:55",
+      "price": 15.88,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 15308.51,
-      "charges": 133,
-      "discharges": 133
+      "profit": 15560.77,
+      "charges": 137,
+      "discharges": 137
     },
     {
       "name": "Greedy",
-      "profit": 5613.26,
-      "charges": 73,
-      "discharges": 56
+      "profit": 4836.3,
+      "charges": 83,
+      "discharges": 60
     },
     {
       "name": "Sliding Window",
-      "profit": 3730.65,
+      "profit": 3730.57,
       "charges": 19,
       "discharges": 19
     },
     {
       "name": "Dynamic Programming",
-      "profit": 15308.51,
-      "charges": 133,
-      "discharges": 133
+      "profit": 15560.77,
+      "charges": 137,
+      "discharges": 137
     },
     {
       "name": "Forecast Ema",
-      "profit": 3892.17,
-      "charges": 170,
-      "discharges": 153
+      "profit": 4459.84,
+      "charges": 173,
+      "discharges": 156
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 15308.51,
-  "annualizedProfit": 5587605.39,
+  "bestProfit": 15560.77,
+  "annualizedProfit": 2839840.56,
   "dataRange": {
-    "start": "2025-12-29 04:25:00",
-    "end": "2025-12-31 04:20:00",
-    "days": 1
+    "start": "2025-12-29 04:55:00",
+    "end": "2025-12-31 04:55:00",
+    "days": 2
   }
 }
