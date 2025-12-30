@@ -1,39 +1,14 @@
 {
-  "lastUpdated": "2025-12-30T16:50:14.934210",
+  "lastUpdated": "2025-12-30T17:15:31.215000",
   "region": "TAS1",
   "stats": {
-    "current": 39.14,
-    "mean": 37.77,
+    "current": 23.54,
+    "mean": 37.68,
     "min": 0.04,
     "max": 350.02,
-    "count": 570
+    "count": 577
   },
   "prices": [
-    {
-      "time": "18:35",
-      "fullDate": "2025-12-30 18:35:00",
-      "price": 42.14
-    },
-    {
-      "time": "18:40",
-      "fullDate": "2025-12-30 18:40:00",
-      "price": 49.47
-    },
-    {
-      "time": "18:45",
-      "fullDate": "2025-12-30 18:45:00",
-      "price": 48.94
-    },
-    {
-      "time": "18:50",
-      "fullDate": "2025-12-30 18:50:00",
-      "price": 49.55
-    },
-    {
-      "time": "18:55",
-      "fullDate": "2025-12-30 18:55:00",
-      "price": 50.31
-    },
     {
       "time": "19:00",
       "fullDate": "2025-12-30 19:00:00",
@@ -508,34 +483,34 @@
       "time": "02:50",
       "fullDate": "2025-12-31 02:50:00",
       "price": 39.14
+    },
+    {
+      "time": "02:55",
+      "fullDate": "2025-12-31 02:55:00",
+      "price": 39.14
+    },
+    {
+      "time": "03:00",
+      "fullDate": "2025-12-31 03:00:00",
+      "price": 39.14
+    },
+    {
+      "time": "03:05",
+      "fullDate": "2025-12-31 03:05:00",
+      "price": 23.38
+    },
+    {
+      "time": "03:10",
+      "fullDate": "2025-12-31 03:10:00",
+      "price": 23.54
+    },
+    {
+      "time": "03:15",
+      "fullDate": "2025-12-31 03:15:00",
+      "price": 23.54
     }
   ],
   "signals": [
-    {
-      "time": "01:15",
-      "price": 38.14,
-      "signal": "hold"
-    },
-    {
-      "time": "01:20",
-      "price": 39.14,
-      "signal": "hold"
-    },
-    {
-      "time": "01:25",
-      "price": 39.14,
-      "signal": "hold"
-    },
-    {
-      "time": "01:30",
-      "price": 39.14,
-      "signal": "hold"
-    },
-    {
-      "time": "01:35",
-      "price": 39.14,
-      "signal": "hold"
-    },
     {
       "time": "01:40",
       "price": 37.78,
@@ -594,12 +569,12 @@
     {
       "time": "02:35",
       "price": 39.14,
-      "signal": "sell"
+      "signal": "hold"
     },
     {
       "time": "02:40",
       "price": 39.14,
-      "signal": "sell"
+      "signal": "hold"
     },
     {
       "time": "02:45",
@@ -610,46 +585,71 @@
       "time": "02:50",
       "price": 39.14,
       "signal": "sell"
+    },
+    {
+      "time": "02:55",
+      "price": 39.14,
+      "signal": "sell"
+    },
+    {
+      "time": "03:00",
+      "price": 39.14,
+      "signal": "sell"
+    },
+    {
+      "time": "03:05",
+      "price": 23.38,
+      "signal": "hold"
+    },
+    {
+      "time": "03:10",
+      "price": 23.54,
+      "signal": "hold"
+    },
+    {
+      "time": "03:15",
+      "price": 23.54,
+      "signal": "hold"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 14947.15,
-      "charges": 130,
-      "discharges": 130
+      "profit": 15003.28,
+      "charges": 131,
+      "discharges": 131
     },
     {
       "name": "Greedy",
-      "profit": 5902.87,
-      "charges": 58,
+      "profit": 5557.47,
+      "charges": 61,
       "discharges": 51
     },
     {
       "name": "Sliding Window",
-      "profit": 2949.09,
+      "profit": 3421.22,
       "charges": 19,
-      "discharges": 14
+      "discharges": 17
     },
     {
       "name": "Dynamic Programming",
-      "profit": 14947.15,
-      "charges": 130,
-      "discharges": 130
+      "profit": 15003.28,
+      "charges": 131,
+      "discharges": 131
     },
     {
       "name": "Forecast Ema",
-      "profit": 3939.95,
-      "charges": 166,
-      "discharges": 154
+      "profit": 3860.55,
+      "charges": 171,
+      "discharges": 155
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 14947.15,
-  "annualizedProfit": 2727855.32,
+  "bestProfit": 15003.28,
+  "annualizedProfit": 2738098.9,
   "dataRange": {
-    "start": "2025-12-29 02:45:00",
-    "end": "2025-12-31 02:50:00",
+    "start": "2025-12-29 03:15:00",
+    "end": "2025-12-31 03:15:00",
     "days": 2
   }
 }
