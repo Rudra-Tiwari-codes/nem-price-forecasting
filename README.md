@@ -63,13 +63,13 @@ A simulation engine that:
 
 | Strategy | Profit | Charge Cycles | Discharge Cycles |
 |----------|--------|---------------|------------------|
-| Perfect Foresight | $52,174 | 250 | 230 |
-| Greedy | $9,272 | 45 | 21 |
-| Sliding Window | $1,507 | 6 | 6 |
-| Dynamic Programming | $52,174 | 250 | 230 |
-| Forecast Ema | $1,286 | 207 | 185 |
+| Perfect Foresight | $52,812 | 250 | 230 |
+| Greedy | $6,809 | 40 | 16 |
+| Sliding Window | $1,898 | 7 | 6 |
+| Dynamic Programming | $52,812 | 250 | 230 |
+| Forecast Ema | $1,789 | 204 | 180 |
 
-**Key Insight:** Perfect Foresight provides the theoretical upper bound at $52,174. The greedy strategy achieves ~18% of optimal. Last updated: 2025-12-30 22:36 UTC.
+**Key Insight:** Perfect Foresight provides the theoretical upper bound at $52,812. The greedy strategy achieves ~13% of optimal. Last updated: 2025-12-30 22:52 UTC.
 
 ---
 
