@@ -1,29 +1,14 @@
 {
-  "lastUpdated": "2025-12-30T09:45:50.657799",
+  "lastUpdated": "2025-12-30T09:56:23.553825",
   "region": "QLD1",
   "stats": {
     "current": 79.99,
-    "mean": 24.59,
+    "mean": 24.79,
     "min": -23.7,
     "max": 120.0,
-    "count": 577
+    "count": 578
   },
   "prices": [
-    {
-      "time": "11:30",
-      "fullDate": "2025-12-30 11:30:00",
-      "price": -20.2
-    },
-    {
-      "time": "11:35",
-      "fullDate": "2025-12-30 11:35:00",
-      "price": -14.99
-    },
-    {
-      "time": "11:40",
-      "fullDate": "2025-12-30 11:40:00",
-      "price": -23.56
-    },
     {
       "time": "11:45",
       "fullDate": "2025-12-30 11:45:00",
@@ -508,24 +493,24 @@
       "time": "19:45",
       "fullDate": "2025-12-30 19:45:00",
       "price": 79.99
+    },
+    {
+      "time": "19:50",
+      "fullDate": "2025-12-30 19:50:00",
+      "price": 79.99
+    },
+    {
+      "time": "19:55",
+      "fullDate": "2025-12-30 19:55:00",
+      "price": 79.99
+    },
+    {
+      "time": "20:00",
+      "fullDate": "2025-12-30 20:00:00",
+      "price": 79.99
     }
   ],
   "signals": [
-    {
-      "time": "18:10",
-      "price": 84.46,
-      "signal": "sell"
-    },
-    {
-      "time": "18:15",
-      "price": 79.99,
-      "signal": "sell"
-    },
-    {
-      "time": "18:20",
-      "price": 81.53,
-      "signal": "sell"
-    },
     {
       "time": "18:25",
       "price": 98.73,
@@ -604,10 +589,25 @@
     {
       "time": "19:40",
       "price": 79.99,
-      "signal": "sell"
+      "signal": "hold"
     },
     {
       "time": "19:45",
+      "price": 79.99,
+      "signal": "hold"
+    },
+    {
+      "time": "19:50",
+      "price": 79.99,
+      "signal": "hold"
+    },
+    {
+      "time": "19:55",
+      "price": 79.99,
+      "signal": "sell"
+    },
+    {
+      "time": "20:00",
       "price": 79.99,
       "signal": "sell"
     }
@@ -639,8 +639,8 @@
     },
     {
       "name": "Forecast Ema",
-      "profit": -106.85,
-      "charges": 194,
+      "profit": -1160.81,
+      "charges": 197,
       "discharges": 191
     }
   ],
@@ -648,8 +648,8 @@
   "bestProfit": 26478.39,
   "annualizedProfit": 4832305.28,
   "dataRange": {
-    "start": "2025-12-28 19:45:00",
-    "end": "2025-12-30 19:45:00",
+    "start": "2025-12-28 19:55:00",
+    "end": "2025-12-30 20:00:00",
     "days": 2
   }
 }
