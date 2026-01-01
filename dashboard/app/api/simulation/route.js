@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 export async function GET(request) {
     try {
@@ -14,7 +16,26 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
-        // Fetch simulation data from GitHub (works on Vercel serverless)
+        // In development, try local files first (more up-to-date than GitHub)
+        const isDev = process.env.NODE_ENV === 'development';
+
+        if (isDev) {
+            try {
+                const publicPath = join(process.cwd(), 'public', `simulation_${region}.json`);
+                if (existsSync(publicPath)) {
+                    const fileContent = readFileSync(publicPath, 'utf-8');
+                    const data = JSON.parse(fileContent);
+                    return NextResponse.json({
+                        ...data,
+                        source: 'Local Simulation Data'
+                    });
+                }
+            } catch (localErr) {
+                console.log('Local file read failed, falling back to GitHub:', localErr.message);
+            }
+        }
+
+        // Fallback: Fetch simulation data from GitHub (works on Vercel serverless)
         const githubUrl = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_${region}.json`;
         const response = await fetch(githubUrl, { next: { revalidate: 60 } });
 
@@ -22,7 +43,7 @@ export async function GET(request) {
             const data = await response.json();
             return NextResponse.json({
                 ...data,
-                source: 'GitHub (Python Simulation)'
+                source: 'GitHub Simulation Data'
             });
         }
 
@@ -54,3 +75,4 @@ export async function GET(request) {
         }, { status: 500 });
     }
 }
+
