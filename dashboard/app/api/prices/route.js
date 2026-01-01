@@ -135,7 +135,7 @@ export async function GET(request) {
         const zipLinks = await getLatestZipLinks();
 
         if (zipLinks.length === 0) {
-            return returnDemoData('No dispatch files found on NEMWEB');
+            return returnDataError('No dispatch files found on NEMWEB');
         }
 
         let allPrices = [];
@@ -159,7 +159,7 @@ export async function GET(request) {
         const last100 = uniquePrices.slice(-100);
 
         if (last100.length === 0) {
-            return returnDemoData('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
+            return returnDataError('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
         }
 
         // Calculate EMA forecast
@@ -211,37 +211,17 @@ export async function GET(request) {
 
     } catch (error) {
         console.error('NEMWEB Scraper Error:', error);
-        return returnDemoData(error.message);
+        return returnDataError(error.message);
     }
 }
 
-function returnDemoData(reason) {
-    const now = Date.now();
-    const prices = Array.from({ length: 50 }, (_, i) => {
-        const timestamp = now - (50 - i) * 5 * 60 * 1000;
-        const date = new Date(timestamp);
-        const hours = String(date.getHours()).padStart(2, '0');
-        const mins = String(date.getMinutes()).padStart(2, '0');
-        const basePrice = 100 + Math.sin(i / 5) * 30 + (i % 10);
-        return {
-            time: `${hours}:${mins}`,
-            price: Math.round(basePrice * 100) / 100,
-            forecast: Math.round((basePrice + 5 - (i % 10)) * 100) / 100,
-            signal: i % 5 === 0 ? 'buy' : i % 7 === 0 ? 'sell' : 'hold'
-        };
-    });
-
+function returnDataError(reason) {
+    // Return proper HTTP error instead of masking failures with fake data
     return NextResponse.json({
-        prices,
-        stats: {
-            current: prices[prices.length - 1].price,
-            mean: 105.5,
-            min: 70,
-            max: 150,
-            count: 50
-        },
-        source: 'Demo Data',
-        reason,
-        lastUpdated: new Date().toISOString()
-    });
+        error: 'Unable to fetch real-time price data',
+        reason: reason,
+        suggestion: 'Please try again later or check if AEMO NEMWEB is accessible',
+        timestamp: new Date().toISOString()
+    }, { status: 503 });
 }
+
