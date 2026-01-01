@@ -148,11 +148,16 @@ def run_simulation(
     print(f"\n  Best Strategy: {best_name.replace('_', ' ').title()}")
     print(f"     Total Profit: ${best_profit:,.2f}")
     
-    # Calculate annualized ROI
+    # Calculate annualized ROI (only if we have enough data to extrapolate)
     date_range = df['SETTLEMENTDATE'].max() - df['SETTLEMENTDATE'].min()
     days = date_range.days if hasattr(date_range, 'days') else 1
-    annualized = (best_profit / max(days, 1)) * 365
-    print(f"     Annualized: ${annualized:,.0f}/year")
+    # Only show annualized if we have at least 7 days of data, otherwise it's unreliable
+    if days >= 7:
+        annualized = (best_profit / max(days, 1)) * 365
+        print(f"     Annualized: ${annualized:,.0f}/year")
+    else:
+        annualized = None  # Not enough data to extrapolate
+        print(f"     Annualized: N/A (only {days} days of data, need 7+ for reliable estimate)")
     
     # Generate charts
     if generate_charts:
@@ -229,7 +234,7 @@ def run_simulation(
             'strategies': strategy_summary,
             'bestStrategy': best_name.replace('_', ' ').title(),
             'bestProfit': round(best_profit, 2),
-            'annualizedProfit': round(annualized, 2),
+            'annualizedProfit': round(annualized, 2) if annualized is not None else None,
             'dataRange': {
                 'start': str(df['SETTLEMENTDATE'].min()),
                 'end': str(df['SETTLEMENTDATE'].max()),

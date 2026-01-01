@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar, Line } from 'recharts';
 
 const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
@@ -96,8 +97,13 @@ export default function Home() {
     <div className="min-h-screen p-8 max-w-6xl mx-auto">
       <header className="mb-8 flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-          <p className="text-white/40 text-sm mt-1">
+          <div className="flex items-center gap-4 mb-1">
+            <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
+            <Link href="/predictions" className="text-sm text-white/50 hover:text-white/80 border border-white/20 hover:border-white/40 px-3 py-1 rounded transition-colors">
+              Predictions →
+            </Link>
+          </div>
+          <p className="text-white/40 text-sm">
             {loading ? 'Loading...' : (data?.source || 'API')} | {selectedRegion}
           </p>
         </div>
@@ -153,7 +159,12 @@ export default function Home() {
             </div>
             <div className="text-right">
               <p className="text-white/40 text-xs uppercase tracking-widest">Annualized</p>
-              <p className="text-xl font-light">${data.annualizedProfit?.toLocaleString()}/yr</p>
+              <p className="text-xl font-light">
+                {data.annualizedProfit != null
+                  ? `$${data.annualizedProfit.toLocaleString()}/yr`
+                  : <span className="text-white/40 text-sm">N/A (limited data)</span>
+                }
+              </p>
             </div>
           </div>
         </div>
