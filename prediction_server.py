@@ -32,9 +32,13 @@ app = FastAPI(
 )
 
 # Enable CORS for dashboard
+# In production, set ALLOWED_ORIGINS to your frontend URL
+origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+origins = [origin.strip() for origin in origins_env.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +56,7 @@ def load_data() -> pd.DataFrame:
     """Load price data from CSV."""
     if not os.path.exists(DATA_FILE):
         raise FileNotFoundError(f"Data file not found: {DATA_FILE}")
-    
+
     df = pd.read_csv(DATA_FILE)
     df["SETTLEMENTDATE"] = pd.to_datetime(df["SETTLEMENTDATE"])
     return df
@@ -67,23 +71,23 @@ def get_region_prices(df: pd.DataFrame, region: str) -> np.ndarray:
 
 def train_models():
     """Train XGBoost models for all regions."""
-    global models, last_train_time
-    
+    global last_train_time
+
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Training models...")
-    
+
     df = load_data()
-    
+
     for region in REGIONS:
         prices = get_region_prices(df, region)
         if len(prices) < LOOKBACK + 10:
             print(f"  Skipping {region}: insufficient data ({len(prices)} points)")
             continue
-        
+
         model = XGBoostPredictor(lookback=LOOKBACK, n_estimators=100)
         model.fit_predict(prices)
         models[region] = model
         print(f"  Trained {region} model on {len(prices)} data points")
-    
+
     last_train_time = datetime.now()
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Training complete")
 
@@ -91,7 +95,7 @@ def train_models():
 def load_predictions_history():
     """Load prediction history from file."""
     global predictions_history
-    
+
     if os.path.exists(PREDICTIONS_FILE):
         with open(PREDICTIONS_FILE, "r") as f:
             predictions_history = json.load(f)
@@ -110,18 +114,18 @@ def update_errors(region: str, df: pd.DataFrame, current_time: datetime):
     """Update error calculations for past predictions using actual prices at target times."""
     if region not in predictions_history:
         return
-    
+
     # Get the region's data with timestamps
     region_df = df[df["REGIONID"] == region].copy()
     region_df = region_df.sort_values("SETTLEMENTDATE")
-    
+
     updated = False
     for pred in predictions_history[region]:
         if pred.get("actual") is not None:
             continue  # Already has actual price
-        
+
         pred_time = datetime.fromisoformat(pred["target_time"])
-        
+
         # Check if we now have the actual price for this prediction
         if pred_time <= current_time:
             # Find the price at or closest to the target time
@@ -129,21 +133,21 @@ def update_errors(region: str, df: pd.DataFrame, current_time: datetime):
             mask = (region_df["SETTLEMENTDATE"] >= pred_time - timedelta(minutes=5)) & \
                    (region_df["SETTLEMENTDATE"] <= pred_time + timedelta(minutes=5))
             matching_prices = region_df[mask]
-            
+
             if len(matching_prices) > 0:
                 # Get the price closest to the target time
                 closest_idx = (matching_prices["SETTLEMENTDATE"] - pred_time).abs().idxmin()
                 actual_price = float(matching_prices.loc[closest_idx, "RRP"])
                 pred["actual"] = actual_price
                 pred["actual_time"] = str(matching_prices.loc[closest_idx, "SETTLEMENTDATE"])
-                
+
                 if actual_price != 0:
                     pred["error_percent"] = abs(pred["predicted"] - actual_price) / abs(actual_price) * 100
                 else:
                     pred["error_percent"] = 0.0
                 pred["updated_at"] = datetime.now().isoformat()
                 updated = True
-    
+
     if updated:
         # Keep only last 100 predictions per region
         predictions_history[region] = predictions_history[region][-100:]
@@ -171,35 +175,35 @@ async def root():
 async def get_predictions(region: str):
     """Get current prediction for a region."""
     region = region.upper()
-    
+
     if region not in REGIONS:
         raise HTTPException(status_code=400, detail=f"Invalid region. Use one of: {REGIONS}")
-    
+
     if region not in models:
         raise HTTPException(status_code=503, detail=f"Model for {region} not loaded. Try again later.")
-    
+
     # Load latest data
     df = load_data()
     prices = get_region_prices(df, region)
-    
+
     if len(prices) < LOOKBACK:
         raise HTTPException(status_code=503, detail=f"Insufficient data for {region}")
-    
+
     # Get current time and price
     region_df = df[df["REGIONID"] == region].sort_values("SETTLEMENTDATE")
     current_time = region_df["SETTLEMENTDATE"].iloc[-1]
     current_price = float(prices[-1])
-    
+
     # Make prediction for T+15min
     model = models[region]
     recent_prices = prices[-LOOKBACK:]
     predicted_price = model.predict_next(recent_prices)
-    
+
     target_time = current_time + timedelta(minutes=15)
-    
+
     # Update any pending predictions with actual values
     update_errors(region, df, current_time)
-    
+
     # Store this prediction (with deduplication check)
     prediction_record = {
         "prediction_time": datetime.now().isoformat(),
@@ -209,22 +213,22 @@ async def get_predictions(region: str):
         "actual": None,
         "error_percent": None
     }
-    
+
     if region not in predictions_history:
         predictions_history[region] = []
-    
+
     # Check if we already have a prediction for this target time (avoid duplicates)
     existing_target_times = {p["target_time"] for p in predictions_history[region]}
     if target_time.isoformat() not in existing_target_times:
         predictions_history[region].append(prediction_record)
         save_predictions_history()
-    
+
     # Get pending predictions (waiting for actual price)
     pending = [p for p in predictions_history[region] if p.get("actual") is None]
-    
+
     # Get recent completed predictions with errors
     completed = [p for p in predictions_history[region] if p.get("actual") is not None][-20:]
-    
+
     return {
         "region": region,
         "current_price": current_price,
@@ -245,21 +249,21 @@ async def get_predictions(region: str):
 async def get_accuracy(region: str):
     """Get accuracy metrics for a region."""
     region = region.upper()
-    
+
     if region not in REGIONS:
         raise HTTPException(status_code=400, detail=f"Invalid region. Use one of: {REGIONS}")
-    
+
     completed = [p for p in predictions_history.get(region, []) if p.get("error_percent") is not None]
-    
+
     if not completed:
         return {
             "region": region,
             "total_predictions": 0,
             "message": "No completed predictions yet. Wait for actual prices to arrive."
         }
-    
+
     errors = [p["error_percent"] for p in completed]
-    
+
     return {
         "region": region,
         "total_predictions": len(completed),
