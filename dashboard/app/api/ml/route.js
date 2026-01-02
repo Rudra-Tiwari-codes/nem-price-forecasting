@@ -60,7 +60,7 @@ export async function GET(request) {
             accuracy: null,
             region: region,
             source: 'none',
-            error: 'No predictions available. Run python main.py or python src/ml_forecasting.py first.',
+            error: 'No predictions available. Ensure prediction_server.py is running and accessible.',
             lastUpdated: new Date().toISOString()
         }, { status: 200 });
 

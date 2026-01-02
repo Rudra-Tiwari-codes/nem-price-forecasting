@@ -18,6 +18,7 @@ export async function GET() {
 
         // In development, try local files first (more up-to-date than GitHub)
         const isDev = process.env.NODE_ENV === 'development';
+        const githubBaseUrl = process.env.NEXT_PUBLIC_GITHUB_DATA_URL || 'https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public';
 
         if (isDev) {
             try {
@@ -36,7 +37,7 @@ export async function GET() {
         }
 
         // Fallback: Fetch simulation data from GitHub (works on Vercel serverless)
-        const githubUrl = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_${region}.json`;
+        const githubUrl = `${githubBaseUrl}/simulation_${region}.json`;
         const response = await fetch(githubUrl, { next: { revalidate: 60 } });
 
         if (response.ok) {
@@ -49,7 +50,7 @@ export async function GET() {
 
         // Fallback to SA1 if specific region not found
         if (region !== 'SA1') {
-            const sa1Url = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_SA1.json`;
+            const sa1Url = `${githubBaseUrl}/simulation_SA1.json`;
             const sa1Response = await fetch(sa1Url, { next: { revalidate: 60 } });
 
             if (sa1Response.ok) {
