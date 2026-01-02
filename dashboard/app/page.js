@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart, BarChart, Bar, Line } from 'recharts';
 
@@ -41,6 +41,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('SA1');
+  const fetchDataRef = useRef(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -83,14 +84,19 @@ export default function Home() {
     setLoading(false);
   }, [selectedRegion]);
 
+  // Keep ref updated with latest fetchData
   useEffect(() => {
-    fetchData();
-  }, [selectedRegion, fetchData]);
-
-  useEffect(() => {
-    const interval = setInterval(fetchData, 60 * 1000);
-    return () => clearInterval(interval);
+    fetchDataRef.current = fetchData;
   }, [fetchData]);
+
+  // Initial fetch and polling interval
+  useEffect(() => {
+    fetchData(); // eslint-disable-line react-hooks/set-state-in-effect
+    const interval = setInterval(() => {
+      fetchDataRef.current?.();
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, [selectedRegion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Always render the UI immediately - no blocking loading screen
   return (
