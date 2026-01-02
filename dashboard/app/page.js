@@ -105,9 +105,6 @@ export default function Home() {
         <div>
           <div className="flex items-center gap-4 mb-1">
             <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
-            <Link href="/predictions" className="text-sm text-white/50 hover:text-white/80 border border-white/20 hover:border-white/40 px-3 py-1 rounded transition-colors">
-              Predictions →
-            </Link>
           </div>
           <p className="text-white/40 text-sm">
             {loading ? 'Loading...' : (data?.source || 'API')} | {selectedRegion}

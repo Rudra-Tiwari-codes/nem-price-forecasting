@@ -21,9 +21,6 @@ export default function RootLayout({ children }) {
             <Link href="/" className="text-white/60 hover:text-white transition-colors">
               Dashboard
             </Link>
-            <Link href="/predictions" className="text-white/60 hover:text-white transition-colors">
-              Predictions
-            </Link>
           </div>
         </nav>
         {children}
