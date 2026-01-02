@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nem-prediction-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python prediction_server.py
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: https://nem-price-forecasting.vercel.app
+      - key: PYTHON_VERSION
+        value: "3.11"
