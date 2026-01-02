@@ -7,7 +7,6 @@ Tests the core trading strategies to ensure correct behavior.
 import pytest
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 
 
 @pytest.fixture
@@ -23,7 +22,7 @@ def sample_price_df():
     prices[40] = -20  # negative price
     prices[60] = 500  # big spike
     prices[80] = 50   # low price
-    
+
     return pd.DataFrame({
         'SETTLEMENTDATE': dates,
         'RRP': prices,
@@ -33,22 +32,22 @@ def sample_price_df():
 
 class TestBattery:
     """Tests for Battery class."""
-    
+
     def test_battery_initialization(self):
         from src.battery import Battery
         battery = Battery(capacity_mwh=100, power_mw=50, efficiency=0.90)
-        
+
         assert battery.capacity_mwh == 100
         assert battery.power_mw == 50
         assert battery.efficiency == 0.90
         assert battery.current_soc == 0.0
-    
+
     def test_battery_charge(self):
         from src.battery import Battery
         battery = Battery(capacity_mwh=100, power_mw=50, efficiency=0.90)
-        
+
         charged, from_grid = battery.charge(energy_mwh=10)
-        
+
         assert charged > 0
         assert from_grid > charged  # Grid provides more due to losses
         assert battery.current_soc == charged
@@ -60,7 +59,7 @@ class TestBattery:
         # First charge
         battery.charge(energy_mwh=20)
         initial_soc = battery.current_soc
-        
+
         # Then discharge
         discharged, to_grid = battery.discharge(energy_mwh=10)
         
@@ -90,12 +89,12 @@ class TestBattery:
 
 class TestGreedyStrategy:
     """Tests for Greedy strategy."""
-    
+
     def test_greedy_returns_dataframe(self, sample_price_df):
         from src.strategies.greedy import run_greedy_strategy
         
         result, thresholds = run_greedy_strategy(sample_price_df)
-        
+
         assert isinstance(result, pd.DataFrame)
         assert 'action' in result.columns
         assert 'cumulative_profit' in result.columns
@@ -122,7 +121,7 @@ class TestGreedyStrategy:
 
 class TestSlidingWindowStrategy:
     """Tests for Sliding Window strategy."""
-    
+
     def test_sliding_window_returns_dataframe(self, sample_price_df):
         from src.strategies.sliding_window import run_sliding_window_strategy
         
@@ -145,7 +144,7 @@ class TestSlidingWindowStrategy:
 
 class TestPerfectForesightStrategy:
     """Tests for Perfect Foresight (DP) strategy."""
-    
+
     def test_perfect_foresight_returns_dataframe(self, sample_price_df):
         from src.strategies.perfect_foresight import run_perfect_foresight
         
@@ -164,15 +163,15 @@ class TestPerfectForesightStrategy:
         
         pf_profit = pf_result['cumulative_profit'].iloc[-1]
         greedy_profit = greedy_result['cumulative_profit'].iloc[-1]
-        
+
         # Perfect foresight should be >= greedy (it's optimal)
         assert pf_profit >= greedy_profit
-    
+
     def test_perfect_foresight_soc_stays_valid(self, sample_price_df):
         from src.strategies.perfect_foresight import run_perfect_foresight
-        
+
         result = run_perfect_foresight(sample_price_df, capacity_mwh=100, soc_levels=11)
-        
+
         # SoC should always be between 0 and capacity
         assert result['soc'].min() >= 0
         assert result['soc'].max() <= 100
@@ -180,18 +179,18 @@ class TestPerfectForesightStrategy:
 
 class TestDynamicProgrammingWrapper:
     """Tests that DP wrapper works correctly."""
-    
+
     def test_dp_wrapper_calls_perfect_foresight(self, sample_price_df):
         from src.strategies.dynamic_programming import run_dp_strategy
         from src.strategies.perfect_foresight import run_perfect_foresight
-        
+
         dp_result = run_dp_strategy(sample_price_df, num_soc_states=11)
         pf_result = run_perfect_foresight(sample_price_df, soc_levels=11)
-        
+
         # Should produce identical results
         dp_profit = dp_result['cumulative_profit'].iloc[-1]
         pf_profit = pf_result['cumulative_profit'].iloc[-1]
-        
+
         assert abs(dp_profit - pf_profit) < 0.01
 
 
