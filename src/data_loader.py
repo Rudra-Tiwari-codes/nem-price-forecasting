@@ -60,6 +60,10 @@ def load_dispatch_data(
     # Sort by datetime
     df = df.sort_values('SETTLEMENTDATE').reset_index(drop=True)
     
+    # Ensure RRP is numeric (handle string data from CSV)
+    if 'RRP' in df.columns:
+        df['RRP'] = pd.to_numeric(df['RRP'], errors='coerce')
+    
     return df
 
 
