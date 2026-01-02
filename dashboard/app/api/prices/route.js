@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import JSZip from 'jszip';
 
-const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/';
+// TradingIS_Reports has ~5 minute delay vs 2-3 hours for DispatchIS_Reports
+const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/TradingIS_Reports/';
 
 async function getLatestZipLinks() {
     const response = await fetch(NEMWEB_URL, {
@@ -14,7 +15,7 @@ async function getLatestZipLinks() {
     const html = await response.text();
 
     // Extract ZIP file links from HTML directory listing
-    const regex = /href="([^"]*DISPATCHIS[^"]*\.zip)"/gi;
+    const regex = /href="([^"]*TRADINGIS[^"]*\.zip)"/gi;
     const matches = [...html.matchAll(regex)];
 
     const links = matches
@@ -60,8 +61,8 @@ async function extractPricesFromZip(url, region = 'SA1') {
         let rrpIdx = -1;
 
         for (const line of lines) {
-            // Header row starts with I,DISPATCH,PRICE
-            if (line.startsWith('I,DISPATCH,PRICE,')) {
+            // Header row starts with I,TRADING,PRICE
+            if (line.startsWith('I,TRADING,PRICE,')) {
                 const headerParts = line.split(',');
                 for (let i = 0; i < headerParts.length; i++) {
                     const col = headerParts[i].replace(/"/g, '').trim().toUpperCase();
@@ -70,8 +71,8 @@ async function extractPricesFromZip(url, region = 'SA1') {
                     if (col === 'RRP') rrpIdx = i;
                 }
             }
-            // Data row starts with D,DISPATCH,PRICE
-            if (line.startsWith('D,DISPATCH,PRICE,') && settlementDateIdx >= 0 && regionIdIdx >= 0 && rrpIdx >= 0) {
+            // Data row starts with D,TRADING,PRICE
+            if (line.startsWith('D,TRADING,PRICE,') && settlementDateIdx >= 0 && regionIdIdx >= 0 && rrpIdx >= 0) {
                 const parts = line.split(',');
                 const settlementDate = parts[settlementDateIdx]?.replace(/"/g, '');
                 const regionId = parts[regionIdIdx]?.replace(/"/g, '');
@@ -204,7 +205,7 @@ export async function GET(request) {
             prices,
             stats,
             region: selectedRegion,
-            source: 'NEMWEB Live',
+            source: 'NEMWEB Real-Time',
             filesProcessed: zipLinks.length,
             lastUpdated: new Date().toISOString()
         });
