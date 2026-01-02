@@ -14,7 +14,8 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional, List
 
-BASE_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/"
+# TradingIS_Reports has ~5 min delay vs 2-3 hours for DispatchIS_Reports
+BASE_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/TradingIS_Reports/"
 OUTPUT_DIR = Path(__file__).parent / "data"
 COMBINED_CSV = OUTPUT_DIR / "combined_dispatch_prices.csv"
 
@@ -30,7 +31,7 @@ def get_zip_links(base_url: str) -> List[str]:
     
     for a_tag in soup.find_all('a', href=True):
         href = a_tag['href']
-        if href.endswith('.zip') and 'DISPATCHIS' in href:
+        if href.endswith('.zip') and 'TRADINGIS' in href:
             # Handle relative vs absolute URLs
             if href.startswith('http'):
                 links.append(href)
@@ -64,10 +65,10 @@ def download_and_extract_zip(url: str) -> Optional[pd.DataFrame]:
                 data_lines = []
                 
                 for line in lines:
-                    if line.startswith('I,DISPATCH,PRICE,'):
+                    if line.startswith('I,TRADING,PRICE,'):
                         # This is the header definition line
                         header_line = line
-                    elif line.startswith('D,DISPATCH,PRICE,'):
+                    elif line.startswith('D,TRADING,PRICE,'):
                         # This is a data row
                         data_lines.append(line)
                 
