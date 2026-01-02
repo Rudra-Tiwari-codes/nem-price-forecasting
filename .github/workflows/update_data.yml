@@ -44,4 +44,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add data/ charts/ dashboard/public/
           git diff --staged --quiet || git commit -m "Auto-update: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+          # Pull any changes that happened during our run, then push
+          git pull --rebase origin main || true
+          git push || echo "Push failed, another update may be in progress"
