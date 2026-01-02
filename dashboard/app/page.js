@@ -100,8 +100,8 @@ export default function Home() {
 
   // Always render the UI immediately - no blocking loading screen
   return (
-    <div className="min-h-screen p-8 max-w-6xl mx-auto">
-      <header className="mb-8 flex justify-between items-start">
+    <div className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
+      <header className="mb-8 flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>
           <div className="flex items-center gap-4 mb-1">
             <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
@@ -196,11 +196,11 @@ export default function Home() {
                 <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
                 <Tooltip
                   contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
-                  formatter={(value) => [`$${value}`, 'Price']}
+                  formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
                   labelFormatter={(label, payload) => payload?.[0]?.payload?.fullDate || label}
                 />
-                <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} />
-                <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} />
+                <Area type="monotone" dataKey="price" stroke="none" fill="#fff" fillOpacity={0.05} tooltipType="none" />
+                <Line type="monotone" dataKey="price" stroke="#fff" strokeWidth={1.5} dot={false} name="Price" />
               </ComposedChart>
             </ResponsiveContainer>
           ) : (
@@ -213,12 +213,12 @@ export default function Home() {
       {data?.strategies?.length > 0 && (
         <section className="mb-8">
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Strategy Comparison</h2>
-          <div className="h-48 border border-white/10 rounded-lg p-4">
+          <div className="h-64 sm:h-48 border border-white/10 rounded-lg p-2 sm:p-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.strategies} layout="vertical">
                 <CartesianGrid stroke="#222" horizontal={false} />
                 <XAxis type="number" stroke="#444" fontSize={10} tickFormatter={(v) => `$${v.toLocaleString()}`} />
-                <YAxis type="category" dataKey="name" stroke="#444" fontSize={10} width={120} />
+                <YAxis type="category" dataKey="name" stroke="#444" fontSize={9} width={100} />
                 <Tooltip
                   contentStyle={{ background: '#111', border: '1px solid #333', fontSize: 11 }}
                   formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
@@ -236,11 +236,11 @@ export default function Home() {
         <section>
           <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Trading Signals</h2>
           <div className="space-y-1 max-h-64 overflow-y-auto">
-            {(data?.signals || data?.prices?.slice(-20) || []).slice().reverse().map((s, i) => (
-              <div key={i} className="flex justify-between items-center py-2 px-3 bg-white/5 rounded">
-                <span className="text-white/50 text-sm">{s.time}</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-white/40 text-sm">${s.price?.toFixed(2)}</span>
+            {(data?.signals && data.signals.length > 0 ? data.signals : []).slice().reverse().map((s, i) => (
+              <div key={i} className="flex justify-between items-center py-2 px-2 sm:px-3 bg-white/5 rounded">
+                <span className="text-white/50 text-xs sm:text-sm">{s.time}</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-white/40 text-xs sm:text-sm">${s.price?.toFixed(2)}</span>
                   <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${s.signal === 'buy' ? 'bg-green-500/20 text-green-400' :
                     s.signal === 'sell' ? 'bg-red-500/20 text-red-400' :
                       'bg-white/10 text-white/30'
@@ -250,6 +250,9 @@ export default function Home() {
                 </div>
               </div>
             ))}
+            {(!data?.signals || data.signals.length === 0) && (
+              <div className="text-center text-white/30 text-sm py-4">No trading signals available</div>
+            )}
           </div>
         </section>
 
