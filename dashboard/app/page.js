@@ -113,9 +113,9 @@ export default function Home() {
         <div className="flex items-center gap-4">
           <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
           <div className="text-right">
-            <p className="text-xs text-white/30">Last Updated</p>
+            <p className="text-xs text-white/30">Last Updated (AEDT)</p>
             <p className="text-sm text-white/60">
-              {data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : '--'}
+              {data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString('en-AU', { timeZone: 'Australia/Sydney', hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }) : '--'}
             </p>
           </div>
         </div>
