@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 const REGIONS = ['SA1', 'NSW1', 'VIC1', 'QLD1', 'TAS1'];
-const API_BASE = 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
 
 function Skeleton({ className = '' }) {
     return <div className={`animate-pulse bg-white/10 rounded ${className}`} />;
@@ -101,8 +101,8 @@ function ErrorTracker({ predictions }) {
                         </div>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-sm font-medium ${pred.error_percent < 5 ? 'bg-green-500/20 text-green-400' :
-                            pred.error_percent < 15 ? 'bg-yellow-500/20 text-yellow-400' :
-                                'bg-red-500/20 text-red-400'
+                        pred.error_percent < 15 ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-red-500/20 text-red-400'
                         }`}>
                         {pred.error_percent?.toFixed(1)}% error
                     </div>
