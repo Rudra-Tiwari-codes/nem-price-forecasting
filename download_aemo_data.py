@@ -13,6 +13,10 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional, List
+from zoneinfo import ZoneInfo
+
+# AEMO uses Australian Eastern Standard Time (AEST/AEDT)
+AEMO_TIMEZONE = ZoneInfo('Australia/Sydney')
 
 # TradingIS_Reports has ~5 min delay vs 2-3 hours for DispatchIS_Reports
 BASE_URL = "https://www.nemweb.com.au/REPORTS/CURRENT/TradingIS_Reports/"
@@ -140,8 +144,13 @@ def download_all_data(max_files: int = None) -> pd.DataFrame:
     # Remove quotes from SETTLEMENTDATE
     combined_df['SETTLEMENTDATE'] = combined_df['SETTLEMENTDATE'].str.strip('"')
     
-    # Convert to proper types
+    # Convert to proper types with timezone awareness
     combined_df['SETTLEMENTDATE'] = pd.to_datetime(combined_df['SETTLEMENTDATE'])
+    # Localize to AEMO timezone (AEST/AEDT) if naive
+    if combined_df['SETTLEMENTDATE'].dt.tz is None:
+        combined_df['SETTLEMENTDATE'] = combined_df['SETTLEMENTDATE'].dt.tz_localize(
+            AEMO_TIMEZONE, ambiguous='infer', nonexistent='shift_forward'
+        )
     combined_df['RRP'] = pd.to_numeric(combined_df['RRP'], errors='coerce')
     
     # Sort by date and region

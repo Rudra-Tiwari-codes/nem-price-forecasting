@@ -8,8 +8,12 @@ for use in arbitrage simulations.
 import pandas as pd
 from pathlib import Path
 from typing import Optional, List
+from zoneinfo import ZoneInfo
 
 from constants import SPIKE_THRESHOLD
+
+# AEMO uses Australian Eastern Standard Time (AEST/AEDT)
+AEMO_TIMEZONE = ZoneInfo('Australia/Sydney')
 
 
 def load_dispatch_data(
@@ -43,7 +47,11 @@ def load_dispatch_data(
             break
     
     if date_col:
+        # Parse datetime and localize to AEMO timezone (AEST/AEDT)
         df['SETTLEMENTDATE'] = pd.to_datetime(df[date_col])
+        # If naive datetime, localize to AEMO timezone
+        if df['SETTLEMENTDATE'].dt.tz is None:
+            df['SETTLEMENTDATE'] = df['SETTLEMENTDATE'].dt.tz_localize(AEMO_TIMEZONE, ambiguous='infer', nonexistent='shift_forward')
         if date_col != 'SETTLEMENTDATE':
             df = df.drop(columns=[date_col])
     

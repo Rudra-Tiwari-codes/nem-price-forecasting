@@ -56,6 +56,10 @@ jobs:
       - name: Run pytest
         run: |
           python -m pytest tests/ -v --tb=short
+      
+      - name: Run E2E smoke test
+        run: |
+          python -m pytest tests/test_e2e.py -v --tb=short -x
 
   build:
     runs-on: ubuntu-latest
