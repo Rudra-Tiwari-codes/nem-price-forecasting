@@ -27,9 +27,9 @@ function RegionSelector({ selected, onChange }) {
 
 function Stat({ label, value, highlight }) {
   return (
-    <div className={`p-4 rounded-lg ${highlight ? 'bg-white/5 border border-white/10' : ''}`}>
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{label}</p>
-      <p className={`text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>
+    <div className={`p-3 sm:p-4 rounded-lg bg-white/5 border border-white/10`}>
+      <p className="text-white/40 text-[10px] sm:text-xs uppercase tracking-widest mb-1">{label}</p>
+      <p className={`text-lg sm:text-2xl font-light ${highlight ? 'text-white' : 'text-white/80'}`}>
         ${typeof value === 'number' ? value.toFixed(2) : value}
       </p>
     </div>
@@ -100,21 +100,33 @@ export default function Home() {
 
   // Always render the UI immediately - no blocking loading screen
   return (
-    <div className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
-      <header className="mb-8 flex flex-col sm:flex-row justify-between items-start gap-4">
-        <div>
-          <div className="flex items-center gap-4 mb-1">
-            <h1 className="text-3xl font-light tracking-tight">NEM Analytics</h1>
+    <div className="min-h-screen p-3 sm:p-8 max-w-6xl mx-auto">
+      <header className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
+          <div className="w-full sm:w-auto">
+            <div className="flex items-center justify-between sm:justify-start gap-3 mb-1">
+              <h1 className="text-xl sm:text-3xl font-light tracking-tight">NEM Analytics</h1>
+              <div className="sm:hidden">
+                <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
+              </div>
+            </div>
+            <p className="text-white/40 text-xs sm:text-sm">
+              {loading ? 'Loading...' : (data?.source || 'API')} | {selectedRegion}
+            </p>
           </div>
-          <p className="text-white/40 text-sm">
-            {loading ? 'Loading...' : (data?.source || 'API')} | {selectedRegion}
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
-          <div className="text-right">
-            <p className="text-xs text-white/30">Last Updated (AEDT)</p>
-            <p className="text-sm text-white/60">
+          <div className="hidden sm:flex items-center gap-4">
+            <RegionSelector selected={selectedRegion} onChange={setSelectedRegion} />
+            <div className="text-right">
+              <p className="text-xs text-white/30">Last Updated (AEDT)</p>
+              <p className="text-sm text-white/60">
+                {data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString('en-AU', { timeZone: 'Australia/Sydney', hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }) : '--'}
+              </p>
+            </div>
+          </div>
+          {/* Mobile: Last Updated below header */}
+          <div className="sm:hidden w-full text-left">
+            <p className="text-[10px] text-white/30">Last Updated (AEDT)</p>
+            <p className="text-xs text-white/60">
               {data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString('en-AU', { timeZone: 'Australia/Sydney', hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }) : '--'}
             </p>
           </div>
@@ -150,8 +162,31 @@ export default function Home() {
 
       {/* Best Strategy Banner */}
       {data?.bestStrategy && (
-        <div className="mb-8 p-4 bg-white/5 rounded-lg border border-white/10">
-          <div className="flex flex-wrap justify-between items-center gap-4">
+        <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-white/5 rounded-lg border border-white/10">
+          {/* Mobile: Stacked layout */}
+          <div className="grid grid-cols-1 sm:hidden gap-3">
+            <div>
+              <p className="text-white/40 text-[10px] uppercase tracking-widest">Best Strategy</p>
+              <p className="text-lg font-light">{data.bestStrategy}</p>
+            </div>
+            <div className="flex justify-between gap-4">
+              <div>
+                <p className="text-white/40 text-[10px] uppercase tracking-widest">Total Profit</p>
+                <p className="text-base font-light text-green-400">${data.bestProfit?.toLocaleString()}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-white/40 text-[10px] uppercase tracking-widest">Annualized</p>
+                <p className="text-base font-light">
+                  {data.annualizedProfit != null
+                    ? `$${(data.annualizedProfit / 1000000).toFixed(1)}M/yr`
+                    : <span className="text-white/40 text-xs">N/A</span>
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+          {/* Desktop: Horizontal layout */}
+          <div className="hidden sm:flex flex-wrap justify-between items-center gap-4">
             <div>
               <p className="text-white/40 text-xs uppercase tracking-widest">Best Strategy</p>
               <p className="text-xl font-light">{data.bestStrategy}</p>
@@ -174,28 +209,31 @@ export default function Home() {
       )}
 
       {/* Price Chart - show skeleton when loading */}
-      <section className="mb-8">
-        <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">
-          Price History - {selectedRegion} (Last ~8 Hours) {data?.prices?.length ? `- ${data.prices.length} points` : ''}
+      <section className="mb-6 sm:mb-8">
+        <h2 className="text-xs sm:text-sm text-white/40 uppercase tracking-widest mb-3 sm:mb-4">
+          <span className="hidden sm:inline">Price History - {selectedRegion} (Last ~8 Hours)</span>
+          <span className="sm:hidden">Prices - {selectedRegion}</span>
+          {data?.prices?.length ? <span className="hidden sm:inline"> - {data.prices.length} points</span> : ''}
         </h2>
-        <div className="h-64 border border-white/10 rounded-lg p-4">
+        <div className="h-48 sm:h-64 border border-white/10 rounded-lg p-2 sm:p-4">
           {loading && !data ? (
             <Skeleton className="w-full h-full" />
           ) : data?.prices?.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={data.prices}>
+              <ComposedChart data={data.prices} margin={{ left: -10, right: 5, top: 5, bottom: 0 }}>
                 <CartesianGrid stroke="#222" vertical={false} />
                 <XAxis
                   dataKey="time"
                   stroke="#444"
-                  fontSize={10}
+                  fontSize={8}
                   tickLine={false}
                   axisLine={false}
-                  interval={Math.floor((data.prices?.length || 1) / 12)}
+                  interval={Math.floor((data.prices?.length || 1) / 6)}
+                  tick={{ fontSize: 8 }}
                 />
-                <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
+                <YAxis stroke="#444" fontSize={8} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} width={35} />
                 <Tooltip
-                  contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 11 }}
+                  contentStyle={{ background: '#111', border: '1px solid #333', borderRadius: 4, fontSize: 10 }}
                   formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
                   labelFormatter={(label, payload) => payload?.[0]?.payload?.fullDate || label}
                 />
@@ -204,23 +242,23 @@ export default function Home() {
               </ComposedChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-white/30">No chart data</div>
+            <div className="h-full flex items-center justify-center text-white/30 text-sm">No chart data</div>
           )}
         </div>
       </section>
 
       {/* Strategy Comparison */}
       {data?.strategies?.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-sm text-white/40 uppercase tracking-widest mb-4">Strategy Comparison</h2>
-          <div className="h-64 sm:h-48 border border-white/10 rounded-lg p-2 sm:p-4">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-xs sm:text-sm text-white/40 uppercase tracking-widest mb-3 sm:mb-4">Strategy Comparison</h2>
+          <div className="h-48 sm:h-48 border border-white/10 rounded-lg p-2 sm:p-4">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.strategies} layout="vertical">
+              <BarChart data={data.strategies} layout="vertical" margin={{ left: -20, right: 10, top: 5, bottom: 5 }}>
                 <CartesianGrid stroke="#222" horizontal={false} />
-                <XAxis type="number" stroke="#444" fontSize={10} tickFormatter={(v) => `$${v.toLocaleString()}`} />
-                <YAxis type="category" dataKey="name" stroke="#444" fontSize={9} width={100} />
+                <XAxis type="number" stroke="#444" fontSize={8} tickFormatter={(v) => `$${(v / 1000000).toFixed(0)}M`} />
+                <YAxis type="category" dataKey="name" stroke="#444" fontSize={8} width={80} tick={{ fontSize: 8 }} />
                 <Tooltip
-                  contentStyle={{ background: '#111', border: '1px solid #333', fontSize: 11 }}
+                  contentStyle={{ background: '#111', border: '1px solid #333', fontSize: 10 }}
                   formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
                 />
                 <Bar dataKey="profit" fill="#4ade80" radius={[0, 4, 4, 0]} />
