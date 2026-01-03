@@ -4,6 +4,10 @@ import JSZip from 'jszip';
 // TradingIS_Reports has ~5 minute delay vs 2-3 hours for DispatchIS_Reports
 const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/TradingIS_Reports/';
 
+// Cache configuration
+const CACHE_MAX_AGE = 300; // 5 minutes - matches AEMO update frequency
+const CACHE_STALE_WHILE_REVALIDATE = 60; // Allow stale for 1 minute while fetching fresh
+
 async function getLatestZipLinks() {
     const response = await fetch(NEMWEB_URL, {
         headers: {
@@ -118,7 +122,7 @@ export async function GET(request) {
             if (simResponse.ok) {
                 const simData = await simResponse.json();
                 if (simData.prices && simData.prices.length > 0) {
-                    return NextResponse.json({
+                    const response = NextResponse.json({
                         prices: simData.prices,
                         stats: simData.stats,
                         region: selectedRegion,
@@ -126,6 +130,9 @@ export async function GET(request) {
                         filesProcessed: 0,
                         lastUpdated: simData.lastUpdated || new Date().toISOString()
                     });
+                    // Add cache headers for CDN/browser caching
+                    response.headers.set('Cache-Control', `public, s-maxage=${CACHE_MAX_AGE}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}`);
+                    return response;
                 }
             }
         } catch (simErr) {
@@ -201,7 +208,7 @@ export async function GET(request) {
             count: priceValues.length
         };
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             prices,
             stats,
             region: selectedRegion,
@@ -209,6 +216,9 @@ export async function GET(request) {
             filesProcessed: zipLinks.length,
             lastUpdated: new Date().toISOString()
         });
+        // Add cache headers - shorter for live data
+        response.headers.set('Cache-Control', `public, s-maxage=${Math.floor(CACHE_MAX_AGE / 2)}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}`);
+        return response;
 
     } catch (error) {
         console.error('NEMWEB Scraper Error:', error);

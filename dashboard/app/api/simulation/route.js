@@ -2,7 +2,16 @@ import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-export async function GET() {
+// Cache configuration
+const CACHE_MAX_AGE = 300; // 5 minutes
+const CACHE_STALE_WHILE_REVALIDATE = 60;
+
+function addCacheHeaders(response) {
+    response.headers.set('Cache-Control', `public, s-maxage=${CACHE_MAX_AGE}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}`);
+    return response;
+}
+
+export async function GET(request) {
     try {
         // Get region from query parameter, default to SA1
         const { searchParams } = new URL(request.url);
@@ -26,10 +35,10 @@ export async function GET() {
                 if (existsSync(publicPath)) {
                     const fileContent = readFileSync(publicPath, 'utf-8');
                     const data = JSON.parse(fileContent);
-                    return NextResponse.json({
+                    return addCacheHeaders(NextResponse.json({
                         ...data,
                         source: 'Local Simulation Data'
-                    });
+                    }));
                 }
             } catch (localErr) {
                 console.log('Local file read failed, falling back to GitHub:', localErr.message);
@@ -42,10 +51,10 @@ export async function GET() {
 
         if (response.ok) {
             const data = await response.json();
-            return NextResponse.json({
+            return addCacheHeaders(NextResponse.json({
                 ...data,
                 source: 'GitHub Simulation Data'
-            });
+            }));
         }
 
         // Fallback to SA1 if specific region not found
@@ -55,10 +64,10 @@ export async function GET() {
 
             if (sa1Response.ok) {
                 const data = await sa1Response.json();
-                return NextResponse.json({
+                return addCacheHeaders(NextResponse.json({
                     ...data,
                     source: 'GitHub (SA1 fallback)'
-                });
+                }));
             }
         }
 
