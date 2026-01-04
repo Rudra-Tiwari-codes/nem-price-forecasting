@@ -1,0 +1,16 @@
+{
+  "SA1": [
+    {
+      "prediction_time": "2025-12-31T17:50:29.490843",
+      "target_time": "2025-12-31T15:40:00",
+      "predicted": -55.41903805121764,
+      "current_price": -200.0,
+      "actual": null,
+      "error_percent": null
+    }
+  ],
+  "NSW1": [],
+  "VIC1": [],
+  "QLD1": [],
+  "TAS1": []
+}

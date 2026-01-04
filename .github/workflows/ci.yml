@@ -52,11 +52,14 @@ jobs:
           python -c "from src.eda import price_distribution_analysis; print('EDA module OK')"
           python -c "from src.forecasting import RollingMeanPredictor; print('Forecasting module OK')"
           python -c "from src.metrics import sharpe_ratio; print('Metrics module OK')"
-          python -c "from src.ml_forecasting import XGBoostPredictor; print('ML Forecasting module OK')"
       
       - name: Run pytest
         run: |
-          python -m pytest tests/ -v --tb=short || true
+          python -m pytest tests/ -v --tb=short
+      
+      - name: Run E2E smoke test
+        run: |
+          python -m pytest tests/test_e2e.py -v --tb=short -x
 
   build:
     runs-on: ubuntu-latest

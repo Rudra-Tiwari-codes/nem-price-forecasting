@@ -2,12 +2,66 @@ name: Update Data
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/15 * * * *'
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight UTC for squashing
   workflow_dispatch:
+    inputs:
+      squash:
+        description: 'Squash old auto-update commits'
+        type: boolean
+        default: false
 
 jobs:
+  # Weekly job to squash old auto-update commits and prevent repo bloat
+  squash-commits:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 0 * * 0' || github.event.inputs.squash == 'true'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Squash old auto-update commits
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Count auto-update commits in the last 7 days
+          AUTO_COMMITS=$(git log --oneline --since="7 days ago" --grep="Auto-update:" | wc -l)
+          echo "Found $AUTO_COMMITS auto-update commits in the last 7 days"
+          
+          if [ "$AUTO_COMMITS" -gt 10 ]; then
+            echo "Squashing auto-update commits..."
+            
+            # Find the oldest auto-update commit from this week
+            OLDEST_AUTO=$(git log --oneline --since="7 days ago" --grep="Auto-update:" --reverse | head -1 | cut -d' ' -f1)
+            
+            if [ -n "$OLDEST_AUTO" ]; then
+              # Get the parent of the oldest auto-update commit
+              PARENT=$(git rev-parse ${OLDEST_AUTO}^)
+              
+              # Soft reset to parent, keeping all changes staged
+              git reset --soft $PARENT
+              
+              # Create single squashed commit with current data
+              git commit -m "Weekly data squash: $(date -u +'%Y-%m-%d') - Combined $AUTO_COMMITS auto-updates"
+              
+              # Force push the squashed history
+              git push --force-with-lease origin main
+              
+              echo "Successfully squashed $AUTO_COMMITS commits into 1"
+            fi
+          else
+            echo "Not enough commits to squash (need >10, have $AUTO_COMMITS)"
+          fi
+
   update:
     runs-on: ubuntu-latest
+    if: github.event.schedule == '*/15 * * * *' || (github.event_name == 'workflow_dispatch' && github.event.inputs.squash != 'true')
     permissions:
       contents: write
     steps:
@@ -38,10 +92,15 @@ jobs:
           # Generate charts for SA1 (default)
           python main.py --region SA1
       
+      - name: Update README with latest results
+        run: python update_readme.py
+      
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/ charts/ dashboard/public/
+          git add data/ charts/ dashboard/public/ README.md
           git diff --staged --quiet || git commit -m "Auto-update: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+          # Pull any changes that happened during our run, then push
+          git pull --rebase origin main || true
+          git push || echo "Push failed, another update may be in progress"

@@ -8,6 +8,12 @@ for use in arbitrage simulations.
 import pandas as pd
 from pathlib import Path
 from typing import Optional, List
+from zoneinfo import ZoneInfo
+
+from constants import SPIKE_THRESHOLD
+
+# AEMO uses Australian Eastern Standard Time (AEST/AEDT)
+AEMO_TIMEZONE = ZoneInfo('Australia/Sydney')
 
 
 def load_dispatch_data(
@@ -41,7 +47,11 @@ def load_dispatch_data(
             break
     
     if date_col:
+        # Parse datetime and localize to AEMO timezone (AEST/AEDT)
         df['SETTLEMENTDATE'] = pd.to_datetime(df[date_col])
+        # If naive datetime, localize to AEMO timezone
+        if df['SETTLEMENTDATE'].dt.tz is None:
+            df['SETTLEMENTDATE'] = df['SETTLEMENTDATE'].dt.tz_localize(AEMO_TIMEZONE, ambiguous='infer', nonexistent='shift_forward')
         if date_col != 'SETTLEMENTDATE':
             df = df.drop(columns=[date_col])
     
@@ -57,6 +67,10 @@ def load_dispatch_data(
     
     # Sort by datetime
     df = df.sort_values('SETTLEMENTDATE').reset_index(drop=True)
+    
+    # Ensure RRP is numeric (handle string data from CSV)
+    if 'RRP' in df.columns:
+        df['RRP'] = pd.to_numeric(df['RRP'], errors='coerce')
     
     return df
 
@@ -101,8 +115,8 @@ def get_price_statistics(df: pd.DataFrame) -> dict:
         'max': rrp.max(),
         'negative_count': (rrp < 0).sum(),
         'negative_percent': (rrp < 0).mean() * 100,
-        'spike_count': (rrp > 300).sum(),  # Prices > $300/MWh
-        'spike_percent': (rrp > 300).mean() * 100,
+        'spike_count': (rrp > SPIKE_THRESHOLD).sum(),  # Prices > spike threshold
+        'spike_percent': (rrp > SPIKE_THRESHOLD).mean() * 100,
     }
 
 

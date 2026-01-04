@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import JSZip from 'jszip';
 
-const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/DispatchIS_Reports/';
+// TradingIS_Reports has ~5 minute delay vs 2-3 hours for DispatchIS_Reports
+const NEMWEB_URL = 'https://www.nemweb.com.au/REPORTS/CURRENT/TradingIS_Reports/';
+
+// Cache configuration
+const CACHE_MAX_AGE = 300; // 5 minutes - matches AEMO update frequency
+const CACHE_STALE_WHILE_REVALIDATE = 60; // Allow stale for 1 minute while fetching fresh
 
 async function getLatestZipLinks() {
     const response = await fetch(NEMWEB_URL, {
@@ -14,7 +19,7 @@ async function getLatestZipLinks() {
     const html = await response.text();
 
     // Extract ZIP file links from HTML directory listing
-    const regex = /href="([^"]*DISPATCHIS[^"]*\.zip)"/gi;
+    const regex = /href="([^"]*TRADINGIS[^"]*\.zip)"/gi;
     const matches = [...html.matchAll(regex)];
 
     const links = matches
@@ -60,8 +65,8 @@ async function extractPricesFromZip(url, region = 'SA1') {
         let rrpIdx = -1;
 
         for (const line of lines) {
-            // Header row starts with I,DISPATCH,PRICE
-            if (line.startsWith('I,DISPATCH,PRICE,')) {
+            // Header row starts with I,TRADING,PRICE
+            if (line.startsWith('I,TRADING,PRICE,')) {
                 const headerParts = line.split(',');
                 for (let i = 0; i < headerParts.length; i++) {
                     const col = headerParts[i].replace(/"/g, '').trim().toUpperCase();
@@ -70,8 +75,8 @@ async function extractPricesFromZip(url, region = 'SA1') {
                     if (col === 'RRP') rrpIdx = i;
                 }
             }
-            // Data row starts with D,DISPATCH,PRICE
-            if (line.startsWith('D,DISPATCH,PRICE,') && settlementDateIdx >= 0 && regionIdIdx >= 0 && rrpIdx >= 0) {
+            // Data row starts with D,TRADING,PRICE
+            if (line.startsWith('D,TRADING,PRICE,') && settlementDateIdx >= 0 && regionIdIdx >= 0 && rrpIdx >= 0) {
                 const parts = line.split(',');
                 const settlementDate = parts[settlementDateIdx]?.replace(/"/g, '');
                 const regionId = parts[regionIdIdx]?.replace(/"/g, '');
@@ -109,10 +114,36 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
+        // First, try to use pre-generated simulation data (has 100 data points)
+        try {
+            const simUrl = `https://raw.githubusercontent.com/Rudra-Tiwari-codes/nem-price-forecasting/main/dashboard/public/simulation_${selectedRegion}.json`;
+            const simResponse = await fetch(simUrl, { next: { revalidate: 300 } });
+
+            if (simResponse.ok) {
+                const simData = await simResponse.json();
+                if (simData.prices && simData.prices.length > 0) {
+                    const response = NextResponse.json({
+                        prices: simData.prices,
+                        stats: simData.stats,
+                        region: selectedRegion,
+                        source: 'GitHub Simulation Data',
+                        filesProcessed: 0,
+                        lastUpdated: simData.lastUpdated || new Date().toISOString()
+                    });
+                    // Add cache headers for CDN/browser caching
+                    response.headers.set('Cache-Control', `public, s-maxage=${CACHE_MAX_AGE}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}`);
+                    return response;
+                }
+            }
+        } catch (simErr) {
+            console.log('Simulation data not available, falling back to NEMWEB:', simErr.message);
+        }
+
+        // Fallback: Try live NEMWEB scraping
         const zipLinks = await getLatestZipLinks();
 
         if (zipLinks.length === 0) {
-            return returnDemoData('No dispatch files found on NEMWEB');
+            return returnDataError('No dispatch files found on NEMWEB');
         }
 
         let allPrices = [];
@@ -136,7 +167,7 @@ export async function GET(request) {
         const last100 = uniquePrices.slice(-100);
 
         if (last100.length === 0) {
-            return returnDemoData('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
+            return returnDataError('No ' + selectedRegion + ' price data extracted from ' + zipLinks.length + ' files');
         }
 
         // Calculate EMA forecast
@@ -177,48 +208,31 @@ export async function GET(request) {
             count: priceValues.length
         };
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             prices,
             stats,
             region: selectedRegion,
-            source: 'NEMWEB Live',
+            source: 'NEMWEB Real-Time',
             filesProcessed: zipLinks.length,
             lastUpdated: new Date().toISOString()
         });
+        // Add cache headers - shorter for live data
+        response.headers.set('Cache-Control', `public, s-maxage=${Math.floor(CACHE_MAX_AGE / 2)}, stale-while-revalidate=${CACHE_STALE_WHILE_REVALIDATE}`);
+        return response;
 
     } catch (error) {
         console.error('NEMWEB Scraper Error:', error);
-        return returnDemoData(error.message);
+        return returnDataError(error.message);
     }
 }
 
-function returnDemoData(reason) {
-    const now = Date.now();
-    const prices = Array.from({ length: 50 }, (_, i) => {
-        const timestamp = now - (50 - i) * 5 * 60 * 1000;
-        const date = new Date(timestamp);
-        const hours = String(date.getHours()).padStart(2, '0');
-        const mins = String(date.getMinutes()).padStart(2, '0');
-        const basePrice = 100 + Math.sin(i / 5) * 30 + (i % 10);
-        return {
-            time: `${hours}:${mins}`,
-            price: Math.round(basePrice * 100) / 100,
-            forecast: Math.round((basePrice + 5 - (i % 10)) * 100) / 100,
-            signal: i % 5 === 0 ? 'buy' : i % 7 === 0 ? 'sell' : 'hold'
-        };
-    });
-
+function returnDataError(reason) {
+    // Return proper HTTP error instead of masking failures with fake data
     return NextResponse.json({
-        prices,
-        stats: {
-            current: prices[prices.length - 1].price,
-            mean: 105.5,
-            min: 70,
-            max: 150,
-            count: 50
-        },
-        source: 'Demo Data',
-        reason,
-        lastUpdated: new Date().toISOString()
-    });
+        error: 'Unable to fetch real-time price data',
+        reason: reason,
+        suggestion: 'Please try again later or check if AEMO NEMWEB is accessible',
+        timestamp: new Date().toISOString()
+    }, { status: 503 });
 }
+

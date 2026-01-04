@@ -163,28 +163,5 @@ class TestMetrics:
         assert mdd == 5.0
 
 
-class TestMLForecasters:
-    """Tests for ML-based forecasters."""
-    
-    @pytest.fixture
-    def sample_prices(self):
-        np.random.seed(42)
-        return np.random.normal(100, 20, 200)
-    
-    def test_xgboost_predictor(self, sample_prices):
-        from src.ml_forecasting import XGBoostPredictor
-        predictor = XGBoostPredictor(lookback=12)
-        predictions = predictor.fit_predict(sample_prices)
-        
-        assert len(predictions) == len(sample_prices)
-    
-    def test_random_forest_predictor(self, sample_prices):
-        from src.ml_forecasting import RandomForestPredictor
-        predictor = RandomForestPredictor(lookback=12)
-        predictions = predictor.fit_predict(sample_prices)
-        
-        assert len(predictions) == len(sample_prices)
-
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

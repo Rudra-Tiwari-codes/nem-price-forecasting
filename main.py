@@ -6,18 +6,18 @@ Runs price analysis, forecasting evaluation, and trading strategy simulation.
 
 import sys
 from pathlib import Path
+import time
 
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-from data_loader import load_dispatch_data, get_price_statistics, validate_data
-from battery import Battery
-from strategies.perfect_foresight import run_perfect_foresight
-from strategies.greedy import run_greedy_strategy, optimize_thresholds
-from strategies.sliding_window import run_sliding_window_strategy, optimize_window_size
-from strategies.dynamic_programming import run_dp_strategy
-from visualizer import generate_all_charts, plot_strategy_comparison
-import time
+from data_loader import load_dispatch_data, get_price_statistics, validate_data  # noqa: E402
+from strategies.perfect_foresight import run_perfect_foresight  # noqa: E402
+from strategies.greedy import run_greedy_strategy  # noqa: E402
+from strategies.sliding_window import run_sliding_window_strategy  # noqa: E402
+from strategies.dynamic_programming import run_dp_strategy  # noqa: E402
+from forecasting import run_forecast_strategy, EMAPredictor  # noqa: E402
+from visualizer import generate_all_charts  # noqa: E402
 
 
 def print_header(text: str):
@@ -42,43 +42,43 @@ def run_simulation(
     run_eda: bool = False
 ):
     print_header("NEM ARBITRAGE ENGINE")
-    print(f"\nBattery Configuration:")
+    print("\nBattery Configuration:")
     print(f"  Capacity: {capacity_mwh} MWh")
     print(f"  Power Rating: {power_mw} MW")
     print(f"  Efficiency: {efficiency:.0%}")
-    print(f"  C-Rate: {capacity_mwh/power_mw:.1f} hours")
-    
+    print(f"  C-Rate: {capacity_mwh / power_mw:.1f} hours")
+
     # Check if data file exists
     data_file = Path(data_path)
     if not data_file.exists():
         print(f"\nError: Data file not found: {data_path}")
         print("Please run 'python download_aemo_data.py' first to fetch AEMO price data.")
         return None, None
-    
+
     # Load data
     print_section("Loading Data")
     df = load_dispatch_data(data_path, regions=[region] if region else None)
-    
+
     if df.empty:
         print("Error: No data loaded. The CSV file may be empty or corrupted.")
         return None, None
-    
+
     validation = validate_data(df)
     print(f"  Rows loaded: {validation['row_count']:,}")
     print(f"  Date range: {validation['date_range'][0]} to {validation['date_range'][1]}")
     print(f"  Valid: {'Yes' if validation['valid'] else 'No'}")
-    
+
     if not validation['valid']:
         print("  Issues found:")
         for issue in validation['issues']:
             print(f"    - {issue}")
         print("\nError: Data validation failed. Please check the data file.")
         return None, None
-    
+
     if 'REGIONID' in df.columns:
         regions = df['REGIONID'].unique()
         print(f"  Regions: {', '.join(regions)}")
-    
+
     # Price statistics
     print_section("Price Statistics")
     stats = get_price_statistics(df)
@@ -89,63 +89,75 @@ def run_simulation(
     print(f"  Max:    ${stats['max']:.2f}/MWh")
     print(f"  Negative prices: {stats['negative_percent']:.1f}%")
     print(f"  Spike prices (>$300): {stats['spike_percent']:.1f}%")
-    
+
     # Run strategies
     print_section("Running Strategies")
     results = {}
     timings = {}
-    
+
     # Perfect Foresight
     print("  Running Perfect Foresight...")
     start = time.perf_counter()
     results['perfect_foresight'] = run_perfect_foresight(df, capacity_mwh, power_mw, efficiency)
     timings['perfect_foresight'] = time.perf_counter() - start
-    
+
     # Greedy
     print("  Running Greedy Strategy...")
     start = time.perf_counter()
     results['greedy'], thresholds = run_greedy_strategy(df, capacity_mwh, power_mw, efficiency)
     timings['greedy'] = time.perf_counter() - start
-    
+
     # Sliding Window
     print("  Running Sliding Window...")
     start = time.perf_counter()
     results['sliding_window'] = run_sliding_window_strategy(df, capacity_mwh, power_mw, efficiency)
     timings['sliding_window'] = time.perf_counter() - start
-    
+
     # Dynamic Programming
     print("  Running Dynamic Programming...")
     start = time.perf_counter()
     results['dynamic_programming'] = run_dp_strategy(df, capacity_mwh, power_mw, efficiency)
     timings['dynamic_programming'] = time.perf_counter() - start
-    
+
+    # Forecast-Based Strategy (EMA)
+    print("  Running Forecast Strategy (EMA)...")
+    start = time.perf_counter()
+    predictor = EMAPredictor(span=12)
+    results['forecast_ema'] = run_forecast_strategy(df, predictor, capacity_mwh, power_mw, efficiency)
+    timings['forecast_ema'] = time.perf_counter() - start
+
     # Results summary
     print_section("Results Summary")
     print("\n  Strategy              | Total Profit  | Cycles | Time (ms)")
     print("  " + "-" * 58)
-    
+
     for name, result_df in results.items():
         profit = result_df['cumulative_profit'].iloc[-1]
         charges = (result_df['action'] == 'charge').sum()
         discharges = (result_df['action'] == 'discharge').sum()
         time_ms = timings[name] * 1000
-        
+
         display_name = name.replace('_', ' ').title()
         print(f"  {display_name:<22} | ${profit:>11,.0f} | {charges:>3}/{discharges:<3} | {time_ms:>7.1f}")
-    
+
     # Best result
     best_name = max(results.keys(), key=lambda k: results[k]['cumulative_profit'].iloc[-1])
     best_profit = results[best_name]['cumulative_profit'].iloc[-1]
-    
+
     print(f"\n  Best Strategy: {best_name.replace('_', ' ').title()}")
     print(f"     Total Profit: ${best_profit:,.2f}")
-    
-    # Calculate annualized ROI
+
+    # Calculate annualized ROI (only if we have enough data to extrapolate)
     date_range = df['SETTLEMENTDATE'].max() - df['SETTLEMENTDATE'].min()
     days = date_range.days if hasattr(date_range, 'days') else 1
-    annualized = (best_profit / max(days, 1)) * 365
-    print(f"     Annualized: ${annualized:,.0f}/year")
-    
+    # Only show annualized if we have at least 7 days of data, otherwise it's unreliable
+    if days >= 7:
+        annualized = (best_profit / max(days, 1)) * 365
+        print(f"     Annualized: ${annualized:,.0f}/year")
+    else:
+        annualized = None  # Not enough data to extrapolate
+        print(f"     Annualized: N/A (only {days} days of data, need 7+ for reliable estimate)")
+
     # Generate charts
     if generate_charts:
         print_section("Generating Charts")
@@ -157,17 +169,17 @@ def run_simulation(
                 print(f"    - {Path(path).name}")
         except Exception as e:
             print(f"  Warning: Could not generate charts: {e}")
-    
+
     # Export JSON results for dashboard
     print_section("Exporting Dashboard Data")
     try:
         import json
         from datetime import datetime
-        
+
         dashboard_dir = Path(data_path).parent.parent / "dashboard" / "public"
         dashboard_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Get recent price data for chart
+
+        # Get recent price data for chart (100 intervals = ~8 hours at 5-min intervals)
         recent_df = df.tail(100).copy()
         recent_prices = []
         for _, row in recent_df.iterrows():
@@ -178,7 +190,7 @@ def run_simulation(
                 'fullDate': str(row['SETTLEMENTDATE']),
                 'price': round(float(row['RRP']), 2)
             })
-        
+
         # Strategy results summary
         strategy_summary = []
         for name, result_df in results.items():
@@ -191,7 +203,7 @@ def run_simulation(
                 'charges': charges,
                 'discharges': discharges
             })
-        
+
         # Get trading signals from best strategy
         signals = []
         best_result = results[best_name].tail(20)
@@ -205,7 +217,7 @@ def run_simulation(
                 'price': round(float(row['RRP']), 2),
                 'signal': signal
             })
-        
+
         dashboard_data = {
             'lastUpdated': datetime.now().isoformat(),
             'region': region if region else 'ALL',
@@ -221,25 +233,25 @@ def run_simulation(
             'strategies': strategy_summary,
             'bestStrategy': best_name.replace('_', ' ').title(),
             'bestProfit': round(best_profit, 2),
-            'annualizedProfit': round(annualized, 2),
+            'annualizedProfit': round(annualized, 2) if annualized is not None else None,
             'dataRange': {
                 'start': str(df['SETTLEMENTDATE'].min()),
                 'end': str(df['SETTLEMENTDATE'].max()),
                 'days': days
             }
         }
-        
+
         region_name = region if region else 'ALL'
         output_path = dashboard_dir / f"simulation_{region_name}.json"
         with open(output_path, 'w') as f:
             json.dump(dashboard_data, f, indent=2)
         print(f"  Exported dashboard data to {output_path}")
-        
+
     except Exception as e:
         print(f"  Warning: Could not export dashboard data: {e}")
         import traceback
         traceback.print_exc()
-    
+
     if run_eda:
         print_section("Exploratory Data Analysis")
         try:
@@ -248,23 +260,23 @@ def run_simulation(
             generate_eda_report(data_path, str(chart_dir))
         except Exception as e:
             print(f"  Warning: EDA failed: {e}")
-        
+
         print_section("Strategy Metrics")
         try:
             from metrics import generate_metrics_report
             generate_metrics_report(results, df, capacity_mwh, power_mw, efficiency)
         except Exception as e:
             print(f"  Warning: Metrics failed: {e}")
-    
+
     print_header("SIMULATION COMPLETE")
-    
+
     return results, stats
 
 
 def main():
     """Main entry point with command line support."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description="NEM Arbitrage Engine - Battery Trading Simulator"
     )
@@ -303,9 +315,9 @@ def main():
         action="store_true",
         help="Run exploratory data analysis and metrics"
     )
-    
+
     args = parser.parse_args()
-    
+
     run_simulation(
         data_path=args.data,
         region=args.region,
