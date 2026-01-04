@@ -81,13 +81,13 @@ Efficiency losses are modeled symmetrically: charging 10 MWh draws 10.54 MWh fro
 
 | Strategy | Profit | % of Optimal | Charge Cycles | Discharge Cycles |
 |----------|--------|--------------|---------------|------------------|
-| Perfect Foresight | $621,705 | 100.0% | 1,800 | 1,780 |
-| Dynamic Programming | $621,705 | 100.0% | 1,800 | 1,780 |
-| Forecast Ema | $148,637 | 23.9% | 1,443 | 1,429 |
-| Sliding Window | $152,854 | 24.6% | 102 | 82 |
-| Greedy | $128,135 | 20.6% | 228 | 205 |
+| Perfect Foresight | $634,137 | 100.0% | 1,808 | 1,788 |
+| Dynamic Programming | $634,137 | 100.0% | 1,808 | 1,788 |
+| Forecast Ema | $156,812 | 24.7% | 1,451 | 1,430 |
+| Sliding Window | $154,111 | 24.3% | 103 | 82 |
+| Greedy | $128,100 | 20.2% | 226 | 203 |
 
-**Key Insight:** The Perfect Foresight algorithm establishes a theoretical upper bound of $621,705. Real-world strategies without future knowledge achieve 20-23% of optimal, with the EMA-based forecast strategy performing best among implementable approaches.
+**Key Insight:** The Perfect Foresight algorithm establishes a theoretical upper bound of $634,137. Real-world strategies without future knowledge achieve 20-24% of optimal, with the EMA-based forecast strategy performing best among implementable approaches.
 
 *Results auto-update every 15 minutes via GitHub Actions.*
 
