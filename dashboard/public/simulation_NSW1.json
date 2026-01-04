@@ -1,44 +1,14 @@
 {
-  "lastUpdated": "2026-01-04T04:36:16.873608",
+  "lastUpdated": "2026-01-04T05:08:32.756001",
   "region": "NSW1",
   "stats": {
-    "current": 57.08,
-    "mean": 45.23,
+    "current": 62.92,
+    "mean": 45.24,
     "min": -999.99,
     "max": 299.99,
-    "count": 4316
+    "count": 4322
   },
   "prices": [
-    {
-      "time": "06:15",
-      "fullDate": "2026-01-04 06:15:00+11:00",
-      "price": 0.0
-    },
-    {
-      "time": "06:20",
-      "fullDate": "2026-01-04 06:20:00+11:00",
-      "price": -3.05
-    },
-    {
-      "time": "06:25",
-      "fullDate": "2026-01-04 06:25:00+11:00",
-      "price": 0.0
-    },
-    {
-      "time": "06:30",
-      "fullDate": "2026-01-04 06:30:00+11:00",
-      "price": 25.46
-    },
-    {
-      "time": "06:35",
-      "fullDate": "2026-01-04 06:35:00+11:00",
-      "price": -0.11
-    },
-    {
-      "time": "06:40",
-      "fullDate": "2026-01-04 06:40:00+11:00",
-      "price": 0.0
-    },
     {
       "time": "06:45",
       "fullDate": "2026-01-04 06:45:00+11:00",
@@ -508,39 +478,39 @@
       "time": "14:30",
       "fullDate": "2026-01-04 14:30:00+11:00",
       "price": 57.08
+    },
+    {
+      "time": "14:35",
+      "fullDate": "2026-01-04 14:35:00+11:00",
+      "price": 53.22
+    },
+    {
+      "time": "14:40",
+      "fullDate": "2026-01-04 14:40:00+11:00",
+      "price": 36.06
+    },
+    {
+      "time": "14:45",
+      "fullDate": "2026-01-04 14:45:00+11:00",
+      "price": 38.07
+    },
+    {
+      "time": "14:50",
+      "fullDate": "2026-01-04 14:50:00+11:00",
+      "price": 56.98
+    },
+    {
+      "time": "14:55",
+      "fullDate": "2026-01-04 14:55:00+11:00",
+      "price": 62.94
+    },
+    {
+      "time": "15:00",
+      "fullDate": "2026-01-04 15:00:00+11:00",
+      "price": 62.92
     }
   ],
   "signals": [
-    {
-      "time": "12:55",
-      "price": 39.04,
-      "signal": "buy"
-    },
-    {
-      "time": "13:00",
-      "price": 57.06,
-      "signal": "hold"
-    },
-    {
-      "time": "13:05",
-      "price": 109.37,
-      "signal": "sell"
-    },
-    {
-      "time": "13:10",
-      "price": 103.99,
-      "signal": "sell"
-    },
-    {
-      "time": "13:15",
-      "price": 109.37,
-      "signal": "sell"
-    },
-    {
-      "time": "13:20",
-      "price": 299.98,
-      "signal": "sell"
-    },
     {
       "time": "13:25",
       "price": 299.97,
@@ -610,20 +580,50 @@
       "time": "14:30",
       "price": 57.08,
       "signal": "sell"
+    },
+    {
+      "time": "14:35",
+      "price": 53.22,
+      "signal": "hold"
+    },
+    {
+      "time": "14:40",
+      "price": 36.06,
+      "signal": "buy"
+    },
+    {
+      "time": "14:45",
+      "price": 38.07,
+      "signal": "buy"
+    },
+    {
+      "time": "14:50",
+      "price": 56.98,
+      "signal": "hold"
+    },
+    {
+      "time": "14:55",
+      "price": 62.94,
+      "signal": "sell"
+    },
+    {
+      "time": "15:00",
+      "price": 62.92,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 277896.48,
-      "charges": 1498,
-      "discharges": 1498
+      "profit": 278102.78,
+      "charges": 1500,
+      "discharges": 1500
     },
     {
       "name": "Greedy",
-      "profit": 108744.78,
-      "charges": 250,
-      "discharges": 244
+      "profit": 109229.49,
+      "charges": 251,
+      "discharges": 245
     },
     {
       "name": "Sliding Window",
@@ -633,23 +633,23 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 277896.48,
-      "charges": 1498,
-      "discharges": 1498
+      "profit": 278102.78,
+      "charges": 1500,
+      "discharges": 1500
     },
     {
       "name": "Forecast Ema",
-      "profit": 69015.84,
-      "charges": 1410,
+      "profit": 67653.47,
+      "charges": 1416,
       "discharges": 1407
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 277896.48,
-  "annualizedProfit": 7245158.11,
+  "bestProfit": 278102.78,
+  "annualizedProfit": 6767167.71,
   "dataRange": {
     "start": "2025-12-20 14:55:00+11:00",
-    "end": "2026-01-04 14:30:00+11:00",
-    "days": 14
+    "end": "2026-01-04 15:00:00+11:00",
+    "days": 15
   }
 }
