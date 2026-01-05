@@ -204,24 +204,6 @@ python -m pytest tests/test_e2e.py -v --tb=short
 
 ---
 
-## API Documentation
-
-See [docs/API.md](docs/API.md) for complete REST API reference.
-
-**Example Endpoints:**
-
-```bash
-# Get price data
-GET /api/prices?region=SA1&hours=24
-
-# Run simulation
-POST /api/simulation
-Content-Type: application/json
-{"region": "SA1", "strategy": "greedy", "battery": {"capacity": 100, "power": 50}}
-```
-
----
-
 ## Key Learnings
 
 - **Granularity matters:** 5-minute dispatch data captures price spikes that hourly aggregates miss entirely
@@ -248,11 +230,4 @@ Content-Type: application/json
 - Add walk-forward validation for strategy robustness testing
 
 ---
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
 **Data Source:** [AEMO NEMWEB](https://nemweb.com.au/) | **Dashboard:** [nem-price-forecasting.vercel.app](https://nem-price-forecasting.vercel.app/)
