@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2025-12-27T22:00:12.230509",
+  "lastUpdated": "2026-01-05T23:03:29.599725+00:00",
   "region": "VIC1",
   "stats": {
-    "current": 32.38,
-    "mean": -37.84,
-    "min": -204.31,
-    "max": 47.01,
-    "count": 577
+    "current": 21.18,
+    "mean": -6.39,
+    "min": -15.64,
+    "max": 21.18,
+    "count": 100
   },
   "prices": [
     {

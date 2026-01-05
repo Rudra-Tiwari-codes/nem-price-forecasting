@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2025-12-27T22:00:14.856492",
+  "lastUpdated": "2026-01-05T23:03:32.469483+00:00",
   "region": "QLD1",
   "stats": {
-    "current": 36.63,
-    "mean": 26.52,
-    "min": -14.99,
-    "max": 75.46,
-    "count": 577
+    "current": 20.18,
+    "mean": 1.36,
+    "min": -9.11,
+    "max": 21.61,
+    "count": 100
   },
   "prices": [
     {
