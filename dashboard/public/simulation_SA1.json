@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-01-05T23:03:24.230447+00:00",
+  "lastUpdated": "2026-01-05T23:16:14.055045+00:00",
   "region": "SA1",
   "stats": {
-    "current": -69.66,
-    "mean": -15.12,
-    "min": -230.43,
-    "max": 80.44,
+    "current": -9.5,
+    "mean": 49.08,
+    "min": -12.5,
+    "max": 87.24,
     "count": 100
   },
   "prices": [
@@ -597,19 +597,9 @@
       "signal": "hold"
     },
     {
-      "time": "20:25",
-      "price": 138.0,
-      "signal": "sell"
-    },
-    {
-      "time": "20:30",
-      "price": 125.0,
-      "signal": "sell"
-    },
-    {
-      "time": "20:35",
-      "price": 125.0,
-      "signal": "sell"
+      "time": "08:50",
+      "price": -9.5,
+      "signal": "buy"
     }
   ],
   "strategies": [

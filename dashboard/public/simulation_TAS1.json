@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-01-05T23:03:35.561151+00:00",
+  "lastUpdated": "2026-01-05T23:16:27.963355+00:00",
   "region": "TAS1",
   "stats": {
-    "current": 53.14,
-    "mean": 51.36,
-    "min": 50.06,
-    "max": 65.22,
+    "current": 105.18,
+    "mean": 88.28,
+    "min": 75.04,
+    "max": 105.18,
     "count": 100
   },
   "prices": [
@@ -579,36 +579,6 @@
     {
       "time": "20:05",
       "price": 69.57,
-      "signal": "sell"
-    },
-    {
-      "time": "20:10",
-      "price": 71.45,
-      "signal": "sell"
-    },
-    {
-      "time": "20:15",
-      "price": 69.57,
-      "signal": "sell"
-    },
-    {
-      "time": "20:20",
-      "price": 69.9,
-      "signal": "sell"
-    },
-    {
-      "time": "20:25",
-      "price": 58.08,
-      "signal": "sell"
-    },
-    {
-      "time": "20:30",
-      "price": 69.57,
-      "signal": "sell"
-    },
-    {
-      "time": "20:35",
-      "price": 102.69,
       "signal": "sell"
     }
   ],

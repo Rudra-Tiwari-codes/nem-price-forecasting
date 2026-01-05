@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-01-05T23:03:27.230446+00:00",
+  "lastUpdated": "2026-01-05T23:16:17.423051+00:00",
   "region": "NSW1",
   "stats": {
-    "current": 21.0,
-    "mean": 2.72,
-    "min": -8.8,
-    "max": 22.07,
+    "current": 22.18,
+    "mean": 53.03,
+    "min": -5.99,
+    "max": 82.13,
     "count": 100
   },
   "prices": [

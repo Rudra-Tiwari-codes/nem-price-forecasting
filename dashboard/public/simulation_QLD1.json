@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-01-05T23:03:32.469483+00:00",
+  "lastUpdated": "2026-01-05T23:16:24.540887+00:00",
   "region": "QLD1",
   "stats": {
-    "current": 20.18,
-    "mean": 1.36,
-    "min": -9.11,
-    "max": 21.61,
+    "current": -0.31,
+    "mean": 48.96,
+    "min": -6.26,
+    "max": 78.83,
     "count": 100
   },
   "prices": [
@@ -537,79 +537,64 @@
       "signal": "sell"
     },
     {
-      "time": "19:25",
-      "price": 37.36,
-      "signal": "sell"
-    },
-    {
-      "time": "19:30",
-      "price": 39.03,
-      "signal": "sell"
-    },
-    {
-      "time": "19:35",
-      "price": 38.8,
-      "signal": "sell"
-    },
-    {
-      "time": "19:40",
-      "price": 19.6,
+      "time": "07:55",
+      "price": -5.26,
       "signal": "buy"
     },
     {
-      "time": "19:45",
-      "price": 34.75,
+      "time": "08:00",
+      "price": 0.0,
       "signal": "hold"
     },
     {
-      "time": "19:50",
-      "price": 38.29,
-      "signal": "sell"
-    },
-    {
-      "time": "19:55",
-      "price": 38.52,
-      "signal": "sell"
-    },
-    {
-      "time": "20:00",
-      "price": 36.99,
-      "signal": "sell"
-    },
-    {
-      "time": "20:05",
-      "price": 34.63,
+      "time": "08:05",
+      "price": 0.0,
       "signal": "hold"
     },
     {
-      "time": "20:10",
-      "price": 37.77,
-      "signal": "sell"
-    },
-    {
-      "time": "20:15",
-      "price": 34.75,
+      "time": "08:10",
+      "price": 0.0,
       "signal": "hold"
     },
     {
-      "time": "20:20",
-      "price": 34.75,
+      "time": "08:15",
+      "price": 0.0,
       "signal": "hold"
     },
     {
-      "time": "20:25",
-      "price": 20.02,
+      "time": "08:20",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:25",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:30",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:35",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:40",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:45",
+      "price": 0.0,
+      "signal": "hold"
+    },
+    {
+      "time": "08:50",
+      "price": -0.31,
       "signal": "buy"
-    },
-    {
-      "time": "20:30",
-      "price": 33.24,
-      "signal": "hold"
-    },
-    {
-      "time": "20:35",
-      "price": 36.63,
-      "signal": "sell"
     }
   ],
   "strategies": [
