@@ -174,7 +174,7 @@ def run_simulation(
     print_section("Exporting Dashboard Data")
     try:
         import json
-        from datetime import datetime
+        from datetime import datetime, timezone
 
         dashboard_dir = Path(data_path).parent.parent / "dashboard" / "public"
         dashboard_dir.mkdir(parents=True, exist_ok=True)
@@ -219,14 +219,14 @@ def run_simulation(
             })
 
         dashboard_data = {
-            'lastUpdated': datetime.now().isoformat(),
+            'lastUpdated': datetime.now(timezone.utc).isoformat(),
             'region': region if region else 'ALL',
             'stats': {
-                'current': round(float(df['RRP'].iloc[-1]), 2),
-                'mean': round(float(stats['mean']), 2),
-                'min': round(float(stats['min']), 2),
-                'max': round(float(stats['max']), 2),
-                'count': int(stats['count'])
+                'current': round(float(recent_df['RRP'].iloc[-1]), 2),
+                'mean': round(float(recent_df['RRP'].mean()), 2),
+                'min': round(float(recent_df['RRP'].min()), 2),
+                'max': round(float(recent_df['RRP'].max()), 2),
+                'count': int(len(recent_df))
             },
             'prices': recent_prices,
             'signals': signals,
