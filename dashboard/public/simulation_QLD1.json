@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-06T09:54:52.327772+00:00",
+  "lastUpdated": "2026-01-06T09:57:20.627549+00:00",
   "region": "QLD1",
   "stats": {
     "current": 145.12,
@@ -627,9 +627,9 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 22639.95,
-      "charges": 93,
-      "discharges": 93
+      "profit": 22881.06,
+      "charges": 94,
+      "discharges": 94
     },
     {
       "name": "Dynamic Programming",

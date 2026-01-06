@@ -40,12 +40,16 @@ def volatility_analysis(df: pd.DataFrame, window: int = 288) -> pd.DataFrame:
     if 'RRP' not in df.columns or 'SETTLEMENTDATE' not in df.columns:
         raise ValueError("DataFrame must contain 'RRP' and 'SETTLEMENTDATE' columns")
     
-    df = df.copy()
-    df['rolling_std'] = df['RRP'].rolling(window=window, min_periods=1).std()
-    df['rolling_mean'] = df['RRP'].rolling(window=window, min_periods=1).mean()
-    df['volatility_ratio'] = df['rolling_std'] / df['rolling_mean'].abs().replace(0, np.nan)
+    # Create result with only needed columns to avoid unnecessary copying
+    result = pd.DataFrame({
+        'SETTLEMENTDATE': df['SETTLEMENTDATE'],
+        'RRP': df['RRP']
+    })
+    result['rolling_std'] = df['RRP'].rolling(window=window, min_periods=1).std()
+    result['rolling_mean'] = df['RRP'].rolling(window=window, min_periods=1).mean()
+    result['volatility_ratio'] = result['rolling_std'] / result['rolling_mean'].abs().replace(0, np.nan)
     
-    return df[['SETTLEMENTDATE', 'RRP', 'rolling_std', 'rolling_mean', 'volatility_ratio']]
+    return result
 
 
 def temporal_patterns(df: pd.DataFrame) -> Dict[str, Any]:
@@ -53,22 +57,23 @@ def temporal_patterns(df: pd.DataFrame) -> Dict[str, Any]:
     if 'SETTLEMENTDATE' not in df.columns or 'RRP' not in df.columns:
         raise ValueError("DataFrame must contain 'SETTLEMENTDATE' and 'RRP' columns")
     
-    df = df.copy()
-    df['hour'] = df['SETTLEMENTDATE'].dt.hour
-    df['dayofweek'] = df['SETTLEMENTDATE'].dt.dayofweek
-    df['is_weekend'] = df['dayofweek'] >= 5
+    # Extract temporal features without copying entire dataframe
+    hour = df['SETTLEMENTDATE'].dt.hour
+    dayofweek = df['SETTLEMENTDATE'].dt.dayofweek
+    is_weekend = dayofweek >= 5
     
-    hourly = df.groupby('hour')['RRP'].agg(['mean', 'std', 'median'])
-    daily = df.groupby('dayofweek')['RRP'].agg(['mean', 'std', 'median'])
+    hourly = df.groupby(hour)['RRP'].agg(['mean', 'std', 'median'])
+    daily = df.groupby(dayofweek)['RRP'].agg(['mean', 'std', 'median'])
     
-    weekend_data = df[df['is_weekend']]['RRP']
-    weekday_data = df[~df['is_weekend']]['RRP']
+    weekend_data = df.loc[is_weekend, 'RRP']
+    weekday_data = df.loc[~is_weekend, 'RRP']
     weekend_avg = float(weekend_data.mean()) if len(weekend_data) > 0 else 0.0
     weekday_avg = float(weekday_data.mean()) if len(weekday_data) > 0 else 0.0
     
     peak_hours = [7, 8, 9, 17, 18, 19, 20]
-    peak_data = df[df['hour'].isin(peak_hours)]['RRP']
-    offpeak_data = df[~df['hour'].isin(peak_hours)]['RRP']
+    peak_mask = hour.isin(peak_hours)
+    peak_data = df.loc[peak_mask, 'RRP']
+    offpeak_data = df.loc[~peak_mask, 'RRP']
     peak_avg = float(peak_data.mean()) if len(peak_data) > 0 else 0.0
     offpeak_avg = float(offpeak_data.mean()) if len(offpeak_data) > 0 else 0.0
     

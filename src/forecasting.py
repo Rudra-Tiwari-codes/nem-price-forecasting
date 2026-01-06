@@ -118,6 +118,8 @@ def run_forecast_strategy(
     Trading strategy based on forecast vs current price.
     Buy when forecast > current (price expected to rise).
     Sell when forecast < current (price expected to fall).
+    
+    Optimized version using vectorized operations.
     """
     if 'RRP' not in df.columns:
         raise ValueError("DataFrame must contain 'RRP' column")
@@ -134,24 +136,25 @@ def run_forecast_strategy(
     max_energy = power_mw * interval_hours
     efficiency_factor = np.sqrt(efficiency)
     
+    # Initialize arrays
     actions = np.full(n, 'hold', dtype=object)
     soc = np.zeros(n)
     profit = np.zeros(n)
     cumulative_profit = np.zeros(n)
+    
+    # Pre-compute signals vectorially
+    # Charge when forecast > current * 1.05 (price expected to rise)
+    # Discharge when forecast < current * 0.95 (price expected to fall)
+    charge_signal = (predictions > prices * 1.05) & ~np.isnan(predictions)
+    discharge_signal = (predictions < prices * 0.95) & ~np.isnan(predictions)
     
     current_soc = 0.0
     total_profit = 0.0
     
     for i in range(1, n):
         price = prices[i]
-        forecast = predictions[i]
         
-        if np.isnan(forecast):
-            soc[i] = current_soc
-            cumulative_profit[i] = total_profit
-            continue
-        
-        if forecast > price * 1.05 and current_soc < capacity_mwh:
+        if charge_signal[i] and current_soc < capacity_mwh:
             charge_amount = min(max_energy, capacity_mwh - current_soc)
             grid_energy = charge_amount / efficiency_factor
             cost = grid_energy * price
@@ -160,7 +163,7 @@ def run_forecast_strategy(
             current_soc += charge_amount
             profit[i] = -cost
             
-        elif forecast < price * 0.95 and current_soc > 0:
+        elif discharge_signal[i] and current_soc > 0:
             discharge_amount = min(max_energy, current_soc)
             grid_energy = discharge_amount * efficiency_factor
             revenue = grid_energy * price

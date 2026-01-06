@@ -86,8 +86,7 @@ def run_greedy_strategy(
     
     current_soc = 0.0
     total_profit = 0.0
-    avg_buy_price = 0.0
-    total_bought = 0.0
+    # Simplified tracking - we don't actually use avg_buy_price in the strategy logic
     
     for i in range(n):
         price = prices[i]
@@ -97,11 +96,6 @@ def run_greedy_strategy(
             charge_amount = min(max_energy, capacity_mwh - current_soc)
             grid_energy = charge_amount / efficiency_factor
             cost = grid_energy * price
-            
-            # Track weighted average buy price
-            total_bought += charge_amount
-            avg_buy_price = (avg_buy_price * (total_bought - charge_amount) + 
-                           price * charge_amount) / total_bought if total_bought > 0 else price
             
             actions[i] = 'charge'
             energy[i] = charge_amount

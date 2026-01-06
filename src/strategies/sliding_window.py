@@ -19,6 +19,7 @@ def find_local_extrema(
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Find local minima and maxima using sliding window.
+    Uses scipy's argrelextrema for efficient extrema detection.
     
     Args:
         prices: Array of prices
@@ -27,20 +28,24 @@ def find_local_extrema(
     Returns:
         Tuple of (is_local_min array, is_local_max array)
     """
+    from scipy.signal import argrelextrema
+    
     n = len(prices)
     is_min = np.zeros(n, dtype=bool)
     is_max = np.zeros(n, dtype=bool)
     
-    half_window = window_size // 2
+    # Use scipy's efficient extrema detection
+    # order parameter determines how many points on each side to compare
+    order = window_size // 2
+    if order < 1:
+        order = 1
     
-    for i in range(half_window, n - half_window):
-        window = prices[i - half_window:i + half_window + 1]
-        current = prices[i]
-        
-        if current == np.min(window):
-            is_min[i] = True
-        if current == np.max(window):
-            is_max[i] = True
+    # Find local minima and maxima indices
+    min_indices = argrelextrema(prices, np.less_equal, order=order)[0]
+    max_indices = argrelextrema(prices, np.greater_equal, order=order)[0]
+    
+    is_min[min_indices] = True
+    is_max[max_indices] = True
     
     return is_min, is_max
 

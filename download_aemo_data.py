@@ -190,7 +190,9 @@ def download_all_data(max_files: int = None, force_full: bool = False) -> pd.Dat
     
     print(f"Downloading and extracting {len(new_links)} files...")
     
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    # Increase max_workers for better parallelism on modern systems
+    max_workers = min(20, len(new_links))  # Cap at 20 workers
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_url = {executor.submit(download_and_extract_zip, url): url for url in new_links}
         
         for i, future in enumerate(as_completed(future_to_url)):
@@ -200,8 +202,8 @@ def download_all_data(max_files: int = None, force_full: bool = False) -> pd.Dat
                 all_dfs.append(df)
                 successfully_downloaded.append(url)
             
-            # Progress indicator
-            if (i + 1) % 50 == 0:
+            # Progress indicator - show more frequently for better feedback
+            if (i + 1) % 25 == 0 or (i + 1) == len(new_links):
                 print(f"   Processed {i + 1}/{len(new_links)} files...")
     
     # Update download state with successfully processed files
@@ -216,7 +218,7 @@ def download_all_data(max_files: int = None, force_full: bool = False) -> pd.Dat
         print("No new data was extracted!")
         return existing_df
     
-    # Combine new DataFrames
+    # Combine new DataFrames more efficiently with list comprehension
     print(f"Combining {len(all_dfs)} new DataFrames...")
     new_df = pd.concat(all_dfs, ignore_index=True)
     

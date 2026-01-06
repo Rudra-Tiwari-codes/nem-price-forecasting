@@ -86,12 +86,12 @@ def get_price_series(df: pd.DataFrame, region: Optional[str] = None) -> pd.Serie
     Returns:
         Series of RRP values indexed by SETTLEMENTDATE
     """
-    data = df.copy()
+    if region and 'REGIONID' in df.columns:
+        # Filter without copying the entire dataframe
+        filtered = df[df['REGIONID'] == region]
+        return filtered.set_index('SETTLEMENTDATE')['RRP']
     
-    if region and 'REGIONID' in data.columns:
-        data = data[data['REGIONID'] == region]
-    
-    return data.set_index('SETTLEMENTDATE')['RRP']
+    return df.set_index('SETTLEMENTDATE')['RRP']
 
 
 def get_price_statistics(df: pd.DataFrame) -> dict:

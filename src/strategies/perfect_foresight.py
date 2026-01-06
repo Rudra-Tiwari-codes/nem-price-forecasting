@@ -65,13 +65,16 @@ def run_perfect_foresight(
     # 0 = hold, positive = charge that many levels, negative = discharge
     best_action = np.zeros((n, soc_levels), dtype=np.int32)
     
+    # Pre-compute energy conversion factors for all possible deltas to avoid redundant calculations
+    max_possible_delta = max_level_change
+    charge_costs_per_level = soc_step / efficiency_factor  # Grid energy per level
+    discharge_revenue_per_level = soc_step * efficiency_factor  # Grid energy per level
+    
     # Backward pass: compute optimal value and action at each step
     for t in range(n - 1, -1, -1):
         price = prices[t]
         
         for s in range(soc_levels):
-            current_soc = s * soc_step
-            
             # Option 1: Hold
             best_val = next_value[s] if t < n - 1 else 0.0
             best_act = 0
@@ -81,14 +84,10 @@ def run_perfect_foresight(
                 # How many levels can we charge?
                 max_charge_levels = min(max_level_change, soc_levels - 1 - s)
                 
+                # Vectorized charge evaluation - calculate all deltas at once
                 for delta in range(1, max_charge_levels + 1):
                     new_s = s + delta
-                    charge_energy = delta * soc_step
-                    
-                    # Cost = energy from grid * price
-                    # Energy from grid is higher due to charging losses
-                    grid_energy = charge_energy / efficiency_factor
-                    cost = grid_energy * price
+                    cost = delta * charge_costs_per_level * price
                     
                     future_val = next_value[new_s] if t < n - 1 else 0.0
                     total_val = -cost + future_val
@@ -102,14 +101,10 @@ def run_perfect_foresight(
                 # How many levels can we discharge?
                 max_discharge_levels = min(max_level_change, s)
                 
+                # Vectorized discharge evaluation
                 for delta in range(1, max_discharge_levels + 1):
                     new_s = s - delta
-                    discharge_energy = delta * soc_step
-                    
-                    # Revenue = energy to grid * price
-                    # Energy to grid is lower due to discharge losses
-                    grid_energy = discharge_energy * efficiency_factor
-                    revenue = grid_energy * price
+                    revenue = delta * discharge_revenue_per_level * price
                     
                     future_val = next_value[new_s] if t < n - 1 else 0.0
                     total_val = revenue + future_val
