@@ -148,11 +148,10 @@ export default function About() {
                 <section className="mt-32 pt-12 border-t border-white/5 text-center">
                     <Link
                         href="/"
-                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full overflow-hidden hover:border-white/20 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.5)]"
+                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-black border border-white rounded-full transition-all duration-300 hover:bg-white hover:scale-105"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <span className="relative z-10 text-lg font-[family-name:var(--font-space)] text-white tracking-wide">Check Live Prices</span>
-                        <svg className="w-5 h-5 relative z-10 text-purple-400 transition-transform group-hover:translate-x-1 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span className="relative z-10 text-lg font-[family-name:var(--font-space)] text-white tracking-wide group-hover:text-black transition-colors">Check Live Prices</span>
+                        <svg className="w-5 h-5 relative z-10 text-white transition-all group-hover:translate-x-1 group-hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                     </Link>
