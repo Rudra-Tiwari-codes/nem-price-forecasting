@@ -1,39 +1,14 @@
 {
-  "lastUpdated": "2026-01-06T04:55:20.972839+00:00",
+  "lastUpdated": "2026-01-06T05:22:15.513351+00:00",
   "region": "SA1",
   "stats": {
-    "current": 21.21,
-    "mean": -5.21,
+    "current": 52.17,
+    "mean": -3.17,
     "min": -34.86,
-    "max": 46.25,
+    "max": 87.73,
     "count": 100
   },
   "prices": [
-    {
-      "time": "06:25",
-      "fullDate": "2026-01-06 06:25:00+11:00",
-      "price": 9.22
-    },
-    {
-      "time": "06:30",
-      "fullDate": "2026-01-06 06:30:00+11:00",
-      "price": 1.11
-    },
-    {
-      "time": "06:35",
-      "fullDate": "2026-01-06 06:35:00+11:00",
-      "price": 9.06
-    },
-    {
-      "time": "06:40",
-      "fullDate": "2026-01-06 06:40:00+11:00",
-      "price": 14.58
-    },
-    {
-      "time": "06:45",
-      "fullDate": "2026-01-06 06:45:00+11:00",
-      "price": 13.04
-    },
     {
       "time": "06:50",
       "fullDate": "2026-01-06 06:50:00+11:00",
@@ -508,38 +483,38 @@
       "time": "14:40",
       "fullDate": "2026-01-06 14:40:00+11:00",
       "price": 21.21
+    },
+    {
+      "time": "14:45",
+      "fullDate": "2026-01-06 14:45:00+11:00",
+      "price": -8.5
+    },
+    {
+      "time": "14:50",
+      "fullDate": "2026-01-06 14:50:00+11:00",
+      "price": 70.49
+    },
+    {
+      "time": "14:55",
+      "fullDate": "2026-01-06 14:55:00+11:00",
+      "price": 87.73
+    },
+    {
+      "time": "15:00",
+      "fullDate": "2026-01-06 15:00:00+11:00",
+      "price": 49.02
+    },
+    {
+      "time": "15:05",
+      "fullDate": "2026-01-06 15:05:00+11:00",
+      "price": 52.17
     }
   ],
   "signals": [
     {
-      "time": "13:05",
-      "price": -8.5,
-      "signal": "buy"
-    },
-    {
-      "time": "13:10",
-      "price": -12.5,
-      "signal": "buy"
-    },
-    {
-      "time": "13:15",
-      "price": -7.0,
-      "signal": "sell"
-    },
-    {
-      "time": "13:20",
-      "price": -7.0,
-      "signal": "sell"
-    },
-    {
-      "time": "13:25",
-      "price": -7.0,
-      "signal": "buy"
-    },
-    {
       "time": "13:30",
       "price": -7.0,
-      "signal": "buy"
+      "signal": "sell"
     },
     {
       "time": "13:35",
@@ -549,7 +524,7 @@
     {
       "time": "13:40",
       "price": -7.0,
-      "signal": "sell"
+      "signal": "buy"
     },
     {
       "time": "13:45",
@@ -559,7 +534,7 @@
     {
       "time": "13:50",
       "price": -7.0,
-      "signal": "buy"
+      "signal": "sell"
     },
     {
       "time": "13:55",
@@ -610,20 +585,45 @@
       "time": "14:40",
       "price": 21.21,
       "signal": "sell"
+    },
+    {
+      "time": "14:45",
+      "price": -8.5,
+      "signal": "buy"
+    },
+    {
+      "time": "14:50",
+      "price": 70.49,
+      "signal": "sell"
+    },
+    {
+      "time": "14:55",
+      "price": 87.73,
+      "signal": "sell"
+    },
+    {
+      "time": "15:00",
+      "price": 49.02,
+      "signal": "sell"
+    },
+    {
+      "time": "15:05",
+      "price": 52.17,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 683255.59,
-      "charges": 2035,
-      "discharges": 2018
+      "profit": 684530.88,
+      "charges": 2036,
+      "discharges": 2022
     },
     {
       "name": "Greedy",
-      "profit": 143081.61,
+      "profit": 143459.77,
       "charges": 235,
-      "discharges": 235
+      "discharges": 236
     },
     {
       "name": "Sliding Window",
@@ -633,23 +633,23 @@
     },
     {
       "name": "Dynamic Programming",
-      "profit": 683255.59,
-      "charges": 2035,
-      "discharges": 2018
+      "profit": 684530.88,
+      "charges": 2036,
+      "discharges": 2022
     },
     {
       "name": "Forecast Ema",
-      "profit": 154720.21,
-      "charges": 1628,
-      "discharges": 1610
+      "profit": 155782.95,
+      "charges": 1629,
+      "discharges": 1614
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 683255.59,
-  "annualizedProfit": 15586768.11,
+  "bestProfit": 684530.88,
+  "annualizedProfit": 14697280.59,
   "dataRange": {
     "start": "2025-12-20 14:55:00+11:00",
-    "end": "2026-01-06 14:40:00+11:00",
-    "days": 16
+    "end": "2026-01-06 15:05:00+11:00",
+    "days": 17
   }
 }

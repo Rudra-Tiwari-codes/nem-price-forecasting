@@ -1,39 +1,14 @@
 {
-  "lastUpdated": "2026-01-06T04:55:17.660345+00:00",
+  "lastUpdated": "2026-01-06T05:22:12.498853+00:00",
   "region": "TAS1",
   "stats": {
-    "current": 104.75,
-    "mean": 90.93,
-    "min": 75.04,
-    "max": 130.33,
+    "current": 104.98,
+    "mean": 92.32,
+    "min": 78.74,
+    "max": 136.91,
     "count": 100
   },
   "prices": [
-    {
-      "time": "06:25",
-      "fullDate": "2026-01-06 06:25:00+11:00",
-      "price": 79.3
-    },
-    {
-      "time": "06:30",
-      "fullDate": "2026-01-06 06:30:00+11:00",
-      "price": 75.04
-    },
-    {
-      "time": "06:35",
-      "fullDate": "2026-01-06 06:35:00+11:00",
-      "price": 79.37
-    },
-    {
-      "time": "06:40",
-      "fullDate": "2026-01-06 06:40:00+11:00",
-      "price": 85.06
-    },
-    {
-      "time": "06:45",
-      "fullDate": "2026-01-06 06:45:00+11:00",
-      "price": 83.41
-    },
     {
       "time": "06:50",
       "fullDate": "2026-01-06 06:50:00+11:00",
@@ -508,43 +483,43 @@
       "time": "14:40",
       "fullDate": "2026-01-06 14:40:00+11:00",
       "price": 104.75
+    },
+    {
+      "time": "14:45",
+      "fullDate": "2026-01-06 14:45:00+11:00",
+      "price": 87.82
+    },
+    {
+      "time": "14:50",
+      "fullDate": "2026-01-06 14:50:00+11:00",
+      "price": 105.18
+    },
+    {
+      "time": "14:55",
+      "fullDate": "2026-01-06 14:55:00+11:00",
+      "price": 106.57
+    },
+    {
+      "time": "15:00",
+      "fullDate": "2026-01-06 15:00:00+11:00",
+      "price": 136.91
+    },
+    {
+      "time": "15:05",
+      "fullDate": "2026-01-06 15:05:00+11:00",
+      "price": 104.98
     }
   ],
   "signals": [
     {
-      "time": "13:05",
-      "price": 85.06,
-      "signal": "hold"
-    },
-    {
-      "time": "13:10",
-      "price": 85.01,
-      "signal": "buy"
-    },
-    {
-      "time": "13:15",
-      "price": 85.06,
-      "signal": "hold"
-    },
-    {
-      "time": "13:20",
-      "price": 85.06,
-      "signal": "hold"
-    },
-    {
-      "time": "13:25",
-      "price": 105.18,
-      "signal": "sell"
-    },
-    {
       "time": "13:30",
       "price": 85.06,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "13:35",
       "price": 85.06,
-      "signal": "hold"
+      "signal": "buy"
     },
     {
       "time": "13:40",
@@ -610,14 +585,39 @@
       "time": "14:40",
       "price": 104.75,
       "signal": "sell"
+    },
+    {
+      "time": "14:45",
+      "price": 87.82,
+      "signal": "hold"
+    },
+    {
+      "time": "14:50",
+      "price": 105.18,
+      "signal": "sell"
+    },
+    {
+      "time": "14:55",
+      "price": 106.57,
+      "signal": "sell"
+    },
+    {
+      "time": "15:00",
+      "price": 136.91,
+      "signal": "sell"
+    },
+    {
+      "time": "15:05",
+      "price": 104.98,
+      "signal": "sell"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 160130.45,
-      "charges": 1296,
-      "discharges": 1296
+      "profit": 160489.03,
+      "charges": 1300,
+      "discharges": 1300
     },
     {
       "name": "Greedy",
@@ -627,29 +627,29 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 34033.36,
+      "profit": 34548.54,
       "charges": 213,
-      "discharges": 214
+      "discharges": 215
     },
     {
       "name": "Dynamic Programming",
-      "profit": 160130.45,
-      "charges": 1296,
-      "discharges": 1296
+      "profit": 160489.03,
+      "charges": 1300,
+      "discharges": 1300
     },
     {
       "name": "Forecast Ema",
-      "profit": 48448.1,
-      "charges": 1293,
-      "discharges": 1278
+      "profit": 49440.59,
+      "charges": 1294,
+      "discharges": 1281
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 160130.45,
-  "annualizedProfit": 3652975.81,
+  "bestProfit": 160489.03,
+  "annualizedProfit": 3445793.83,
   "dataRange": {
     "start": "2025-12-20 14:55:00+11:00",
-    "end": "2026-01-06 14:40:00+11:00",
-    "days": 16
+    "end": "2026-01-06 15:05:00+11:00",
+    "days": 17
   }
 }
