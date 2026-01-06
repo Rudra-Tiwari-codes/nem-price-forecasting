@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-06T09:59:26.940760+00:00",
+  "lastUpdated": "2026-01-06T10:01:41.573342+00:00",
   "region": "SA1",
   "stats": {
     "current": 20217.17,
@@ -627,9 +627,9 @@
     },
     {
       "name": "Sliding Window",
-      "profit": 321637.96,
-      "charges": 115,
-      "discharges": 97
+      "profit": 138159.95,
+      "charges": 73,
+      "discharges": 61
     },
     {
       "name": "Dynamic Programming",
