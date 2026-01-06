@@ -6,12 +6,6 @@ export default function About() {
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500/30">
 
-            {/* Background Gradients */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[120px]" />
-            </div>
-
             {/* Main Content Container */}
             <div className="relative z-10 pt-24 pb-16 sm:pt-32 sm:pb-24 px-6 max-w-4xl mx-auto">
 
