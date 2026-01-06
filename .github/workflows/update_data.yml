@@ -87,12 +87,16 @@ jobs:
       
       - name: Run simulation for all regions
         run: |
+          # Generate a single timestamp for all regions to ensure synchronization
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S+00:00")
+          echo "Using timestamp: $TIMESTAMP"
+          
           for region in SA1 NSW1 VIC1 QLD1 TAS1; do
             echo "Running simulation for $region..."
-            python main.py --region $region --no-charts
+            python main.py --region $region --no-charts --timestamp "$TIMESTAMP"
           done
           # Generate charts for SA1 (default)
-          python main.py --region SA1
+          python main.py --region SA1 --timestamp "$TIMESTAMP"
       
       - name: Commit and push changes
         run: |
