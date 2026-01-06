@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from typing import Tuple
 from collections import deque
+from scipy.signal import argrelextrema
 
 
 def find_local_extrema(
@@ -28,8 +29,6 @@ def find_local_extrema(
     Returns:
         Tuple of (is_local_min array, is_local_max array)
     """
-    from scipy.signal import argrelextrema
-    
     n = len(prices)
     is_min = np.zeros(n, dtype=bool)
     is_max = np.zeros(n, dtype=bool)
@@ -40,9 +39,10 @@ def find_local_extrema(
     if order < 1:
         order = 1
     
-    # Find local minima and maxima indices
-    min_indices = argrelextrema(prices, np.less_equal, order=order)[0]
-    max_indices = argrelextrema(prices, np.greater_equal, order=order)[0]
+    # Find local minima and maxima indices using strict comparison
+    # np.less and np.greater ensure true extrema (not flat regions)
+    min_indices = argrelextrema(prices, np.less, order=order)[0]
+    max_indices = argrelextrema(prices, np.greater, order=order)[0]
     
     is_min[min_indices] = True
     is_max[max_indices] = True
