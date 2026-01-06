@@ -1,84 +1,14 @@
 {
-  "lastUpdated": "2026-01-06T03:07:56.882087+00:00",
+  "lastUpdated": "2026-01-06T04:12:29.851979+00:00",
   "region": "SA1",
   "stats": {
-    "current": 1.1,
-    "mean": 8.71,
+    "current": -9.5,
+    "mean": -2.76,
     "min": -34.86,
-    "max": 78.88,
+    "max": 72.56,
     "count": 100
   },
   "prices": [
-    {
-      "time": "04:35",
-      "fullDate": "2026-01-06 04:35:00+11:00",
-      "price": 78.49
-    },
-    {
-      "time": "04:40",
-      "fullDate": "2026-01-06 04:40:00+11:00",
-      "price": 78.12
-    },
-    {
-      "time": "04:45",
-      "fullDate": "2026-01-06 04:45:00+11:00",
-      "price": 75.26
-    },
-    {
-      "time": "04:50",
-      "fullDate": "2026-01-06 04:50:00+11:00",
-      "price": 77.99
-    },
-    {
-      "time": "04:55",
-      "fullDate": "2026-01-06 04:55:00+11:00",
-      "price": 76.22
-    },
-    {
-      "time": "05:00",
-      "fullDate": "2026-01-06 05:00:00+11:00",
-      "price": 72.94
-    },
-    {
-      "time": "05:05",
-      "fullDate": "2026-01-06 05:05:00+11:00",
-      "price": 75.34
-    },
-    {
-      "time": "05:10",
-      "fullDate": "2026-01-06 05:10:00+11:00",
-      "price": 76.79
-    },
-    {
-      "time": "05:15",
-      "fullDate": "2026-01-06 05:15:00+11:00",
-      "price": 75.23
-    },
-    {
-      "time": "05:20",
-      "fullDate": "2026-01-06 05:20:00+11:00",
-      "price": 75.05
-    },
-    {
-      "time": "05:25",
-      "fullDate": "2026-01-06 05:25:00+11:00",
-      "price": 77.15
-    },
-    {
-      "time": "05:30",
-      "fullDate": "2026-01-06 05:30:00+11:00",
-      "price": 76.99
-    },
-    {
-      "time": "05:35",
-      "fullDate": "2026-01-06 05:35:00+11:00",
-      "price": 78.88
-    },
-    {
-      "time": "05:40",
-      "fullDate": "2026-01-06 05:40:00+11:00",
-      "price": 73.82
-    },
     {
       "time": "05:45",
       "fullDate": "2026-01-06 05:45:00+11:00",
@@ -455,6 +385,11 @@
       "price": -8.5
     },
     {
+      "time": "12:00",
+      "fullDate": "2026-01-06 12:00:00+11:00",
+      "price": -7.0
+    },
+    {
       "time": "12:05",
       "fullDate": "2026-01-06 12:05:00+11:00",
       "price": -8.5
@@ -508,74 +443,74 @@
       "time": "12:55",
       "fullDate": "2026-01-06 12:55:00+11:00",
       "price": 1.1
+    },
+    {
+      "time": "13:00",
+      "fullDate": "2026-01-06 13:00:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:05",
+      "fullDate": "2026-01-06 13:05:00+11:00",
+      "price": -8.5
+    },
+    {
+      "time": "13:10",
+      "fullDate": "2026-01-06 13:10:00+11:00",
+      "price": -12.5
+    },
+    {
+      "time": "13:15",
+      "fullDate": "2026-01-06 13:15:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:20",
+      "fullDate": "2026-01-06 13:20:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:25",
+      "fullDate": "2026-01-06 13:25:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:30",
+      "fullDate": "2026-01-06 13:30:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:35",
+      "fullDate": "2026-01-06 13:35:00+11:00",
+      "price": -6.5
+    },
+    {
+      "time": "13:40",
+      "fullDate": "2026-01-06 13:40:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:45",
+      "fullDate": "2026-01-06 13:45:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:50",
+      "fullDate": "2026-01-06 13:50:00+11:00",
+      "price": -7.0
+    },
+    {
+      "time": "13:55",
+      "fullDate": "2026-01-06 13:55:00+11:00",
+      "price": 21.21
+    },
+    {
+      "time": "14:00",
+      "fullDate": "2026-01-06 14:00:00+11:00",
+      "price": -9.5
     }
   ],
   "signals": [
-    {
-      "time": "11:15",
-      "price": -7.0,
-      "signal": "sell"
-    },
-    {
-      "time": "11:20",
-      "price": -7.0,
-      "signal": "buy"
-    },
-    {
-      "time": "11:25",
-      "price": 0.0,
-      "signal": "sell"
-    },
-    {
-      "time": "11:30",
-      "price": 7.79,
-      "signal": "sell"
-    },
-    {
-      "time": "11:35",
-      "price": 0.0,
-      "signal": "sell"
-    },
-    {
-      "time": "11:40",
-      "price": -8.5,
-      "signal": "buy"
-    },
-    {
-      "time": "11:45",
-      "price": -7.0,
-      "signal": "sell"
-    },
-    {
-      "time": "11:50",
-      "price": -8.5,
-      "signal": "buy"
-    },
-    {
-      "time": "11:55",
-      "price": -8.5,
-      "signal": "buy"
-    },
-    {
-      "time": "12:05",
-      "price": -8.5,
-      "signal": "buy"
-    },
-    {
-      "time": "12:10",
-      "price": 0.0,
-      "signal": "sell"
-    },
-    {
-      "time": "12:15",
-      "price": -6.5,
-      "signal": "sell"
-    },
-    {
-      "time": "12:20",
-      "price": -7.0,
-      "signal": "buy"
-    },
     {
       "time": "12:25",
       "price": -8.5,
@@ -584,7 +519,7 @@
     {
       "time": "12:30",
       "price": -7.0,
-      "signal": "sell"
+      "signal": "buy"
     },
     {
       "time": "12:35",
@@ -594,12 +529,12 @@
     {
       "time": "12:40",
       "price": -7.0,
-      "signal": "sell"
+      "signal": "buy"
     },
     {
       "time": "12:45",
       "price": -7.0,
-      "signal": "buy"
+      "signal": "sell"
     },
     {
       "time": "12:50",
@@ -610,46 +545,111 @@
       "time": "12:55",
       "price": 1.1,
       "signal": "sell"
+    },
+    {
+      "time": "13:00",
+      "price": -7.0,
+      "signal": "sell"
+    },
+    {
+      "time": "13:05",
+      "price": -8.5,
+      "signal": "buy"
+    },
+    {
+      "time": "13:10",
+      "price": -12.5,
+      "signal": "buy"
+    },
+    {
+      "time": "13:15",
+      "price": -7.0,
+      "signal": "buy"
+    },
+    {
+      "time": "13:20",
+      "price": -7.0,
+      "signal": "buy"
+    },
+    {
+      "time": "13:25",
+      "price": -7.0,
+      "signal": "sell"
+    },
+    {
+      "time": "13:30",
+      "price": -7.0,
+      "signal": "buy"
+    },
+    {
+      "time": "13:35",
+      "price": -6.5,
+      "signal": "sell"
+    },
+    {
+      "time": "13:40",
+      "price": -7.0,
+      "signal": "buy"
+    },
+    {
+      "time": "13:45",
+      "price": -7.0,
+      "signal": "sell"
+    },
+    {
+      "time": "13:50",
+      "price": -7.0,
+      "signal": "buy"
+    },
+    {
+      "time": "13:55",
+      "price": 21.21,
+      "signal": "sell"
+    },
+    {
+      "time": "14:00",
+      "price": -9.5,
+      "signal": "buy"
     }
   ],
   "strategies": [
     {
       "name": "Perfect Foresight",
-      "profit": 682156.78,
-      "charges": 2024,
-      "discharges": 2006
+      "profit": 682438.95,
+      "charges": 2032,
+      "discharges": 2012
     },
     {
       "name": "Greedy",
-      "profit": 142998.32,
+      "profit": 142898.79,
       "charges": 235,
       "discharges": 234
     },
     {
       "name": "Sliding Window",
-      "profit": 159324.46,
-      "charges": 111,
+      "profit": 159361.79,
+      "charges": 112,
       "discharges": 93
     },
     {
       "name": "Dynamic Programming",
-      "profit": 682156.78,
-      "charges": 2024,
-      "discharges": 2006
+      "profit": 682438.95,
+      "charges": 2032,
+      "discharges": 2012
     },
     {
       "name": "Forecast Ema",
-      "profit": 153615.28,
-      "charges": 1614,
-      "discharges": 1603
+      "profit": 154079.91,
+      "charges": 1626,
+      "discharges": 1605
     }
   ],
   "bestStrategy": "Perfect Foresight",
-  "bestProfit": 682156.78,
-  "annualizedProfit": 15561701.45,
+  "bestProfit": 682438.95,
+  "annualizedProfit": 15568138.58,
   "dataRange": {
     "start": "2025-12-20 14:55:00+11:00",
-    "end": "2026-01-06 12:55:00+11:00",
+    "end": "2026-01-06 14:00:00+11:00",
     "days": 16
   }
 }
