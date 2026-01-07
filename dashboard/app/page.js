@@ -260,6 +260,7 @@ export default function Home() {
                 <Tooltip
                   contentStyle={{ background: '#111', border: '1px solid #333', fontSize: 10 }}
                   formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
+                  cursor={false}
                 />
                 <Bar dataKey="profit" fill="#4ade80" radius={[0, 4, 4, 0]} />
               </BarChart>

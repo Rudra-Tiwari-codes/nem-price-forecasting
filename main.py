@@ -39,7 +39,8 @@ def run_simulation(
     power_mw: float = 50.0,
     efficiency: float = 0.90,
     generate_charts: bool = True,
-    run_eda: bool = False
+    run_eda: bool = False,
+    override_timestamp: str = None
 ):
     print_header("NEM ARBITRAGE ENGINE")
     print("\nBattery Configuration:")
@@ -47,6 +48,8 @@ def run_simulation(
     print(f"  Power Rating: {power_mw} MW")
     print(f"  Efficiency: {efficiency:.0%}")
     print(f"  C-Rate: {capacity_mwh / power_mw:.1f} hours")
+    if override_timestamp:
+        print(f"  Timestamp Override: {override_timestamp}")
 
     # Check if data file exists
     data_file = Path(data_path)
@@ -218,8 +221,14 @@ def run_simulation(
                 'signal': signal
             })
 
+        # Determine last updated timestamp
+        if override_timestamp:
+            last_updated = override_timestamp
+        else:
+            last_updated = datetime.now(timezone.utc).isoformat()
+
         dashboard_data = {
-            'lastUpdated': datetime.now(timezone.utc).isoformat(),
+            'lastUpdated': last_updated,
             'region': region if region else 'ALL',
             'stats': {
                 'current': round(float(recent_df['RRP'].iloc[-1]), 2),
@@ -315,6 +324,11 @@ def main():
         action="store_true",
         help="Run exploratory data analysis and metrics"
     )
+    parser.add_argument(
+        "--timestamp",
+        default=None,
+        help="Override last updated timestamp (ISO 8601 format)"
+    )
 
     args = parser.parse_args()
 
@@ -325,7 +339,8 @@ def main():
         power_mw=args.power,
         efficiency=args.efficiency,
         generate_charts=not args.no_charts,
-        run_eda=args.eda
+        run_eda=args.eda,
+        override_timestamp=args.timestamp
     )
 
 
